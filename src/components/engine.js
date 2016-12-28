@@ -1,51 +1,73 @@
 import React from 'react';
-import EngineStore from '../store/engine.js';
-import State from './state.js';
-import LeftMenuBlock from './leftmenublock.js';
+import Context from './context.js';
 import StateForm from './stateform.js'
+import LeftMenuBlock from './leftmenublock.js';
+
+import EngineStore from '../store/engine.js';
+import StateStore from '../store/state.js';
 
 export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
-    this.store = new EngineStore;
     this.state = {
-      states: [],
-      editState: {},
-      modalState: false
+      store: new EngineStore,
+      modal: {
+        state: {
+          data: {},
+          show: false
+        }
+      }
     };
+    this.lib = {
+      state: {
+        add: () => this.saveToState(
+          (state) => {
+            state.store.states.push( new StateStore );
+          }
+        ),
+        edit: (store) => this.saveToState(
+          (state) => state.modal.state,
+          {
+            data: store,
+            show: true
+          }
+        ),
+        save: (key, value) => this.saveToState(
+          (state) => state.modal.state.data,
+          { [ key ]: value }
+        ),
+        afterEdit: () => this.saveToState(
+          (state) => {
+            state.modal.state.show = false;
+          }
+        )
+      }
+    };
+
+    this.methods = {};
+
+    for (let entity in this.lib) {
+      for (let method in this.lib[entity]) {
+        const name = method + this.ucfirst(entity);
+        this.methods[name] = this.lib[entity][method].bind(this);
+      }
+    }
   }
 
-  updateStateStates() {
-    this.setState( {
-      states: this.store.states.map( (state, key) => ({
-        key,
-        text: state.name,
-        x: state.x,
-        y: state.y,
-        clickHandler: () => this.editState(state)
-      }) )
-    } );
+  ucfirst(str) {
+    return str.charAt(0).toUpperCase() + str.substr(1);
   }
 
-  addState() {
-    this.store.addState();
-    this.updateStateStates();
-  }
+  saveToState(statePath, values='') {
 
-  editState(state) {
-    this.setState({ editState: state, modalState: true });
-  }
-
-  editStateCallback() {
-    this.setState( {modalState: false} );
-    this.updateStateStates();
-  }
-
-  saveEditStateValue(key, value) {
     this.setState((prevState, props) => {
-      if (key in prevState.editState) {
-        prevState.editState[key] = value;
+      let state = statePath(prevState);
+
+      if (typeof state == 'object' && typeof values == 'object') {
+        for (let key in values) {
+          state[key] = values[key];
+        }
       }
 
       return prevState;
@@ -53,24 +75,22 @@ export default class Engine extends React.Component {
   }
 
   render() {
-
-    const stateRects = this.state.states.map( (state, id) => (
-      <State x={state.x} y={state.y} key={id}/>
-    ) );
-
+    const stateModal = this.state.modal.state,
+      methods = this.methods;
     return (
       <div className="engine">
         <div className="left-menu">
-        <LeftMenuBlock caption='States' data={this.state.states}
-          addCaption='Add State' addHandler={this.addState.bind(this)}/>
+        <LeftMenuBlock caption='States'
+          data={this.state.store.states}
+          addCaption='Add State'
+          editHandler={methods.editState}
+          addHandler={methods.addState}/>
         </div>
-        <svg width="800" height="600">
-          {stateRects}
-        </svg>
-        <StateForm show={this.state.modalState}
-          state={this.state.editState}
-          save={this.saveEditStateValue.bind(this)}
-          callback={this.editStateCallback.bind(this)} />
+        <Context store={this.state.store} />
+        <StateForm show={stateModal.show}
+          state={stateModal.data}
+          saveHandler={methods.saveState}
+          afterEditHandler={methods.afterEditState} />
       </div>
     );
   }

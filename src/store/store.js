@@ -1,5 +1,3 @@
-import MicroEvent from 'microevent';
-
 class Store {
   init(values) {
     Object.keys(values).forEach( (key) => {
@@ -7,7 +5,5 @@ class Store {
     } );
   }
 }
-
-MicroEvent.mixin(Store);
 
 export default Store;

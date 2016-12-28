@@ -13,9 +13,10 @@ class LeftMenuElement extends React.Component {
 
 export default class LeftMenuBlock extends React.Component {
   render() {
-    const buttons = this.props.data.map( (element) =>
-        <LeftMenuElement clickHandler={element.clickHandler} text={element.text} key={element.key} />
-    );
+    const data =this.props.data,
+      buttons = data.length == 0 ? [] : data.map( (element, key) =>
+        <LeftMenuElement clickHandler={() => { this.props.editHandler(element) }} text={element.name} key={key} />
+      );
 
     return (
       <div className="left-menu-block">
