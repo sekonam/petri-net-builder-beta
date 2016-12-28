@@ -1,7 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Engine from './components/engine.js';
+import Modal from './components/modal.js';
+
+const rootNode = document.getElementById('root');
+Modal.rootNode = rootNode;
 
 ReactDOM.render(
-  <h1>Hello, world!</h1>,
-  document.getElementById('root')
+  <Engine/>,
+  rootNode
 );

@@ -1,0 +1,16 @@
+.engine .left-menu {
+  float:left;
+  width:150px;
+}
+.list-type-style-none {
+  list-style-type:none;
+  padding-left:0;
+}
+
+.state {
+  width:150px;
+  height:60px;
+  fill:#666;
+  stroke:#ddd;
+  stroke-width:1px;
+}
