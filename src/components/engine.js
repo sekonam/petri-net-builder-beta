@@ -11,7 +11,8 @@ export default class Engine extends React.Component {
     this.store = new EngineStore;
     this.state = {
       states: [],
-      editState: {}
+      editState: {},
+      modalState: false
     };
   }
 
@@ -33,11 +34,11 @@ export default class Engine extends React.Component {
   }
 
   editState(state) {
-    this.setState({ editState: state });
+    this.setState({ editState: state, modalState: true });
   }
 
   editStateCallback() {
-    this.setState( {editState: {}} );
+    this.setState( {modalState: false} );
     this.updateStateStates();
   }
 
@@ -57,8 +58,6 @@ export default class Engine extends React.Component {
       <State x={state.x} y={state.y} key={id}/>
     ) );
 
-    const show = Object.keys(this.state.editState).length != 0;
-
     return (
       <div className="engine">
         <div className="left-menu">
@@ -68,7 +67,10 @@ export default class Engine extends React.Component {
         <svg width="800" height="600">
           {stateRects}
         </svg>
-        <StateForm show={show} state={this.state.editState} save={this.saveEditStateValue.bind(this)} callback={this.editStateCallback.bind(this)} />
+        <StateForm show={this.state.modalState}
+          state={this.state.editState}
+          save={this.saveEditStateValue.bind(this)}
+          callback={this.editStateCallback.bind(this)} />
       </div>
     );
   }
