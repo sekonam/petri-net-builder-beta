@@ -19,8 +19,8 @@ const stateSource = {
 
     return {
       id: props.id,
-      x0: component.props.x,
-      y0: component.props.y
+      x0: component.props.data.x,
+      y0: component.props.data.y
     };
   },
 
@@ -38,10 +38,13 @@ function collect(connect, monitor) {
 class State extends React.Component {
 
   render() {
-    const { connectDragSource, id, x, y} = this.props;
+    const { connectDragSource, id, data: { x, y, name }} = this.props;
 
     return connectDragSource(
-      <rect className="state" x={x} y={y} id={id} />
+      <g>
+        <rect className="state" x={x} y={y} id={id}></rect>
+        <text fontSize='16' x={x+15} y={y+25}>{name}</text>
+      </g>
     );
   }
 }

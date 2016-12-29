@@ -8,8 +8,8 @@ class Context extends React.Component {
 
   render() {
     const states = this.props.store.states,
-      stateRects = states.length == 0 ? [] : this.props.store.states.map( (state, id) => (
-        <State x={state.x} y={state.y} id={id} key={id}
+      stateRects = states.length == 0 ? [] : states.map( (state, id) => (
+        <State data={state} id={id} key={id}
           dragHandler={this.props.dragStateHandler}/>
       ) );
 
