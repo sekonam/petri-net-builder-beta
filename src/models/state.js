@@ -1,4 +1,5 @@
 import Model from './model.js';
+import {PropTypes} from 'react';
 
 export default class StateModel extends Model {
   constructor() {
@@ -16,6 +17,10 @@ export default class StateModel extends Model {
     return this.short('name');
   }
 }
+
+StateModel.propTypes = {
+
+};
 
 StateModel.count = 0;
 StateModel.maxShortLength = 18;

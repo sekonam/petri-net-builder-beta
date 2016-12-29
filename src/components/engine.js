@@ -1,61 +1,84 @@
 import React from 'react';
+
+import EngineModel from '../models/engine.js';
+import StateModel from '../models/state.js';
+import EventModel from '../models/event.js';
+
 import Context from './context.js';
 import StateForm from './stateform.js'
+import EventForm from './eventform.js'
 import LeftMenuBlock from './leftmenublock.js';
-
-import EngineModel from '../model/engine.js';
-import StateModel from '../model/state.js';
 
 export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
+
+    const itemTypes = ['state', 'event'],
+      itemFactory = {
+        'state': () => new StateModel,
+        'event': () => new EventModel
+      };
+
     this.state = {
       store: new EngineModel,
-      modal: {
-        state: {
-          data: {},
-          show: false
-        }
-      }
+      modal: {}
     };
-    this.lib = {
-      state: {
-        add: () => this.saveToState(
+
+    itemTypes.forEach( (key) => {
+      this.state.modal[key] = {
+        data: {},
+        show: false
+      };
+    } );
+
+    const customActions = {
+      add: (itemType) => {
+        const storageName = itemType + 's';
+        return () => this.saveToState(
           (state) => {
-            state.store.states.push( new StateModel );
+            state.store[storageName].push( itemFactory[itemType]() );
           }
-        ),
-        edit: (id) => this.saveToState(
-          (state) => state.modal.state,
+        );
+      },
+      edit: (itemType) => {
+        const storageName = itemType + 's';
+        return (id) => this.saveToState(
+          (state) => state.modal[itemType],
           {
-            data: this.state.store.states[id],
+            data: this.state.store[storageName][id],
             show: true
           }
-        ),
-        save: (key, value) => this.saveToState(
-          (state) => state.modal.state.data,
-          { [ key ]: value }
-        ),
-        afterEdit: () => this.saveToState(
-          (state) => {
-            state.modal.state.show = false;
-          }
-        ),
-        drag: (id,x,y) => this.saveToState(
-          (state) => state.store.states[id],
-          {x,y}
-        )
-      }
+        );
+      },
+      save: (itemType) => (key, value) => this.saveToState(
+        (state) => state.modal[itemType].data,
+        { [ key ]: value }
+      ),
+      afterEdit: (itemType) => () => this.saveToState(
+        (state) => {
+          state.modal[itemType].show = false;
+        }
+      )
     };
 
     this.methods = {};
 
-    for (let entity in this.lib) {
-      for (let method in this.lib[entity]) {
-        const name = method + this.ucfirst(entity);
-        this.methods[name] = this.lib[entity][method].bind(this);
+    for (let key in itemTypes) {
+      const itemType = itemTypes[key];
+      for (let method in customActions) {
+        const name = method + this.ucfirst(itemType);
+        this.methods[name] = customActions[method](itemType);
       }
+    }
+
+    this.methods.dragState = (id,x,y) => this.saveToState(
+      (state) => state.store.states[id],
+      {x,y}
+    );
+
+    for (let method in this.methods) {
+      this.methods[method] = this.methods[method].bind(this);
     }
   }
 
@@ -78,30 +101,43 @@ export default class Engine extends React.Component {
     });
   }
 
-  render() {
-    const stateModal = this.state.modal.state,
-      methods = this.methods;
-
-    let leftMenuStateData = [];
-    this.state.store.states.forEach(
-      (state, id) => leftMenuStateData[id] = state.shortName()
+  getLeftMenuData(data, propName) {
+    let leftMenuData = [];
+    data.forEach(
+      (element, id) => leftMenuData[id] = element.short(propName)
     );
+    return leftMenuData;
+  }
+
+  render() {
+    const modal = this.state.modal,
+      store = this.state.store,
+      methods = this.methods;
 
     return (
       <div className="engine">
         <div className="left-menu">
           <LeftMenuBlock caption='States'
-            data={leftMenuStateData}
+            data={this.getLeftMenuData( store.states, 'name' )}
             addCaption='Add State'
             editHandler={methods.editState}
             addHandler={methods.addState}/>
+          <LeftMenuBlock caption='Events'
+            data={this.getLeftMenuData( store.events, 'name' )}
+            addCaption='Add Event'
+            editHandler={methods.editEvent}
+            addHandler={methods.addEvent}/>
         </div>
-        <Context store={this.state.store}
+        <Context store={store}
           dragStateHandler={methods.dragState}/>
-        <StateForm show={stateModal.show}
-          state={stateModal.data}
+        <StateForm show={modal.state.show}
+          data={modal.state.data}
           saveHandler={methods.saveState}
           afterEditHandler={methods.afterEditState} />
+        <EventForm show={modal.event.show}
+          data={modal.event.data}
+          saveHandler={methods.saveEvent}
+          afterEditHandler={methods.afterEditEvent} />
       </div>
     );
   }
