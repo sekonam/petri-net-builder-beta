@@ -41,6 +41,10 @@ export default class Engine extends React.Component {
           (state) => {
             state.modal.state.show = false;
           }
+        ),
+        drag: (id,x,y) => this.saveToState(
+          (state) => state.store.states[id],
+          {x,y}
         )
       }
     };
@@ -86,7 +90,8 @@ export default class Engine extends React.Component {
           editHandler={methods.editState}
           addHandler={methods.addState}/>
         </div>
-        <Context store={this.state.store} />
+        <Context store={this.state.store}
+          dragStateHandler={methods.dragState}/>
         <StateForm show={stateModal.show}
           state={stateModal.data}
           saveHandler={methods.saveState}

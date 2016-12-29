@@ -1,29 +1,47 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
 import Types from '../types.js';
 
 const stateSource = {
-  beginDrag(props) {
+  beginDrag(props, monitor, component) {
+    this.timerId = setInterval(
+      () => {
+        if (monitor.isDragging()) {
+          const item = monitor.getItem(),
+            offset = monitor.getClientOffset(),
+            initialOffset = monitor.getInitialClientOffset(),
+            x = item.x0 + offset.x - initialOffset.x,
+            y = item.y0 + offset.y - initialOffset.y;
+          component.props.dragHandler(props.id, x, y);
+        }
+      }, 10
+    );
+
     return {
-      name: props.name
+      id: props.id,
+      x0: component.props.x,
+      y0: component.props.y
     };
+  },
+
+  endDrag(props, monitor, component) {
+    clearInterval(this.timerId);
   }
 };
 
 function collect(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging(),
-    offset: monitor.getClientOffset()
   }
 }
 
 class State extends React.Component {
 
   render() {
-    const { isDragging, connectDragSource, offset, name, x, y } = this.props;
+    const { connectDragSource, id, x, y} = this.props;
+
     return connectDragSource(
-      <rect className="state" x={x} y={y}>{name}</rect>
+      <rect className="state" x={x} y={y} id={id} />
     );
   }
 }
