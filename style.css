@@ -1,3 +1,6 @@
+/*
+ * Left menu
+ */
 .engine .left-menu {
   float:left;
   width:150px;
@@ -6,9 +9,18 @@
   list-style-type:none;
   padding-left:0;
 }
+.list-type-style-none li {
+  margin-bottom:5px;
+}
 
+/*
+ * SVG workflow 2D context
+ */
+svg {
+  overflow:hidden;
+}
 .state {
-  width:150px;
+  width:200px;
   height:40px;
   fill:#eee;
   stroke:#333;
@@ -16,11 +28,6 @@
   overflow:none;
   cursor:pointer;
 }
-
-svg {
-  overflow:hidden;
-  clear:both;
-}
-.state text {
+.state-txt {
   cursor:pointer;
 }

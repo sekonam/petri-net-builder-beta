@@ -3,9 +3,13 @@ import { Button } from 'react-bootstrap';
 
 class LeftMenuElement extends React.Component {
   render() {
+    const style = typeof this.props.style == 'string' ? this.props.style : 'default';
     return (
       <li>
-        <Button onClick={this.props.clickHandler}>{this.props.text}</Button>
+        <Button onClick={this.props.clickHandler}
+          bsStyle={style} block>
+          {this.props.text}
+        </Button>
       </li>
     );
   }
@@ -14,8 +18,9 @@ class LeftMenuElement extends React.Component {
 export default class LeftMenuBlock extends React.Component {
   render() {
     const data =this.props.data,
-      buttons = data.length == 0 ? [] : data.map( (element, key) =>
-        <LeftMenuElement clickHandler={() => { this.props.editHandler(element) }} text={element.name} key={key} />
+      buttons = data.length == 0 ? [] : data.map( (text, key) =>
+        <LeftMenuElement clickHandler={() => { this.props.editHandler(key) }}
+          text={text} key={key} />
       );
 
     return (
@@ -23,7 +28,8 @@ export default class LeftMenuBlock extends React.Component {
         <h3>{this.props.caption}</h3>
         <ul className="list-type-style-none">
           {buttons}
-          <LeftMenuElement clickHandler={this.props.addHandler} text={this.props.addCaption} />
+          <LeftMenuElement clickHandler={this.props.addHandler}
+            text={this.props.addCaption} style='primary' />
         </ul>
       </div>
     );

@@ -38,12 +38,12 @@ function collect(connect, monitor) {
 class State extends React.Component {
 
   render() {
-    const { connectDragSource, id, data: { x, y, name }} = this.props;
+    const { connectDragSource, id, data: { x, y }} = this.props;
 
     return connectDragSource(
       <g>
         <rect className="state" x={x} y={y} id={id}></rect>
-        <text fontSize='16' x={x+15} y={y+25}>{name}</text>
+        <text className="state-txt" fontSize='16' x={x+15} y={y+25}>{this.props.data.shortName()}</text>
       </g>
     );
   }

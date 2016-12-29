@@ -26,10 +26,10 @@ export default class Engine extends React.Component {
             state.store.states.push( new StateStore );
           }
         ),
-        edit: (store) => this.saveToState(
+        edit: (id) => this.saveToState(
           (state) => state.modal.state,
           {
-            data: store,
+            data: this.state.store.states[id],
             show: true
           }
         ),
@@ -81,14 +81,20 @@ export default class Engine extends React.Component {
   render() {
     const stateModal = this.state.modal.state,
       methods = this.methods;
+
+    let leftMenuStateData = [];
+    this.state.store.states.forEach(
+      (state, id) => leftMenuStateData[id] = state.shortName()
+    );
+
     return (
       <div className="engine">
         <div className="left-menu">
-        <LeftMenuBlock caption='States'
-          data={this.state.store.states}
-          addCaption='Add State'
-          editHandler={methods.editState}
-          addHandler={methods.addState}/>
+          <LeftMenuBlock caption='States'
+            data={leftMenuStateData}
+            addCaption='Add State'
+            editHandler={methods.editState}
+            addHandler={methods.addState}/>
         </div>
         <Context store={this.state.store}
           dragStateHandler={methods.dragState}/>

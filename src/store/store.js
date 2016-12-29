@@ -1,6 +1,10 @@
 class Store {
-  init(values) {
-    Object.keys(values).forEach( (key) => {
+  init(values, keys = null) {
+    if (keys == null) {
+      keys = Object.keys(values);
+    }
+    
+    keys.forEach( (key) => {
       this[key] = values[key];
     } );
   }
