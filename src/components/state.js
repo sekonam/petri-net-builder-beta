@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
-import Types from '../types.js';
+import Types from './types.js';
 
 const stateSource = {
   beginDrag(props, monitor, component) {

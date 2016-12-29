@@ -3,15 +3,15 @@ import Context from './context.js';
 import StateForm from './stateform.js'
 import LeftMenuBlock from './leftmenublock.js';
 
-import EngineStore from '../store/engine.js';
-import StateStore from '../store/state.js';
+import EngineModel from '../model/engine.js';
+import StateModel from '../model/state.js';
 
 export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      store: new EngineStore,
+      store: new EngineModel,
       modal: {
         state: {
           data: {},
@@ -23,7 +23,7 @@ export default class Engine extends React.Component {
       state: {
         add: () => this.saveToState(
           (state) => {
-            state.store.states.push( new StateStore );
+            state.store.states.push( new StateModel );
           }
         ),
         edit: (id) => this.saveToState(
