@@ -17,7 +17,7 @@ class LeftMenuElement extends React.Component {
 
 export default class LeftMenuBlock extends React.Component {
   render() {
-    const data =this.props.data,
+    const {data, itemName} = this.props,
       buttons = data.length == 0 ? [] : data.map( (text, key) =>
         <LeftMenuElement clickHandler={() => { this.props.editHandler(key) }}
           text={text} key={key} />
@@ -25,11 +25,11 @@ export default class LeftMenuBlock extends React.Component {
 
     return (
       <div className="left-menu-block">
-        <h3>{this.props.caption}</h3>
+        <h3>{itemName.ucfirst() + 's'}</h3>
         <ul className="list-type-style-none">
           {buttons}
           <LeftMenuElement clickHandler={this.props.addHandler}
-            text={this.props.addCaption} style='primary' />
+            text={'Add ' + itemName} style='primary' />
         </ul>
       </div>
     );

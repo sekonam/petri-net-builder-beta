@@ -3,10 +3,12 @@ import React from 'react';
 import EngineModel from '../models/engine.js';
 import StateModel from '../models/state.js';
 import EventModel from '../models/event.js';
+import ActionModel from '../models/action.js';
 
 import Context from './context.js';
 import StateForm from './stateform.js'
 import EventForm from './eventform.js'
+import ActionForm from './actionform.js'
 import LeftMenuBlock from './leftmenublock.js';
 
 export default class Engine extends React.Component {
@@ -14,13 +16,15 @@ export default class Engine extends React.Component {
   constructor(props) {
     super(props);
 
-    const itemTypes = ['state', 'event'],
+    const itemTypes = ['state', 'event', 'action',],
       itemFactory = {
         'state': () => new StateModel,
-        'event': () => new EventModel
+        'event': () => new EventModel,
+        'action': () => new ActionModel
       };
 
     this.state = {
+      itemTypes: itemTypes,
       store: new EngineModel,
       modal: {}
     };
@@ -66,28 +70,26 @@ export default class Engine extends React.Component {
 
     for (let key in itemTypes) {
       const itemType = itemTypes[key];
+      this.methods[itemType] = {};
+
       for (let method in customActions) {
-        const name = method + this.ucfirst(itemType);
-        this.methods[name] = customActions[method](itemType);
+        this.methods[itemType][method] = customActions[method](itemType);
       }
     }
 
-    this.methods.dragState = (id,x,y) => this.saveToState(
+    this.methods.state.drag = (id,x,y) => this.saveToState(
       (state) => state.store.states[id],
       {x,y}
     );
 
-    for (let method in this.methods) {
-      this.methods[method] = this.methods[method].bind(this);
-    }
-  }
-
-  ucfirst(str) {
-    return str.charAt(0).toUpperCase() + str.substr(1);
+    itemTypes.forEach( (itemType) => {
+      for (let method in this.methods[itemType]) {
+        this.methods[itemType][method] = this.methods[itemType][method].bind(this);
+      }
+    } );
   }
 
   saveToState(statePath, values='') {
-
     this.setState((prevState, props) => {
       let state = statePath(prevState);
 
@@ -110,34 +112,38 @@ export default class Engine extends React.Component {
   }
 
   render() {
-    const modal = this.state.modal,
+    const
+      modal = this.state.modal,
       store = this.state.store,
-      methods = this.methods;
+      methods = this.methods,
+
+      leftMenuBlocks = this.state.itemTypes.map( (itemType, id) => (
+        <LeftMenuBlock key={id}
+          itemName={itemType}
+          data={this.getLeftMenuData( store[itemType + 's'], 'name' )}
+          editHandler={methods[itemType].edit}
+          addHandler={methods[itemType].add}/>
+      ));
 
     return (
       <div className="engine">
         <div className="left-menu">
-          <LeftMenuBlock caption='States'
-            data={this.getLeftMenuData( store.states, 'name' )}
-            addCaption='Add State'
-            editHandler={methods.editState}
-            addHandler={methods.addState}/>
-          <LeftMenuBlock caption='Events'
-            data={this.getLeftMenuData( store.events, 'name' )}
-            addCaption='Add Event'
-            editHandler={methods.editEvent}
-            addHandler={methods.addEvent}/>
+          {leftMenuBlocks}
         </div>
         <Context store={store}
-          dragStateHandler={methods.dragState}/>
+          dragStateHandler={methods.state.drag}/>
         <StateForm show={modal.state.show}
           data={modal.state.data}
-          saveHandler={methods.saveState}
-          afterEditHandler={methods.afterEditState} />
+          saveHandler={methods.state.save}
+          afterEditHandler={methods.state.afterEdit} />
         <EventForm show={modal.event.show}
           data={modal.event.data}
-          saveHandler={methods.saveEvent}
-          afterEditHandler={methods.afterEditEvent} />
+          saveHandler={methods.event.save}
+          afterEditHandler={methods.event.afterEdit} />
+        <ActionForm show={modal.action.show}
+          data={modal.action.data}
+          saveHandler={methods.action.save}
+          afterEditHandler={methods.action.afterEdit} />
       </div>
     );
   }

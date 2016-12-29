@@ -5,7 +5,7 @@ import {Form, FormGroup, FormControl, ControlLabel, Checkbox} from 'react-bootst
 export default class StateForm extends React.Component {
   render() {
     return (
-      <Modal title={this.props.data.name} show={this.props.show} hide={this.props.afterEditHandler}>
+      <Modal title={'State: ' + this.props.data.name} show={this.props.show} hide={this.props.afterEditHandler}>
         <Form>
           <FormGroup>
             <ControlLabel>State Name</ControlLabel>
