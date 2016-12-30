@@ -6,6 +6,7 @@ export default class EngineModel extends Model {
     this.states = [];
     this.actions = [];
     this.events = [];
+    this.transitions = [];
   }
 
 }

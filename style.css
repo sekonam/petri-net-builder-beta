@@ -20,8 +20,6 @@ svg {
   overflow:hidden;
 }
 .state {
-  width:200px;
-  height:40px;
   fill:#eee;
   stroke:#333;
   stroke-width:1px;
@@ -30,4 +28,12 @@ svg {
 }
 .state-txt {
   cursor:pointer;
+}
+.state-transition-create {
+  fill:#337ab7;
+  cursor:pointer;
+}
+.transition-line {
+  stroke:#337ab7;
+  stroke-width:1;
 }

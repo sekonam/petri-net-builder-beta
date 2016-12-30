@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
 import Types from './types.js';
+import StateModel from '../models/state.js';
 
 const stateSource = {
   beginDrag(props, monitor, component) {
@@ -38,12 +39,15 @@ function collect(connect, monitor) {
 class State extends React.Component {
 
   render() {
-    const { connectDragSource, id, data: { x, y }} = this.props;
+    const { connectDragSource, id, data: { x, y }, addTransitionHandler} = this.props;
 
     return connectDragSource(
       <g>
-        <rect className="state" x={x} y={y} id={id}></rect>
-        <text className="state-txt" fontSize='16' x={x+15} y={y+25}>{this.props.data.shortName()}</text>
+        <rect className="state" x={x} y={y} id={id}
+          width={StateModel.default.width + 'px'} height={StateModel.default.height + 'px'}></rect>
+        <text className="state-txt" fontSize='16' x={x+10} y={y+25}>{this.props.data.shortName()}</text>
+        <text className="state-transition-create" fontSize='16' x={x+180} y={y+25}
+          onClick={(e) => addTransitionHandler(id, e) }>T</text>
       </g>
     );
   }

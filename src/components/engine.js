@@ -4,6 +4,7 @@ import EngineModel from '../models/engine.js';
 import StateModel from '../models/state.js';
 import EventModel from '../models/event.js';
 import ActionModel from '../models/action.js';
+import TransitionModel from '../models/transition.js';
 
 import Context from './context.js';
 import StateForm from './stateform.js'
@@ -16,17 +17,28 @@ export default class Engine extends React.Component {
   constructor(props) {
     super(props);
 
-    const itemTypes = ['state', 'event', 'action',],
+    const itemTypes = [
+        'state',
+        'event',
+        'action',
+        'transition',
+      ],
       itemFactory = {
         'state': () => new StateModel,
         'event': () => new EventModel,
-        'action': () => new ActionModel
+        'action': () => new ActionModel,
+        'transition': () => new TransitionModel
       };
 
     this.state = {
       itemTypes: itemTypes,
       store: new EngineModel,
-      modal: {}
+      modal: {},
+      leftMenuItems: [
+        'state',
+        'event',
+        'action',
+      ]
     };
 
     itemTypes.forEach( (key) => {
@@ -39,11 +51,15 @@ export default class Engine extends React.Component {
     const customActions = {
       add: (itemType) => {
         const storageName = itemType + 's';
-        return () => this.saveToState(
-          (state) => {
-            state.store[storageName].push( itemFactory[itemType]() );
-          }
-        );
+        return () => {
+          const newItem = itemFactory[itemType]();
+          this.saveToState(
+            (state) => {
+              state.store[storageName].push( newItem );
+            }
+          );
+          return newItem;
+        }
       },
       edit: (itemType) => {
         const storageName = itemType + 's';
@@ -63,7 +79,22 @@ export default class Engine extends React.Component {
         (state) => {
           state.modal[itemType].show = false;
         }
-      )
+      ),
+      remove: (itemType) => (item) => {
+        let id = false;
+
+        this.saveToState(
+          (state) => {
+            id = state.store[itemType + 's'].indexOf(item);
+            if (id > -1) {
+              delete state.store[itemType + 's'][id];
+            }
+            return state;
+          }
+        );
+
+        return id > -1;
+      }
     };
 
     this.methods = {};
@@ -82,6 +113,11 @@ export default class Engine extends React.Component {
       {x,y}
     );
 
+    this.methods.state.setHover = (id, hover) => this.saveToState(
+      (state) => state.store.states[id],
+      {hover}
+    );
+
     itemTypes.forEach( (itemType) => {
       for (let method in this.methods[itemType]) {
         this.methods[itemType][method] = this.methods[itemType][method].bind(this);
@@ -90,8 +126,9 @@ export default class Engine extends React.Component {
   }
 
   saveToState(statePath, values='') {
+    let state;
     this.setState((prevState, props) => {
-      let state = statePath(prevState);
+      state = statePath(prevState);
 
       if (typeof state == 'object' && typeof values == 'object') {
         for (let key in values) {
@@ -101,6 +138,8 @@ export default class Engine extends React.Component {
 
       return prevState;
     });
+
+    return state;
   }
 
   getKeyValueHash(data, propName) {
@@ -117,7 +156,7 @@ export default class Engine extends React.Component {
       store = this.state.store,
       methods = this.methods,
 
-      leftMenuBlocks = this.state.itemTypes.map( (itemType, id) => (
+      leftMenuBlocks = this.state.leftMenuItems.map( (itemType, id) => (
         <LeftMenuBlock key={id}
           itemName={itemType}
           data={this.getKeyValueHash( store[itemType + 's'], 'name' )}
@@ -130,8 +169,7 @@ export default class Engine extends React.Component {
         <div className="left-menu">
           {leftMenuBlocks}
         </div>
-        <Context store={store}
-          dragStateHandler={methods.state.drag}/>
+        <Context store={store} methods={methods} />
         <StateForm show={modal.state.show}
           data={modal.state.data}
           saveHandler={methods.state.save}

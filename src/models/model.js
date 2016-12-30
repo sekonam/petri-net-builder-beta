@@ -19,6 +19,6 @@ class Model {
   }
 }
 
-Model.maxShortLength = 18;
+Model.maxShortLength = 20;
 
 export default Model;

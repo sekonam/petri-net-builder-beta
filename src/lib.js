@@ -4,3 +4,6 @@ String.prototype.ucfirst = function () {
 Array.prototype.doHave = function(element) {
   return this.indexOf(element) > -1;
 };
+Array.prototype.cmap = function(f) {
+  return this.length == 0 ? this : this.map(f);
+};
