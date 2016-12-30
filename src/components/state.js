@@ -46,7 +46,9 @@ class State extends React.Component {
         <rect className="state" x={x} y={y} id={id}
           width={StateModel.default.width + 'px'} height={StateModel.default.height + 'px'}></rect>
         <text className="state-txt" fontSize='16' x={x+10} y={y+25}>{this.props.data.shortName()}</text>
-        <text className="state-transition-create" fontSize='16' x={x+180} y={y+25}
+        <circle className="transition-create-circle" cx={x+184} cy={y+18} r='12'
+          onClick={(e) => addTransitionHandler(id, e) } />
+        <text className="transition-create-text" fontSize='16' x={x+180} y={y+25}
           onClick={(e) => addTransitionHandler(id, e) }>T</text>
       </g>
     );

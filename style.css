@@ -29,9 +29,18 @@ svg {
 .state-txt {
   cursor:pointer;
 }
-.state-transition-create {
+.transition-create-text {
+  fill:#000;
+  cursor:default;
+}
+.transition-create-circle {
   fill:#337ab7;
-  cursor:pointer;
+  stroke:#fff;
+  stroke-width:1;
+}
+.transition-create-circle:hover {
+  stroke-width:2;
+
 }
 .transition-line {
   stroke:#337ab7;
