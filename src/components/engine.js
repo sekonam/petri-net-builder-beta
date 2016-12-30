@@ -38,7 +38,8 @@ export default class Engine extends React.Component {
         'state',
         'event',
         'action',
-      ]
+      ],
+      dragStateId: null
     };
 
     itemTypes.forEach( (key) => {
@@ -114,15 +115,23 @@ export default class Engine extends React.Component {
     );
 
     this.methods.state.setHover = (id, hover) => this.saveToState(
-      (state) => state.store.states[id],
-      {hover}
-    );
+        (state) => state.store.states[id],
+        {hover}
+      );
+
+    this.methods.dragStateId = (id) => {
+      console.log(id);
+      this.setState({
+      dragStateId: id
+    });};
 
     itemTypes.forEach( (itemType) => {
       for (let method in this.methods[itemType]) {
         this.methods[itemType][method] = this.methods[itemType][method].bind(this);
       }
     } );
+
+    this.methods.dragStateId = this.methods.dragStateId.bind(this);
   }
 
   saveToState(statePath, values='') {
@@ -159,6 +168,7 @@ export default class Engine extends React.Component {
       leftMenuBlocks = this.state.leftMenuItems.map( (itemType, id) => (
         <LeftMenuBlock key={id}
           itemName={itemType}
+          activeId={itemType == 'state' ? this.state.dragStateId : ''}
           data={this.getKeyValueHash( store[itemType + 's'], 'name' )}
           editHandler={methods[itemType].edit}
           addHandler={methods[itemType].add}/>

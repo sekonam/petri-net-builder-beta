@@ -20,29 +20,46 @@ svg {
   overflow:hidden;
 }
 .state {
+  cursor: move;
+}
+.state-rect {
   fill:#eee;
   stroke:#333;
   stroke-width:1px;
-  overflow:none;
-  cursor:pointer;
 }
-.state-txt {
-  cursor:pointer;
+.state .transition-create {
+  cursor: pointer;
 }
+
 .transition-create-text {
   fill:#000;
-  cursor:default;
 }
 .transition-create-circle {
   fill:#337ab7;
-  stroke:#fff;
+  stroke:#333;
+}
+
+.transition-create, .transition-create {
   stroke-width:1;
 }
-.transition-create-circle:hover {
+.transition-create:hover, .transition-create:hover {
   stroke-width:2;
+}
 
+.transition {
+  stroke-width:1;
+}
+.transition:hover {
+  cursor:pointer;
+  stroke-width:2;
 }
 .transition-line {
   stroke:#337ab7;
-  stroke-width:1;
+}
+.transition-circle {
+  fill:#337ab7;
+  stroke:#333;
+}
+.transition-circle-text{
+  fill:#000;
 }

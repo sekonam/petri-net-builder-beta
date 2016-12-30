@@ -18,6 +18,8 @@ const stateSource = {
       }, 10
     );
 
+    component.props.dragStateId(props.id);
+
     return {
       id: props.id,
       x0: component.props.data.x,
@@ -27,6 +29,7 @@ const stateSource = {
 
   endDrag(props, monitor, component) {
     clearInterval(this.timerId);
+    component.props.dragStateId(null);
   }
 };
 
@@ -42,14 +45,14 @@ class State extends React.Component {
     const { connectDragSource, id, data: { x, y }, addTransitionHandler} = this.props;
 
     return connectDragSource(
-      <g>
-        <rect className="state" x={x} y={y} id={id}
+      <g className="state">
+        <rect className="state-rect" x={x} y={y} id={id}
           width={StateModel.default.width + 'px'} height={StateModel.default.height + 'px'}></rect>
         <text className="state-txt" fontSize='16' x={x+10} y={y+25}>{this.props.data.shortName()}</text>
-        <circle className="transition-create-circle" cx={x+184} cy={y+18} r='12'
-          onClick={(e) => addTransitionHandler(id, e) } />
-        <text className="transition-create-text" fontSize='16' x={x+180} y={y+25}
-          onClick={(e) => addTransitionHandler(id, e) }>T</text>
+        <g className='transition-create' onClick={(e) => addTransitionHandler(id, e) }>
+          <circle className="transition-create-circle" cx={x+184} cy={y+18} r='12' />
+          <text className="transition-create-text" fontSize='16' x={x+180} y={y+25}>T</text>
+        </g>
       </g>
     );
   }

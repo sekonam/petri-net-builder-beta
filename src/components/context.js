@@ -96,6 +96,7 @@ class Context extends React.Component {
       stateRects = store.states.cmap( (state, id) => (
         <State data={state} id={id} key={id}
           dragHandler={methods.state.drag}
+          dragStateId={methods.dragStateId}
           addTransitionHandler={this.addTransitionHandler(methods.transition.add).bind(this)}/>
       ) ),
 
