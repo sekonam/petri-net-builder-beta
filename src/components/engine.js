@@ -103,7 +103,7 @@ export default class Engine extends React.Component {
     });
   }
 
-  getLeftMenuData(data, propName) {
+  getKeyValueHash(data, propName) {
     let leftMenuData = [];
     data.forEach(
       (element, id) => leftMenuData[id] = element.short(propName)
@@ -120,7 +120,7 @@ export default class Engine extends React.Component {
       leftMenuBlocks = this.state.itemTypes.map( (itemType, id) => (
         <LeftMenuBlock key={id}
           itemName={itemType}
-          data={this.getLeftMenuData( store[itemType + 's'], 'name' )}
+          data={this.getKeyValueHash( store[itemType + 's'], 'name' )}
           editHandler={methods[itemType].edit}
           addHandler={methods[itemType].add}/>
       ));
@@ -141,7 +141,8 @@ export default class Engine extends React.Component {
           saveHandler={methods.event.save}
           afterEditHandler={methods.event.afterEdit} />
         <ActionForm show={modal.action.show}
-          data={modal.action.data}
+          action={modal.action.data}
+          events={this.getKeyValueHash( store.events, 'name' )}
           saveHandler={methods.action.save}
           afterEditHandler={methods.action.afterEdit} />
       </div>
