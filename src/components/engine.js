@@ -120,7 +120,6 @@ export default class Engine extends React.Component {
       );
 
     this.methods.dragStateId = (id) => {
-      console.log(id);
       this.setState({
       dragStateId: id
     });};
