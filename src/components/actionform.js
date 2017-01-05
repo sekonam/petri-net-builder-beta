@@ -1,28 +1,12 @@
 import React from 'react';
 import Modal from './modal.js';
 import {Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
+import Select from 'react-select';
 
 export default class ActionForm extends React.Component {
-  onChangeActionEvents(actionEventIds, saveHandler) {
-    return (e) => {
-        const value = parseInt(e.target.value),
-          key = actionEventIds.indexOf(value);
-        if (key>-1) {
-          delete actionEventIds[key];
-        } else {
-          actionEventIds.push(value);
-        }
-        saveHandler('events', actionEventIds);
-      }
-  }
 
   render() {
-    const {data, saveHandler, events} = this.props,
-      actionEventIds = Object.keys(data).length > 0 ? data.events : [],
-
-      eventOptions = events.length > 0 ? events.map( (name, id) => (
-        <option value={id} key={id}>{name}</option>
-      )) : '';
+    const {data, saveHandler, events, selectedEvents} = this.props;
 
     return (
       <Modal title={'Action: ' + data.name} show={this.props.show}
@@ -35,11 +19,10 @@ export default class ActionForm extends React.Component {
           </FormGroup>
           <FormGroup controlId="EventsSelectMultiple">
             <ControlLabel>Events To Activate Action</ControlLabel>
+            <Select multi={true} value={selectedEvents} options={events}
+              onChange={(val) => saveHandler('events',
+                typeof val == 'undefined' ? [] : val.cmap( (el) => el.value ) )} />
           </FormGroup>
-          <select value={actionEventIds} multiple
-            onChange={this.onChangeActionEvents(actionEventIds, saveHandler)}>
-            {eventOptions}
-          </select>
           <FormGroup controlId="CodeTextarea">
             <ControlLabel>Javascript Action Code</ControlLabel>
             <FormControl componentClass="textarea" placeholder="JavaScript Code Here..."

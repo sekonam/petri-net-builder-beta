@@ -1,30 +1,13 @@
 import React from 'react';
 import Modal from './modal.js';
 import {Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
+import Select from 'react-select';
 
 export default class TransitionForm extends React.Component {
-/*  onChangeActionEvents(actionEventIds, saveHandler) {
-    return (e) => {
-        const value = parseInt(e.target.value),
-          key = actionEventIds.indexOf(value);
-        if (key>-1) {
-          delete actionEventIds[key];
-        } else {
-          actionEventIds.push(value);
-        }
-        saveHandler('events', actionEventIds);
-      }
-  }*/
 
   render() {
-    const {data, saveHandler, events} = this.props,
-      transitionEventIds = ['start', 'finish'].map(
-        (key) => Object.keys(data).length > 0 ? data[key].events : []
-      ),
-
-      eventOptions = events.length > 0 ? events.map( (name, id) => (
-        <option value={id} key={id}>{name}</option>
-      )) : '';
+    const {data, startStates, finishStates, events, selectedStartEvents, selectedFinishEvents,
+      saveHandler, saveToChildHandler, stateHandler} = this.props;
 
     return (
       <Modal title={'Transition: ' + data.name} show={this.props.show}
@@ -35,17 +18,21 @@ export default class TransitionForm extends React.Component {
             <FormControl type="text" value={data.name}
               onChange={(e) => saveHandler('name', e.target.value)} />
           </FormGroup>
-          <div class="columns">
-            <div class="left-side">
+          <div className="columns">
+            <div className="left-side">
+              <FormGroup controlId="TransitionStateSelectStart">
+                <ControlLabel>Start State</ControlLabel><br/>
+                <Select value={data.start} options={startStates}
+                  onChange={(val) => saveToChildHandler(['start'])('state', val.value)} />
+              </FormGroup>
               <FormGroup controlId="TransitionEventsSelectStart">
-                <ControlLabel>Events Come In Transition</ControlLabel>
-                <select value={transitionEventIds['start']} multiple
-                  onChange={this.onChangeActionEvents(transitionEventIds['start'], saveHandler)}>
-                  {eventOptions}
-                </select>
+                <ControlLabel>Income Events</ControlLabel><br/>
+                <Select multi={true} value={selectedStartEvents} options={events}
+                  onChange={(val) => saveToChildHandler(['start'])('events',
+                    val.cmap( (el) => el.value ) )} />
               </FormGroup>
             </div>
-            <div class="right-side">
+            <div className="right-side">
 
             </div>
           </div>

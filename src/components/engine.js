@@ -51,6 +51,14 @@ export default class Engine extends React.Component {
     } );
 
     const customActions = {
+
+      get: (itemType) => (id) => this.state.store[itemType + 's'][id],
+
+      set: (itemType) => (id, key, value) => this.saveToState(
+        (state) => state.store[itemType + 's'][id],
+        { [ key ]: value }
+      ),
+
       add: (itemType) => {
         const storageName = itemType + 's';
         return () => {
@@ -63,6 +71,7 @@ export default class Engine extends React.Component {
           return newItem;
         }
       },
+
       edit: (itemType) => {
         const storageName = itemType + 's';
         return (id) => this.saveToState(
@@ -73,15 +82,29 @@ export default class Engine extends React.Component {
           }
         );
       },
+
       save: (itemType) => (key, value) => this.saveToState(
         (state) => state.modal[itemType].data,
         { [ key ]: value }
       ),
+
+      saveToChild: (itemType) => (subPath) => (key, value) => this.saveToState(
+        (state) => {
+          let stateNode = state.modal[itemType].data;
+          Array.prototype.forEach.call( subPath, (nodeName) => {
+            stateNode = (nodeName in stateNode) ? stateNode[nodeName] : statNode;
+          });
+          return stateNode;
+        },
+        { [ key ]: value }
+      ),
+
       afterEdit: (itemType) => () => this.saveToState(
         (state) => {
           state.modal[itemType].show = false;
         }
       ),
+
       remove: (itemType) => (item) => {
         let id = false;
 
@@ -96,7 +119,17 @@ export default class Engine extends React.Component {
         );
 
         return id > -1;
-      }
+      },
+
+      options: (itemType) => () => this.state.store[itemType + 's'].cmap((item, id) => ({
+        'value': id,
+        'label': item.short('name')
+      })),
+
+      selectedOptions: (itemType) => (selectedIds) => selectedIds.cmap((id) => ({
+        'value': id,
+        'label': this.state.store[itemType + 's'][id].short('name')
+      }))
     };
 
     this.methods = {};
@@ -116,14 +149,34 @@ export default class Engine extends React.Component {
     );
 
     this.methods.state.setHover = (id, hover) => this.saveToState(
-        (state) => state.store.states[id],
-        {hover}
-      );
+      (state) => state.store.states[id],
+      {hover}
+    );
 
     this.methods.dragStateId = (id) => {
       this.setState({
       dragStateId: id
     });};
+
+    const pevStateOptions = this.methods.state.options;
+    this.methods.state.options = (sideName) => {
+      const transition = this.state.modal.transition;
+      let options = pevStateOptions(),
+        splice = [];
+
+      if (transition.show) {
+        const anotherSideName = this.anotherSide(sideName);
+
+        for ( let key in options ) {
+          if (options[key].value == transition.data[anotherSideName].state)
+          {
+            options.splice(key,1);
+          }
+        }
+      }
+
+      return options;
+    };
 
     itemTypes.forEach( (itemType) => {
       for (let method in this.methods[itemType]) {
@@ -136,6 +189,7 @@ export default class Engine extends React.Component {
 
   saveToState(statePath, values='') {
     let state;
+
     this.setState((prevState, props) => {
       state = statePath(prevState);
 
@@ -149,6 +203,10 @@ export default class Engine extends React.Component {
     });
 
     return state;
+  }
+
+  anotherSide(sideName) {
+    return sideName == 'start' ? 'finish' : 'start';
   }
 
   getKeyValueHash(data, propName) {
@@ -190,15 +248,20 @@ export default class Engine extends React.Component {
           afterEditHandler={methods.event.afterEdit} />
         <ActionForm show={modal.action.show}
           data={modal.action.data}
-          events={this.getKeyValueHash( store.events, 'name' )}
+          events={methods.event.options()}
+          selectedEvents={methods.event.selectedOptions(modal.action.show ? modal.action.data.events : [])}
           saveHandler={methods.action.save}
           afterEditHandler={methods.action.afterEdit} />
         <TransitionForm show={modal.transition.show}
           data={modal.transition.data}
-          states={this.getKeyValueHash( store.states, 'name' )}
-          events={this.getKeyValueHash( store.events, 'name' )}
-          actions={this.getKeyValueHash( store.actions, 'name' )}
+          startStates={methods.state.options('start')}
+          finishStates={methods.state.options('finish')}
+          stateHandler={(id) => store.states[id]}
+          events={methods.event.options()}
+          selectedStartEvents={methods.event.selectedOptions(modal.transition.show ? modal.transition.data.start.events : [])}
+          selectedFinishEvents={methods.event.selectedOptions(modal.transition.show ? modal.transition.data.finish.events : [])}
           saveHandler={methods.transition.save}
+          saveToChildHandler={methods.transition.saveToChild}
           afterEditHandler={methods.transition.afterEdit} />
       </div>
     );

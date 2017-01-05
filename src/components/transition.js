@@ -3,15 +3,16 @@ import StateModel from '../models/state.js';
 
 export default class Transition extends React.Component {
   render() {
-    const transition = this.props.data,
-      start = transition.start,
-      finish = transition.finish,
-      drawing = finish.state == null,
+    const {stateHandler} = this.props,
+      transition = this.props.data,
+      start = stateHandler( transition.start.state ),
+      finish = stateHandler( transition.finish.state ),
+      drawing = finish == null,
       {width, height} = StateModel.default;
-    let x1 = start.state.x + width/2,
-      y1 = start.state.y + height/2,
-      x2 = drawing ? finish.offset.x : finish.state.x + width/2,
-      y2 = drawing ? finish.offset.y : finish.state.y + height/2;
+    let x1 = start.x + width/2,
+      y1 = start.y + height/2,
+      x2 = drawing ? transition.finish.offset.x : finish.x + width/2,
+      y2 = drawing ? transition.finish.offset.y : finish.y + height/2;
 
       if ( Math.abs(y2 - y1 ) + width/2 > Math.abs(x2 - x1) + height/2 ) {
         const k = y1 > y2 ? 1 : -1;

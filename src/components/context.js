@@ -36,7 +36,7 @@ class Context extends React.Component {
   addTransitionHandler(addTransition) {
     return (stateId, e) => {
       let transition = addTransition();
-      transition.start.state = this.props.store.states[stateId];
+      transition.start.state = stateId;
       transition.finish.offset = this.currentOffset(e);
       this.setState({ transition });
       document.addEventListener('mousemove', this.documentMouseMove);
@@ -51,15 +51,15 @@ class Context extends React.Component {
 
       let hoverState = null;
       states.forEach( (state, id) => {
-        const hover = (state.x <= offset.x)
-          && (offset.x <=state.x + StateModel.default.width)
-          && (state.y <= offset.y)
-          && (offset.y <=state.y + StateModel.default.height)
-          && id != states.indexOf(this.state.transition.start.state);
-        const tmpHoverState = this.props.methods.state.setHover(id, hover);
+        const hover = state.x <= offset.x
+          && offset.x <=state.x + StateModel.default.width
+          && state.y <= offset.y
+          && offset.y <=state.y + StateModel.default.height
+          && id != this.state.transition.start.state;
+        this.props.methods.state.set(id, 'hover', hover);
 
         if (hover) {
-          hoverState = tmpHoverState;
+          hoverState = id;
         }
       } );
 
@@ -99,13 +99,13 @@ class Context extends React.Component {
         <State data={state} id={id} key={id}
           dragHandler={methods.state.drag}
           dragStateId={methods.dragStateId}
-          onDbClick={methods.dragStateId(id)}
           addTransitionHandler={this.addTransitionHandler(methods.transition.add).bind(this)}/>
       ) ),
 
       transitionArrows = store.transitions.cmap( (transition, id) => (
         <Transition data={transition} key={id}
-          editHandler={() => {methods.transition.edit(id); console.log('qqq');}}/>
+          editHandler={() => methods.transition.edit(id)}
+          stateHandler={methods.state.get} />
       ) );
 
     return (
