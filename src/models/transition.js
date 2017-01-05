@@ -7,13 +7,13 @@ export default class TransitionModel extends Model {
     this.start = {
       state: startState,
       events: [],
-      actions: []
+      condition: ''
     };
     this.finish = {
       offset: null,
       state: null,
       events: [],
-      actions: []
+      condition: ''
     };
   }
 }

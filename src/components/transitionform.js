@@ -22,7 +22,7 @@ export default class TransitionForm extends React.Component {
             <div className="left-side">
               <FormGroup controlId="TransitionStateSelectStart">
                 <ControlLabel>Start State</ControlLabel><br/>
-                <Select value={data.start} options={startStates}
+                <Select value={data.start.state} options={startStates}
                   onChange={(val) => saveToChildHandler(['start'])('state', val.value)} />
               </FormGroup>
               <FormGroup controlId="TransitionEventsSelectStart">
@@ -30,6 +30,11 @@ export default class TransitionForm extends React.Component {
                 <Select multi={true} value={selectedStartEvents} options={events}
                   onChange={(val) => saveToChildHandler(['start'])('events',
                     val.cmap( (el) => el.value ) )} />
+              </FormGroup>
+              <FormGroup controlId="ConditionStart">
+                <ControlLabel>Income Condition</ControlLabel>
+                <FormControl componentClass="textarea" placeholder="JavaScript Code Here..."
+                  value={data.start.condition} onChange={(e) => saveToChildHandler(['start'])('condition', e.target.value)} />
               </FormGroup>
             </div>
             <div className="right-side">

@@ -45,7 +45,7 @@ export default class Engine extends React.Component {
 
     itemTypes.forEach( (key) => {
       this.state.modal[key] = {
-        data: {},
+        data: itemFactory[key](),
         show: false
       };
     } );
