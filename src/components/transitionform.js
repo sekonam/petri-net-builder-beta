@@ -3,7 +3,7 @@ import Modal from './modal.js';
 import {Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 
 export default class TransitionForm extends React.Component {
-  onChangeActionEvents(actionEventIds, saveHandler) {
+/*  onChangeActionEvents(actionEventIds, saveHandler) {
     return (e) => {
         const value = parseInt(e.target.value),
           key = actionEventIds.indexOf(value);
@@ -14,7 +14,7 @@ export default class TransitionForm extends React.Component {
         }
         saveHandler('events', actionEventIds);
       }
-  }
+  }*/
 
   render() {
     const {data, saveHandler, events} = this.props,

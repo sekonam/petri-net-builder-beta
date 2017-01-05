@@ -99,6 +99,7 @@ class Context extends React.Component {
         <State data={state} id={id} key={id}
           dragHandler={methods.state.drag}
           dragStateId={methods.dragStateId}
+          onDbClick={methods.dragStateId(id)}
           addTransitionHandler={this.addTransitionHandler(methods.transition.add).bind(this)}/>
       ) ),
 
