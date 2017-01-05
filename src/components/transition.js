@@ -31,7 +31,7 @@ export default class Transition extends React.Component {
       y3 = (y1+y2)/2;
 
     return (
-      <g className='transition'>
+      <g className='transition' onClick={this.props.editHandler}>
         <line x1={x1} y1={y1} x2={x2} y2={y2} className='transition-line' />
         <circle cx={x3} cy={y3} r='15' className='transition-circle' />
         <circle cx={x2} cy={y2} r='2' className='transition-line' />

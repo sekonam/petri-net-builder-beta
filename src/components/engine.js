@@ -7,9 +7,10 @@ import ActionModel from '../models/action.js';
 import TransitionModel from '../models/transition.js';
 
 import Context from './context.js';
-import StateForm from './stateform.js'
-import EventForm from './eventform.js'
-import ActionForm from './actionform.js'
+import StateForm from './stateform.js';
+import EventForm from './eventform.js';
+import ActionForm from './actionform.js';
+import TransitionForm from './transitionform.js';
 import LeftMenuBlock from './leftmenublock.js';
 
 export default class Engine extends React.Component {
@@ -188,10 +189,17 @@ export default class Engine extends React.Component {
           saveHandler={methods.event.save}
           afterEditHandler={methods.event.afterEdit} />
         <ActionForm show={modal.action.show}
-          action={modal.action.data}
+          data={modal.action.data}
           events={this.getKeyValueHash( store.events, 'name' )}
           saveHandler={methods.action.save}
           afterEditHandler={methods.action.afterEdit} />
+        <TransitionForm show={modal.transition.show}
+          data={modal.transition.data}
+          states={this.getKeyValueHash( store.states, 'name' )}
+          events={this.getKeyValueHash( store.events, 'name' )}
+          actions={this.getKeyValueHash( store.actions, 'name' )}
+          saveHandler={methods.transition.save}
+          afterEditHandler={methods.transition.afterEdit} />
       </div>
     );
   }

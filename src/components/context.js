@@ -40,7 +40,7 @@ class Context extends React.Component {
       transition.finish.offset = this.currentOffset(e);
       this.setState({ transition });
       document.addEventListener('mousemove', this.documentMouseMove);
-      document.addEventListener('mouseup', this.documentMouseUp);
+      document.addEventListener('click', this.documentMouseUp, true);
     }
   }
 
@@ -77,7 +77,7 @@ class Context extends React.Component {
     }
 
     document.removeEventListener('mousemove', this.documentMouseMove);
-    document.removeEventListener('mouseup', this.documentMouseUp);
+    document.removeEventListener('click', this.documentMouseUp, true);
 
     this.props.store.states.forEach( (state, id) => {
       state.hover = false;
@@ -87,6 +87,8 @@ class Context extends React.Component {
       transition: null,
       haverState: null
     });
+
+//    e.stopPropagation();
   }
 
   render() {
@@ -101,7 +103,8 @@ class Context extends React.Component {
       ) ),
 
       transitionArrows = store.transitions.cmap( (transition, id) => (
-        <Transition data={transition} key={id} />
+        <Transition data={transition} key={id}
+          editHandler={() => {methods.transition.edit(id); console.log('qqq');}}/>
       ) );
 
     return (

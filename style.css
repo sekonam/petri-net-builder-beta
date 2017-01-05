@@ -63,3 +63,15 @@ svg {
 .transition-circle-text{
   fill:#000;
 }
+
+.columns {
+  overflow: hidden;
+}
+.left-side {
+  float:left;
+  width:50%;
+}
+.right-side {
+  float:right;
+  width: 50%;
+}
