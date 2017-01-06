@@ -17,6 +17,7 @@ export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
+//    localStorage.setItem('store', '');
 
     const itemTypes = [
         'state',
@@ -33,7 +34,7 @@ export default class Engine extends React.Component {
 
     this.state = {
       itemTypes: itemTypes,
-      store: new EngineModel,
+      store: new EngineModel(this.loadStore()),
       modal: {},
       leftMenuItems: [
         'state',
@@ -170,11 +171,6 @@ export default class Engine extends React.Component {
       {x,y}
     );
 
-/*    this.methods.state.setHover = (id, hover) => this.saveToState(
-      (state) => state.store.states.indexOfId(id),
-      {hover}
-    );*/
-
     this.methods.dragStateId = (id) => {
       this.setState({
         dragStateId: id
@@ -216,6 +212,19 @@ export default class Engine extends React.Component {
           action.events.splice(eventKey, 1);
         }
       } );
+
+      state.store.transitions.forEach( (transition) => {
+
+        [ 'start', 'finish' ].forEach( (name) => {
+          const data = transition[name].events,
+            eventKey = data.indexOf(eid);
+
+          if ( eventKey > -1 ) {
+            data.splice(eventKey, 1);
+          }
+        } );
+
+      } );
     } );
 
     itemTypes.forEach( (itemType) => {
@@ -225,6 +234,8 @@ export default class Engine extends React.Component {
     } );
 
     this.methods.dragStateId = this.methods.dragStateId.bind(this);
+
+    window.addEventListener( 'beforeunload', this.saveStore.bind(this) );
   }
 
   saveToState(statePath, values='') {
@@ -249,29 +260,27 @@ export default class Engine extends React.Component {
     return sideName == 'start' ? 'finish' : 'start';
   }
 
-  componentDidMount() {
+  loadStore() {
     if (typeof(Storage) !== "undefined") {
-      localStorage.setItem('store', '');
       const jsonStore = localStorage.getItem( 'store' );
 
       if (jsonStore) {
-        const store = JSON.parse( jsonStore );
-        this.setState( (prevState, props) => ({ store: new EngineModel(store) }) );
+        console.log(JSON.parse( jsonStore ));
+        return JSON.parse( jsonStore );
       }
     }
 
-    window.addEventListener( 'beforeunload', this.componentWillUnmount.bind(this) );
+    return null;
   }
 
-  componentWillUnmount() {
+  saveStore() {
     if (typeof(Storage) !== "undefined") {
       localStorage.setItem('store', JSON.stringify(this.state.store));
     }
-
-    window.removeEventListener( 'beforeunload', this.componentWillUnmount.bind(this) );
   }
 
   render() {
+    console.log(this.state.store);
     const
       modal = this.state.modal,
       store = this.state.store,

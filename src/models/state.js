@@ -5,16 +5,9 @@ export default class StateModel extends Model {
 
   constructor(params) {
     super();
-    this.init(StateModel.default, [
-      'name',
-      'start',
-      'finish',
-      'width',
-      'height',
-      'hover',
-    ]);
+    this.setPropValue( 'id', params, this.getId() );
 
-    [ 'name', 'start', 'finish' ].forEach( (name) => {
+    [ 'name', 'start', 'finish', 'hover' ].forEach( (name) => {
       this.setPropValue( name, params, StateModel.default[name] );
     } );
 

@@ -1,7 +1,11 @@
 class Model {
 
+  getId() {
+    return String.random(15);
+  }
+
   genId() {
-    this.id = String.random(15);
+    this.id = this.getId();
   }
 
   init(params, defaults) {
