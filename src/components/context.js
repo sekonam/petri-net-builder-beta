@@ -68,7 +68,6 @@ class Context extends React.Component {
   }
 
   documentMouseUp(e) {
-    console.log(this.state.transition,this.state.hoverState);
     if (this.state.transition) {
       if (this.state.hoverState) {
         this.state.transition.finish.state = this.state.hoverState;
@@ -108,7 +107,7 @@ class Context extends React.Component {
       ) );
 
     return (
-      <svg width="600" height="600" ref={ (svg) => { this.svg = svg; } }>
+      <svg width="800" height="600" ref={ (el) => { this.svg = el; } }>
         {stateRects}
         {transitionArrows}
       </svg>

@@ -5,12 +5,14 @@ import StateModel from '../models/state.js';
 import EventModel from '../models/event.js';
 import ActionModel from '../models/action.js';
 import TransitionModel from '../models/transition.js';
+import VarModel from '../models/VarModel.js';
 
 import Context from './context.js';
 import StateForm from './stateform.js';
 import EventForm from './eventform.js';
 import ActionForm from './actionform.js';
 import TransitionForm from './transitionform.js';
+import VarForm from './VarForm.js';
 import LeftMenuBlock from './leftmenublock.js';
 
 export default class Engine extends React.Component {
@@ -24,12 +26,14 @@ export default class Engine extends React.Component {
         'event',
         'action',
         'transition',
+        'var',
       ],
       itemFactory = {
         'state': () => new StateModel,
         'event': () => new EventModel,
         'action': () => new ActionModel,
-        'transition': () => new TransitionModel
+        'transition': () => new TransitionModel,
+        'var': () => new VarModel
       };
 
     this.state = {
@@ -40,6 +44,7 @@ export default class Engine extends React.Component {
         'state',
         'event',
         'action',
+        'var',
       ],
       dragStateId: null
     };
@@ -265,7 +270,6 @@ export default class Engine extends React.Component {
       const jsonStore = localStorage.getItem( 'store' );
 
       if (jsonStore) {
-        console.log(JSON.parse( jsonStore ));
         return JSON.parse( jsonStore );
       }
     }
@@ -280,7 +284,6 @@ export default class Engine extends React.Component {
   }
 
   render() {
-    console.log(this.state.store);
     const
       modal = this.state.modal,
       store = this.state.store,
@@ -331,6 +334,11 @@ export default class Engine extends React.Component {
           saveToChildHandler={methods.transition.saveToChild}
           afterEditHandler={methods.transition.afterEdit}
           removeHandler={methods.transition.remove} />
+        <VarForm show={modal.var.show}
+          data={modal.var.data}
+          saveHandler={methods.var.save}
+          afterEditHandler={methods.var.afterEdit}
+          removeHandler={methods.var.remove} />
       </div>
     );
   }

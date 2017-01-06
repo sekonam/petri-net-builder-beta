@@ -18,12 +18,14 @@
  */
 svg {
   overflow:hidden;
+  background-color:#e9e9e9;
+  margin-left:5px;
 }
 .state {
   cursor: move;
 }
 .state-rect {
-  fill:#eee;
+  fill:#ddd;
   stroke:#333;
   stroke-width:1px;
 }
