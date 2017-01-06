@@ -89,6 +89,14 @@ class Context extends React.Component {
 //    e.stopPropagation();
   }
 
+  svgWidth() {
+    return window.innerWidth - 200;
+  }
+
+  svgHeight() {
+    return window.innerHeight;
+  }
+
   render() {
     const store = this.props.store,
       methods = this.props.methods,
@@ -107,7 +115,7 @@ class Context extends React.Component {
       ) );
 
     return (
-      <svg width="800" height="600" ref={ (el) => { this.svg = el; } }>
+      <svg width={this.svgWidth()} height={this.svgHeight()} ref={ (el) => { this.svg = el; } }>
         {stateRects}
         {transitionArrows}
       </svg>
