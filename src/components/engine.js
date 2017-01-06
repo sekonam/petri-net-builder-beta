@@ -219,10 +219,11 @@ export default class Engine extends React.Component {
 
   componentDidMount() {
     if (typeof(Storage) !== "undefined") {
-      const store = JSON.parse( localStorage.getItem( 'store' ) );
-      console.log(store);
+//      localStorage.setItem('store', '');
+      const jsonStore = localStorage.getItem( 'store' );
 
-      if (store != null) {
+      if (jsonStore) {
+        const store = JSON.parse( jsonStore );
         this.setState( (prevState, props) => ({ store: new EngineModel(store) }) );
       }
     }

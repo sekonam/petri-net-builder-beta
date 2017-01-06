@@ -1,9 +1,9 @@
 import Model from './model.js';
 
 export default class EventModel extends Model {
-  constructor() {
+  constructor(params = null) {
     super();
-    this.init(EventModel.default);
+    this.init(params, EventModel.default);
   }
 }
 

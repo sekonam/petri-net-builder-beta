@@ -1,5 +1,17 @@
 class Model {
-  init(params) {
+
+  init(params, defaults) {
+    console.log(params, typeof params);
+    if (typeof params == 'object' && params && Object.keys(params).length > 0) {
+      console.log('oopss');
+      this.initProps(params);
+    } else {
+      console.log(defaults);
+      this.initProps(defaults);
+    }
+  }
+
+  initProps(params) {
     if ( typeof params != 'undefined') {
       Object.keys(params).forEach( (name) => {
         this[name] = name in params ? params[name] : null;

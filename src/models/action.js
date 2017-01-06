@@ -4,12 +4,7 @@ export default class ActionModel extends Model {
 
   constructor(params) {
     super();
-
-    if (typeof params == 'object' && Object.keys(params).length > 0) {
-      this.init(params);
-    } else {
-      this.init(ActionModel.default);
-    }
+    this.init(params, ActionModel.default);
   }
 
 }

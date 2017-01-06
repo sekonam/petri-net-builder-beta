@@ -1,26 +1,30 @@
 import Model from './model.js';
 import StateModel from './state.js';
 import ActionModel from './action.js';
+import EventModel from './event.js';
+import TransitionModel from './transition.js';
 
 export default class EngineModel extends Model {
   constructor(store = null) {
     super();
-    const entities = ['states', 'actions', 'events', 'transitions'];
-    entities.forEach( (name) => { this[name] = []; } );
+    const entities = ['state', 'action', 'event', 'transition'];
+    entities.forEach( (name) => { this[name + 's'] = []; } );
 
     if (store != null) {
-      if (typeof store.states != 'undefined') {
-        store.states.forEach( (state, id) => {
-          this.states[id] = new StateModel(state);
-        } );
-      }
+      const entityFactories = {
+        state: (params) => new StateModel(params),
+        action: (params) => new ActionModel(params),
+        event: (params) => new EventModel(params),
+        transition: (params) => new TransitionModel(params)
+      };
 
-      if (typeof store.actions != 'undefined') {
-        console.log(store.actions);
-        store.actions.forEach( (action, id) => {
-          this.actions[id] = new ActionModel(action);
-        } );
-      }
+      entities.forEach( (name) => {
+        if (typeof store[name +'s'] != 'undefined') {
+          store[name +'s'].forEach( (item, id) => {
+            this[name +'s'][id] = entityFactories[name](item);
+          } );
+        }
+      } );
     }
   }
 }

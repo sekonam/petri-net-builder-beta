@@ -1,19 +1,24 @@
 import Model from './model.js';
 
 export default class TransitionModel extends Model {
-  constructor(startState) {
+  constructor(params) {
     super();
-    this.name = 'Transition name';
-    this.start = {
-      state: startState,
-      events: [],
-      condition: ''
-    };
-    this.finish = {
-      offset: null,
-      state: null,
-      events: [],
-      condition: ''
-    };
+
+    if (typeof params == 'object' && Object.keys(params).length > 0) {
+      this.initProps(params);
+    } else {
+      this.name = 'Transition name';
+      this.start = {
+        state: null,
+        events: [],
+        condition: ''
+      };
+      this.finish = {
+        offset: null,
+        state: null,
+        events: [],
+        condition: ''
+      };
+    }
   }
 }
