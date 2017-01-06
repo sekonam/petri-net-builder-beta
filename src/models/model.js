@@ -1,12 +1,18 @@
 class Model {
-  init(values, keys = null) {
-    if (keys == null) {
-      keys = Object.keys(values);
+  init(params) {
+    if ( typeof params != 'undefined') {
+      Object.keys(params).forEach( (name) => {
+        this[name] = name in params ? params[name] : null;
+      } );
+    }
+  }
+
+  value(obj, name) {
+    if (typeof obj != 'undefined') {
+      return name in obj ? obj[name] : null;
     }
 
-    keys.forEach( (key) => {
-      this[key] = values[key];
-    } );
+    return null;
   }
 
   short(propName, maxLength = Model.maxShortLength) {
@@ -17,6 +23,7 @@ class Model {
 
     return '';
   }
+
 }
 
 Model.maxShortLength = 20;

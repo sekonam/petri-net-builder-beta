@@ -148,10 +148,10 @@ export default class Engine extends React.Component {
       {x,y}
     );
 
-    this.methods.state.setHover = (id, hover) => this.saveToState(
+/*    this.methods.state.setHover = (id, hover) => this.saveToState(
       (state) => state.store.states[id],
       {hover}
-    );
+    );*/
 
     this.methods.dragStateId = (id) => {
       this.setState({
@@ -215,6 +215,27 @@ export default class Engine extends React.Component {
       (element, id) => leftMenuData[id] = element.short(propName)
     );
     return leftMenuData;
+  }
+
+  componentDidMount() {
+    if (typeof(Storage) !== "undefined") {
+      const store = JSON.parse( localStorage.getItem( 'store' ) );
+      console.log(store);
+
+      if (store != null) {
+        this.setState( (prevState, props) => ({ store: new EngineModel(store) }) );
+      }
+    }
+
+    window.addEventListener( 'beforeunload', this.componentWillUnmount.bind(this) );
+  }
+
+  componentWillUnmount() {
+    if (typeof(Storage) !== "undefined") {
+      localStorage.setItem('store', JSON.stringify(this.state.store));
+    }
+
+    window.removeEventListener( 'beforeunload', this.componentWillUnmount.bind(this) );
   }
 
   render() {

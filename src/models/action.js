@@ -1,10 +1,17 @@
 import Model from './model.js';
 
 export default class ActionModel extends Model {
-  constructor() {
+
+  constructor(params) {
     super();
-    this.init(ActionModel.default);
+
+    if (typeof params == 'object' && Object.keys(params).length > 0) {
+      this.init(params);
+    } else {
+      this.init(ActionModel.default);
+    }
   }
+
 }
 
 ActionModel.default = {

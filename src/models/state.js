@@ -2,7 +2,8 @@ import Model from './model.js';
 import {PropTypes} from 'react';
 
 export default class StateModel extends Model {
-  constructor() {
+
+  constructor(params) {
     super();
     this.init(StateModel.default, [
       'name',
@@ -13,16 +14,22 @@ export default class StateModel extends Model {
       'hover',
     ]);
 
-    ['x','y'].forEach((value) => {
-      this[value] = StateModel.default[value] + StateModel.count * StateModel.default.step;
+    [ 'name', 'start', 'finish' ].forEach( (name) => {
+      this.setPropValue( name, params, StateModel.default[name] );
+    } );
+
+    [ 'x', 'y' ].forEach( (name) => {
+      this.setPropValue( name, params,
+        StateModel.default[name] + StateModel.count * StateModel.default.step );
     });
 
     StateModel.count++;
   }
 
-  shortName() {
-    return this.short('name');
+  setPropValue( name, params, defaultValue ) {
+    this[name] = this.value(params, name) != null ? params[name] : defaultValue;
   }
+
 }
 
 StateModel.count = 0;
