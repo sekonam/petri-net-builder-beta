@@ -38,6 +38,22 @@ export default class TransitionForm extends React.Component {
               </FormGroup>
             </div>
             <div className="right-side">
+              <FormGroup controlId="TransitionStateSelectFinish">
+                <ControlLabel>Finish State</ControlLabel><br/>
+                <Select value={data.finish.state} options={finishStates}
+                  onChange={(val) => saveToChildHandler(['finish'])('state', val.value)} />
+              </FormGroup>
+              <FormGroup controlId="TransitionEventsSelectFinish">
+                <ControlLabel>Outcome Events</ControlLabel><br/>
+                <Select multi={true} value={selectedFinishEvents} options={events}
+                  onChange={(val) => saveToChildHandler(['finish'])('events',
+                    val.cmap( (el) => el.value ) )} />
+              </FormGroup>
+              <FormGroup controlId="ConditionFinish">
+                <ControlLabel>Outcome Condition</ControlLabel>
+                <FormControl componentClass="textarea" placeholder="JavaScript Code Here..."
+                  value={data.finish.condition} onChange={(e) => saveToChildHandler(['finish'])('condition', e.target.value)} />
+              </FormGroup>
 
             </div>
           </div>

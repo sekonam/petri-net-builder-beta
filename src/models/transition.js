@@ -7,6 +7,7 @@ export default class TransitionModel extends Model {
     if (typeof params == 'object' && Object.keys(params).length > 0) {
       this.initProps(params);
     } else {
+      this.genId();
       this.name = 'Transition name';
       this.start = {
         state: null,

@@ -52,13 +52,27 @@ export default class Engine extends React.Component {
 
     const customActions = {
 
-      get: (itemType) => (id) => this.state.store[itemType + 's'].find(
+      get: (itemType) => (id) => {return this.state.store[itemType + 's'].find(
         (el) => el.id == id
-      ),
+      )},
 
       set: (itemType) => (id, key, value) => this.saveToState(
         (state) => state.store[itemType + 's'].indexOfId(id),
         { [ key ]: value }
+      ),
+
+      each: (itemType) => (params) => this.saveToState(
+        (state) => {
+          state.store[itemType + 's'].forEach(
+            (el) => {
+              if (typeof params == 'object' && params) {
+                for (let name in params) {
+                  el[name] = params[name];
+                }
+              }
+            }
+          );
+        }
       ),
 
       add: (itemType) => {
@@ -77,7 +91,7 @@ export default class Engine extends React.Component {
       edit: (itemType) => {
         const storageName = itemType + 's';
         return (id) => this.saveToState(
-          (state) => {console.log(this.state.store[storageName].indexOfId(id));return state.modal[itemType]},
+          (state) => state.modal[itemType],
           {
             data: this.state.store[storageName].indexOfId(id),
             show: true
@@ -115,7 +129,7 @@ export default class Engine extends React.Component {
               key = data.findIndexById(id);
 
             if (key > -1) {
-              data.splice(id, 1);
+              data.splice(key, 1);
 
               if (callback) {
                 callback.call(this, state, id);
@@ -167,10 +181,9 @@ export default class Engine extends React.Component {
       });
     };
 
-    const pevStateOptions = this.methods.state.options;
-    this.methods.state.options = (sideName) => {
+    this.methods.state.optionsForTransition = (sideName) => {
       const transition = this.state.modal.transition;
-      let options = pevStateOptions(),
+      let options = this.methods.state.options(),
         splice = [];
 
       if (transition.show) {
@@ -299,8 +312,8 @@ export default class Engine extends React.Component {
           removeHandler={methods.action.remove} />
         <TransitionForm show={modal.transition.show}
           data={modal.transition.data}
-          startStates={methods.state.options('start')}
-          finishStates={methods.state.options('finish')}
+          startStates={methods.state.optionsForTransition('start')}
+          finishStates={methods.state.optionsForTransition('finish')}
           stateHandler={(id) => store.states.indexOfId(id)}
           events={methods.event.options()}
           selectedStartEvents={methods.event.selectedOptions(modal.transition.show ? modal.transition.data.start.events : [])}

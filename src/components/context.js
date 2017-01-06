@@ -20,7 +20,7 @@ class Context extends React.Component {
 
   componentDidMount() {
     const svgPos = this.svg.getBoundingClientRect();
-    this.state.svgOffset = {
+    this.svgOffset = {
       x: svgPos.left,
       y: svgPos.top
     };
@@ -28,8 +28,8 @@ class Context extends React.Component {
 
   currentOffset(e) {
     return {
-      x: e.pageX - this.state.svgOffset.x,
-      y: e.pageY - this.state.svgOffset.y
+      x: e.pageX - this.svgOffset.x,
+      y: e.pageY - this.svgOffset.y
     };
   }
 
@@ -68,25 +68,24 @@ class Context extends React.Component {
   }
 
   documentMouseUp(e) {
-    if (this.state.transition != null) {
-      if (this.state.hoverState != null) {
+    console.log(this.state.transition,this.state.hoverState);
+    if (this.state.transition) {
+      if (this.state.hoverState) {
         this.state.transition.finish.state = this.state.hoverState;
       } else {
         this.props.methods.transition.remove(this.state.transition.id);
       }
+
+      document.removeEventListener('mousemove', this.documentMouseMove);
+      document.removeEventListener('click', this.documentMouseUp, true);
+
+      this.props.methods.state.each( {hover: false} );
+
+      this.setState({
+        transition: null,
+        haverState: null
+      });
     }
-
-    document.removeEventListener('mousemove', this.documentMouseMove);
-    document.removeEventListener('click', this.documentMouseUp, true);
-
-    this.props.store.states.forEach( (state) => {
-      state.hover = false;
-    } );
-
-    this.setState({
-      transition: null,
-      haverState: null
-    });
 
 //    e.stopPropagation();
   }

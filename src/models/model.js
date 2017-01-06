@@ -1,6 +1,6 @@
 class Model {
 
-  constructor() {
+  genId() {
     this.id = String.random(15);
   }
 
@@ -17,6 +17,10 @@ class Model {
       Object.keys(params).forEach( (name) => {
         this[name] = name in params ? params[name] : null;
       } );
+
+      if (!this.id) {
+        this.genId();
+      }
     }
   }
 
