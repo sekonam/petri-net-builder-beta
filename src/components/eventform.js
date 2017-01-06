@@ -5,7 +5,9 @@ import {Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 export default class EventForm extends React.Component {
   render() {
     return (
-      <Modal title={'Event: ' + this.props.data.name} show={this.props.show} hide={this.props.afterEditHandler}>
+      <Modal title={'Event: ' + this.props.data.name} show={this.props.show}
+        hide={this.props.afterEditHandler}
+        remove={() => { this.props.removeHandler(this.props.dataId); }} >
         <Form>
           <FormGroup controlId="NameInput">
             <ControlLabel>Event Name</ControlLabel>

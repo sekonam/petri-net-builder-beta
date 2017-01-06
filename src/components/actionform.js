@@ -10,7 +10,7 @@ export default class ActionForm extends React.Component {
 
     return (
       <Modal title={'Action: ' + data.name} show={this.props.show}
-        hide={this.props.afterEditHandler}>
+        hide={this.props.afterEditHandler} remove={() => { this.props.removeHandler(this.props.dataId); }}>
         <Form>
           <FormGroup controlId="NameInput">
             <ControlLabel>Action Name</ControlLabel>

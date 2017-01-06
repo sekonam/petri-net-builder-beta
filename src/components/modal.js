@@ -14,6 +14,10 @@ export default class ModalDialog extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
+          <Button onClick={() => {
+            this.props.remove();
+            this.props.hide();
+          }}>Delete</Button>
           <Button onClick={this.props.hide}>Close</Button>
         </Modal.Footer>
 

@@ -45,6 +45,7 @@ export default class Engine extends React.Component {
 
     itemTypes.forEach( (key) => {
       this.state.modal[key] = {
+        id: null,
         data: itemFactory[key](),
         show: false
       };
@@ -77,6 +78,7 @@ export default class Engine extends React.Component {
         return (id) => this.saveToState(
           (state) => state.modal[itemType],
           {
+            id,
             data: this.state.store[storageName][id],
             show: true
           }
@@ -105,20 +107,21 @@ export default class Engine extends React.Component {
         }
       ),
 
-      remove: (itemType) => (item) => {
-        let id = false;
+      remove: (itemType, callback = null) => (id) => {
 
         this.saveToState(
           (state) => {
-            id = state.store[itemType + 's'].indexOf(item);
-            if (id > -1) {
-              delete state.store[itemType + 's'][id];
+            delete state.store[itemType + 's'][id];
+
+            if (callback) {
+              callback.call(this, state, id);
             }
+
             return state;
           }
         );
 
-        return id > -1;
+        return id;
       },
 
       options: (itemType) => () => this.state.store[itemType + 's'].cmap((item, id) => ({
@@ -126,10 +129,10 @@ export default class Engine extends React.Component {
         'label': item.short('name')
       })),
 
-      selectedOptions: (itemType) => (selectedIds) => selectedIds.cmap((id) => ({
+      selectedOptions: (itemType) => (selectedIds) => {console.log(selectedIds,this.state.store.events);return selectedIds.cmap((id) => ({
         'value': id,
         'label': this.state.store[itemType + 's'][id].short('name')
-      }))
+      }))}
     };
 
     this.methods = {};
@@ -177,6 +180,27 @@ export default class Engine extends React.Component {
 
       return options;
     };
+
+    this.methods.state.remove = customActions.remove('state', (state, sid) => {
+      state.store.transitions.forEach( (transition, tid) => {
+        if (transition.start.state == sid || transition.finish.state == sid) {
+          state.store.transitions.splice(tid, 1);
+        }
+      } );
+    } );
+
+    this.methods.event.remove = customActions.remove('event', (state, eid) => {
+      console.log(state.store.actions);
+      state.store.actions.forEach( (action, aid) => {
+        const eventKey = action.events.indexOf(eid);
+
+console.log(action, eventKey);
+        if ( eventKey > -1 ) {
+          console.log('sdfsd',action.events.splice(eventKey, 1));
+          console.log(action);
+        }
+      } );
+    } );
 
     itemTypes.forEach( (itemType) => {
       for (let method in this.methods[itemType]) {
@@ -261,20 +285,27 @@ export default class Engine extends React.Component {
         </div>
         <Context store={store} methods={methods} />
         <StateForm show={modal.state.show}
+          dataId={modal.state.id}
           data={modal.state.data}
           saveHandler={methods.state.save}
-          afterEditHandler={methods.state.afterEdit} />
+          afterEditHandler={methods.state.afterEdit}
+          removeHandler={methods.state.remove} />
         <EventForm show={modal.event.show}
+          dataId={modal.event.id}
           data={modal.event.data}
           saveHandler={methods.event.save}
-          afterEditHandler={methods.event.afterEdit} />
+          afterEditHandler={methods.event.afterEdit}
+          removeHandler={methods.event.remove} />
         <ActionForm show={modal.action.show}
+          dataId={modal.action.id}
           data={modal.action.data}
           events={methods.event.options()}
           selectedEvents={methods.event.selectedOptions(modal.action.show ? modal.action.data.events : [])}
           saveHandler={methods.action.save}
-          afterEditHandler={methods.action.afterEdit} />
+          afterEditHandler={methods.action.afterEdit}
+          removeHandler={methods.action.remove} />
         <TransitionForm show={modal.transition.show}
+          dataId={modal.transition.id}
           data={modal.transition.data}
           startStates={methods.state.options('start')}
           finishStates={methods.state.options('finish')}
@@ -284,7 +315,8 @@ export default class Engine extends React.Component {
           selectedFinishEvents={methods.event.selectedOptions(modal.transition.show ? modal.transition.data.finish.events : [])}
           saveHandler={methods.transition.save}
           saveToChildHandler={methods.transition.saveToChild}
-          afterEditHandler={methods.transition.afterEdit} />
+          afterEditHandler={methods.transition.afterEdit}
+          removeHandler={methods.transition.remove} />
       </div>
     );
   }

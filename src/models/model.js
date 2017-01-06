@@ -1,12 +1,9 @@
 class Model {
 
   init(params, defaults) {
-    console.log(params, typeof params);
     if (typeof params == 'object' && params && Object.keys(params).length > 0) {
-      console.log('oopss');
       this.initProps(params);
     } else {
-      console.log(defaults);
       this.initProps(defaults);
     }
   }
