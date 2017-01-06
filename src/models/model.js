@@ -1,5 +1,9 @@
 class Model {
 
+  constructor() {
+    this.id = String.random(15);
+  }
+
   init(params, defaults) {
     if (typeof params == 'object' && params && Object.keys(params).length > 0) {
       this.initProps(params);

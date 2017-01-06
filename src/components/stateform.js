@@ -6,7 +6,7 @@ export default class StateForm extends React.Component {
   render() {
     return (
       <Modal title={'State: ' + this.props.data.name} show={this.props.show}
-        hide={this.props.afterEditHandler} remove={() => { this.props.removeHandler(this.props.dataId); }}>
+        hide={this.props.afterEditHandler} remove={() => { this.props.removeHandler(this.props.data.id); }}>
         <Form>
           <FormGroup>
             <ControlLabel>State Name</ControlLabel>

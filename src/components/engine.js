@@ -45,7 +45,6 @@ export default class Engine extends React.Component {
 
     itemTypes.forEach( (key) => {
       this.state.modal[key] = {
-        id: null,
         data: itemFactory[key](),
         show: false
       };
@@ -53,10 +52,12 @@ export default class Engine extends React.Component {
 
     const customActions = {
 
-      get: (itemType) => (id) => this.state.store[itemType + 's'][id],
+      get: (itemType) => (id) => this.state.store[itemType + 's'].find(
+        (el) => el.id == id
+      ),
 
       set: (itemType) => (id, key, value) => this.saveToState(
-        (state) => state.store[itemType + 's'][id],
+        (state) => state.store[itemType + 's'].indexOfId(id),
         { [ key ]: value }
       ),
 
@@ -76,10 +77,9 @@ export default class Engine extends React.Component {
       edit: (itemType) => {
         const storageName = itemType + 's';
         return (id) => this.saveToState(
-          (state) => state.modal[itemType],
+          (state) => {console.log(this.state.store[storageName].indexOfId(id));return state.modal[itemType]},
           {
-            id,
-            data: this.state.store[storageName][id],
+            data: this.state.store[storageName].indexOfId(id),
             show: true
           }
         );
@@ -111,10 +111,15 @@ export default class Engine extends React.Component {
 
         this.saveToState(
           (state) => {
-            delete state.store[itemType + 's'][id];
+            const data = state.store[itemType + 's'],
+              key = data.findIndexById(id);
 
-            if (callback) {
-              callback.call(this, state, id);
+            if (key > -1) {
+              data.splice(id, 1);
+
+              if (callback) {
+                callback.call(this, state, id);
+              }
             }
 
             return state;
@@ -124,15 +129,15 @@ export default class Engine extends React.Component {
         return id;
       },
 
-      options: (itemType) => () => this.state.store[itemType + 's'].cmap((item, id) => ({
-        'value': id,
+      options: (itemType) => () => this.state.store[itemType + 's'].cmap((item) => ({
+        'value': item.id,
         'label': item.short('name')
       })),
 
-      selectedOptions: (itemType) => (selectedIds) => {console.log(selectedIds,this.state.store.events);return selectedIds.cmap((id) => ({
+      selectedOptions: (itemType) => (selectedIds) => selectedIds.cmap((id) => ({
         'value': id,
-        'label': this.state.store[itemType + 's'][id].short('name')
-      }))}
+        'label': this.state.store[itemType + 's'].indexOfId(id).short('name')
+      }))
     };
 
     this.methods = {};
@@ -147,19 +152,20 @@ export default class Engine extends React.Component {
     }
 
     this.methods.state.drag = (id,x,y) => this.saveToState(
-      (state) => state.store.states[id],
+      (state) => state.store.states.indexOfId(id),
       {x,y}
     );
 
 /*    this.methods.state.setHover = (id, hover) => this.saveToState(
-      (state) => state.store.states[id],
+      (state) => state.store.states.indexOfId(id),
       {hover}
     );*/
 
     this.methods.dragStateId = (id) => {
       this.setState({
-      dragStateId: id
-    });};
+        dragStateId: id
+      });
+    };
 
     const pevStateOptions = this.methods.state.options;
     this.methods.state.options = (sideName) => {
@@ -190,14 +196,11 @@ export default class Engine extends React.Component {
     } );
 
     this.methods.event.remove = customActions.remove('event', (state, eid) => {
-      console.log(state.store.actions);
-      state.store.actions.forEach( (action, aid) => {
+      state.store.actions.forEach( (action) => {
         const eventKey = action.events.indexOf(eid);
 
-console.log(action, eventKey);
         if ( eventKey > -1 ) {
-          console.log('sdfsd',action.events.splice(eventKey, 1));
-          console.log(action);
+          action.events.splice(eventKey, 1);
         }
       } );
     } );
@@ -233,17 +236,9 @@ console.log(action, eventKey);
     return sideName == 'start' ? 'finish' : 'start';
   }
 
-  getKeyValueHash(data, propName) {
-    let leftMenuData = [];
-    data.forEach(
-      (element, id) => leftMenuData[id] = element.short(propName)
-    );
-    return leftMenuData;
-  }
-
   componentDidMount() {
     if (typeof(Storage) !== "undefined") {
-//      localStorage.setItem('store', '');
+      localStorage.setItem('store', '');
       const jsonStore = localStorage.getItem( 'store' );
 
       if (jsonStore) {
@@ -269,14 +264,15 @@ console.log(action, eventKey);
       store = this.state.store,
       methods = this.methods,
 
-      leftMenuBlocks = this.state.leftMenuItems.map( (itemType, id) => (
-        <LeftMenuBlock key={id}
+      leftMenuBlocks = this.state.leftMenuItems.map( (itemType, key) => {
+        return (
+        <LeftMenuBlock key={key}
           itemName={itemType}
           activeId={itemType == 'state' ? this.state.dragStateId : ''}
-          data={this.getKeyValueHash( store[itemType + 's'], 'name' )}
+          data={methods[itemType].options()}
           editHandler={methods[itemType].edit}
           addHandler={methods[itemType].add}/>
-      ));
+      )});
 
     return (
       <div className="engine">
@@ -285,19 +281,16 @@ console.log(action, eventKey);
         </div>
         <Context store={store} methods={methods} />
         <StateForm show={modal.state.show}
-          dataId={modal.state.id}
           data={modal.state.data}
           saveHandler={methods.state.save}
           afterEditHandler={methods.state.afterEdit}
           removeHandler={methods.state.remove} />
         <EventForm show={modal.event.show}
-          dataId={modal.event.id}
           data={modal.event.data}
           saveHandler={methods.event.save}
           afterEditHandler={methods.event.afterEdit}
           removeHandler={methods.event.remove} />
         <ActionForm show={modal.action.show}
-          dataId={modal.action.id}
           data={modal.action.data}
           events={methods.event.options()}
           selectedEvents={methods.event.selectedOptions(modal.action.show ? modal.action.data.events : [])}
@@ -305,11 +298,10 @@ console.log(action, eventKey);
           afterEditHandler={methods.action.afterEdit}
           removeHandler={methods.action.remove} />
         <TransitionForm show={modal.transition.show}
-          dataId={modal.transition.id}
           data={modal.transition.data}
           startStates={methods.state.options('start')}
           finishStates={methods.state.options('finish')}
-          stateHandler={(id) => store.states[id]}
+          stateHandler={(id) => store.states.indexOfId(id)}
           events={methods.event.options()}
           selectedStartEvents={methods.event.selectedOptions(modal.transition.show ? modal.transition.data.start.events : [])}
           selectedFinishEvents={methods.event.selectedOptions(modal.transition.show ? modal.transition.data.finish.events : [])}

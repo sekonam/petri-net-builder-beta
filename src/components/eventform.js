@@ -7,7 +7,7 @@ export default class EventForm extends React.Component {
     return (
       <Modal title={'Event: ' + this.props.data.name} show={this.props.show}
         hide={this.props.afterEditHandler}
-        remove={() => { this.props.removeHandler(this.props.dataId); }} >
+        remove={() => { this.props.removeHandler(this.props.data.id); }} >
         <Form>
           <FormGroup controlId="NameInput">
             <ControlLabel>Event Name</ControlLabel>

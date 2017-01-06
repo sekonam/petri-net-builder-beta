@@ -50,16 +50,16 @@ class Context extends React.Component {
         states = this.props.store.states;
 
       let hoverState = null;
-      states.forEach( (state, id) => {
+      states.forEach( (state) => {
         const hover = state.x <= offset.x
           && offset.x <=state.x + StateModel.default.width
           && state.y <= offset.y
           && offset.y <=state.y + StateModel.default.height
-          && id != this.state.transition.start.state;
-        this.props.methods.state.set(id, 'hover', hover);
+          && state.id != this.state.transition.start.state;
+        this.props.methods.state.set(state.id, 'hover', hover);
 
         if (hover) {
-          hoverState = id;
+          hoverState = state.id;
         }
       } );
 
@@ -72,14 +72,14 @@ class Context extends React.Component {
       if (this.state.hoverState != null) {
         this.state.transition.finish.state = this.state.hoverState;
       } else {
-        this.props.methods.transition.remove(this.state.transition);
+        this.props.methods.transition.remove(this.state.transition.id);
       }
     }
 
     document.removeEventListener('mousemove', this.documentMouseMove);
     document.removeEventListener('click', this.documentMouseUp, true);
 
-    this.props.store.states.forEach( (state, id) => {
+    this.props.store.states.forEach( (state) => {
       state.hover = false;
     } );
 
@@ -96,7 +96,7 @@ class Context extends React.Component {
       methods = this.props.methods,
 
       stateRects = store.states.cmap( (state, id) => (
-        <State data={state} id={id} key={id}
+        <State data={state} id={state.id} key={id}
           dragHandler={methods.state.drag}
           dragStateId={methods.dragStateId}
           addTransitionHandler={this.addTransitionHandler(methods.transition.add).bind(this)}/>
@@ -104,7 +104,7 @@ class Context extends React.Component {
 
       transitionArrows = store.transitions.cmap( (transition, id) => (
         <Transition data={transition} key={id}
-          editHandler={() => methods.transition.edit(id)}
+          editHandler={() => methods.transition.edit(transition.id)}
           stateHandler={methods.state.get} />
       ) );
 

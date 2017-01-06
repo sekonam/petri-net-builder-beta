@@ -20,8 +20,8 @@ export default class EngineModel extends Model {
 
       entities.forEach( (name) => {
         if (typeof store[name +'s'] != 'undefined') {
-          store[name +'s'].forEach( (item, id) => {
-            this[name +'s'][id] = entityFactories[name](item);
+          store[name +'s'].forEach( (item) => {
+            this[name +'s'].push( entityFactories[name](item) );
           } );
         }
       } );

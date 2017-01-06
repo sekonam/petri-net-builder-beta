@@ -18,11 +18,10 @@ class LeftMenuElement extends React.Component {
 export default class LeftMenuBlock extends React.Component {
   render() {
     const {data, itemName, activeId} = this.props,
-      buttons = data.length == 0 ? [] : data.map( (text, key) =>
-        <LeftMenuElement clickHandler={() => { this.props.editHandler(key) }}
-          text={text} key={key} style={activeId === key ? 'info' : 'default'} />
+      buttons = data.cmap( (el) =>
+        <LeftMenuElement clickHandler={() => { this.props.editHandler(el.value) }}
+          text={el.label} key={el.value} style={activeId === el.value ? 'info' : 'default'} />
       );
-
     return (
       <div className="left-menu-block">
         <h3>{itemName.ucfirst() + 's'}</h3>
