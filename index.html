@@ -21,18 +21,6 @@
   <div id="root">
   </div>
   <script>
-  var a = [1,2,3,2,5];
-  function f(a,val) {
-    a.forEach((v,k) =>{
-      console.log(v);
-      if (v == val) {
-        a.splice(k,1);
-        f(a,val);
-      }
-    });
-  }
-  f(a,2);
-  console.log(a);
   </script>
   <script src="dist/bundle.js"></script>
 </body>
