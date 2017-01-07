@@ -22,3 +22,13 @@ Array.prototype.indexOfId = function (id) {
 Array.prototype.findIndexById = function (id) {
   return this.findIndex( (el) => el.id == id );
 };
+Array.prototype.spliceRecurcive = function (findFunc) {
+  let count = 0;
+
+  for( let key = this.findIndex(findFunc); key > -1; key = this.findIndex(findFunc) ) {
+    this.splice( key, 1 );
+    count ++;
+  }
+
+  return count;
+}

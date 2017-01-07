@@ -202,11 +202,9 @@ export default class Engine extends React.Component {
     };
 
     this.methods.state.remove = customActions.remove('state', (state, sid) => {
-      state.store.transitions.forEach( (transition, tid) => {
-        if (transition.start.state == sid || transition.finish.state == sid) {
-          state.store.transitions.splice(tid, 1);
-        }
-      } );
+      state.store.transitions.spliceRecurcive(
+        (transition) => (transition.start.state == sid || transition.finish.state == sid)
+      );
     } );
 
     this.methods.event.remove = customActions.remove('event', (state, eid) => {
