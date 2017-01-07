@@ -12,13 +12,22 @@ class Context extends React.Component {
     super(props);
     this.state = {
       transition: null,
-      hoverState: null
+      hoverState: null,
+      documentSize: {
+        width: 0,
+        height: 0
+      }
     };
     this.documentMouseMove = this.documentMouseMove.bind(this);
     this.documentMouseUp = this.documentMouseUp.bind(this);
   }
 
   componentDidMount() {
+    this.setState( { documentSize: {
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight
+    } } );
+
     const svgPos = this.svg.getBoundingClientRect();
     this.svgOffset = {
       x: svgPos.left,
@@ -90,11 +99,11 @@ class Context extends React.Component {
   }
 
   svgWidth() {
-    return window.innerWidth - 200;
+    return Math.max( 0, this.state.documentSize.width - 190 );
   }
 
   svgHeight() {
-    return window.innerHeight;
+    return Math.max( 0, this.state.documentSize.height - 20 );
   }
 
   render() {
@@ -115,7 +124,9 @@ class Context extends React.Component {
       ) );
 
     return (
-      <svg width={this.svgWidth()} height={this.svgHeight()} ref={ (el) => { this.svg = el; } }>
+      <svg width={ this.svgWidth() }
+        height={ this.svgHeight() }
+        ref={ (el) => { this.svg = el; } }>
         {stateRects}
         {transitionArrows}
       </svg>

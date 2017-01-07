@@ -1,3 +1,10 @@
+body {
+  background-color:#000;
+  color:#aaa;
+}
+
+/* orange: #f0ad4e */
+
 /*
  * Left menu
  */
@@ -17,53 +24,71 @@
  * SVG workflow 2D context
  */
 svg {
+  margin:10px 5px 5px;
   overflow:hidden;
-  background-color:#f5f5ff;
-  margin-left:5px;
-}
-.state {
-  cursor: move;
-}
-.state-rect {
-  fill:#ddd;
-  stroke:#333;
-  stroke-width:1px;
-}
-.state .transition-create {
-  cursor: pointer;
+  background-color:#aaa;
+  opacity:1;
+  border:1px solid #fff;
 }
 
-.transition-create-text {
+.state {
+  cursor: move;
+  opacity:1;
+}
+.state-rect {
   fill:#000;
+  stroke:#fff;
+  stroke-width:1;
+}
+.state-txt {
+  fill:#bbb;
+  font-size: 10pt;
+}
+.state:hover .state-rect {
+  stroke-width:2px;
+}
+.state:hover .state-txt {
+  fill:#fff;
+}
+
+.transition-create {
+  cursor: pointer;
+  stroke-width:1;
+}
+.transition-create:hover {
+  stroke-width:2;
+}
+.transition-create-text {
+  fill:#ddd;
+  font-size: 10pt;
 }
 .transition-create-circle {
   fill:#337ab7;
-  stroke:#333;
+  stroke:#eee;
 }
-
-.transition-create, .transition-create {
-  stroke-width:1;
+.transition-create:hover .transition-create-text {
+  fill:#eee;
 }
-.transition-create:hover, .transition-create:hover {
-  stroke-width:2;
+.transition-create:hover .transition-create-circle {
+  stroke:#fff;
 }
 
 .transition {
   stroke-width:1;
+  fill:#337ab7;
+  stroke:#fff;
+  opacity:1;
 }
 .transition:hover {
   cursor:pointer;
   stroke-width:2;
 }
 .transition-line {
-  stroke:#337ab7;
 }
 .transition-circle {
-  fill:#337ab7;
-  stroke:#333;
 }
 .transition-circle-text{
-  fill:#000;
+  fill:#fff;
 }
 
 .columns {
