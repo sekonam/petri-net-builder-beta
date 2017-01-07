@@ -61,7 +61,7 @@ svg {
   fill:#ddd;
   font-size: 10pt;
 }
-.transition-circle {
+.transition-button .transition-circle {
   fill:#337ab7;
   stroke:#aaa;
 }
@@ -85,6 +85,7 @@ svg {
 .transition-line {
 }
 .transition-circle {
+  stroke:#fff;
 }
 .transition-circle-text{
   fill:#fff;
