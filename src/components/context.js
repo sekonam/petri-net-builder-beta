@@ -114,7 +114,9 @@ class Context extends React.Component {
         <State data={state} id={state.id} key={id}
           dragHandler={methods.state.drag}
           dragStateId={methods.dragStateId}
-          addTransitionHandler={this.addTransitionHandler(methods.transition.add).bind(this)}/>
+          addTransitionHandler={this.addTransitionHandler(methods.transition.add).bind(this)}
+          editHandler={methods.state.edit}
+          removeHandler={methods.state.remove}/>
       ) ),
 
       transitionArrows = store.transitions.cmap( (transition, id) => (

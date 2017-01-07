@@ -39,20 +39,36 @@ function collect(connect, monitor) {
   }
 }
 
+class CircleButton extends React.Component {
+  render() {
+    const {x, y} = this.props;
+    return (
+      <g className='transition-button' onClick={this.props.clickHandler}>
+        <circle className="transition-circle" cx={x+4} cy={y} r='9' />
+        <text className="transition-text" x={x} y={y+5}>
+          {this.props.caption}</text>
+      </g>
+    );
+  }
+}
+
 class State extends React.Component {
 
   render() {
-    const { connectDragSource, id, data: { x, y }, addTransitionHandler} = this.props;
+    const { connectDragSource, id, data: { x, y },
+      addTransitionHandler, removeHandler, editHandler} = this.props;
 
     return connectDragSource(
       <g className="state">
         <rect className="state-rect" x={x} y={y} id={id}
           width={StateModel.default.width + 'px'} height={StateModel.default.height + 'px'}></rect>
-        <text className="state-txt" fontSize='16' x={x+10} y={y+25}>{this.props.data.short('name')}</text>
-        <g className='transition-create' onClick={(e) => addTransitionHandler(id, e) }>
-          <circle className="transition-create-circle" cx={x+184} cy={y+18} r='12' />
-          <text className="transition-create-text" fontSize='16' x={x+180} y={y+25}>T</text>
-        </g>
+        <text className="state-txt" x={x+7} y={y+18}>{this.props.data.short('name', 11)}</text>
+        <CircleButton clickHandler={(e) => addTransitionHandler(id, e)}
+          x={x+25} y={y+35} caption="T"/>
+        <CircleButton clickHandler={(e) => editHandler(id)}
+          x={x+47} y={y+35} caption="E"/>
+        <CircleButton clickHandler={(e) => removeHandler(id)}
+          x={x+69} y={y+35} caption="D"/>
       </g>
     );
   }

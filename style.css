@@ -41,7 +41,7 @@ svg {
   stroke-width:1;
 }
 .state-txt {
-  fill:#bbb;
+  fill:#ddd;
   font-size: 10pt;
 }
 .state:hover .state-rect {
@@ -51,25 +51,24 @@ svg {
   fill:#fff;
 }
 
-.transition-create {
+.transition-button {
   cursor: pointer;
   stroke-width:1;
 }
-.transition-create:hover {
-  stroke-width:2;
+.transition-button:hover {
 }
-.transition-create-text {
+.transition-text {
   fill:#ddd;
   font-size: 10pt;
 }
-.transition-create-circle {
+.transition-circle {
   fill:#337ab7;
-  stroke:#eee;
+  stroke:#aaa;
 }
-.transition-create:hover .transition-create-text {
+.transition-button:hover .transition-text {
   fill:#eee;
 }
-.transition-create:hover .transition-create-circle {
+.transition-button:hover .transition-circle {
   stroke:#fff;
 }
 

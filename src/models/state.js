@@ -34,7 +34,7 @@ StateModel.default = {
   step: 10,
   start: false,
   finish: false,
-  width: 200,
-  height: 40,
+  width: 100,
+  height: 52,
   hover: false
 };
