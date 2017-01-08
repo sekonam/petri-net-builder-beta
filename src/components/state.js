@@ -56,14 +56,39 @@ class CircleButton extends React.Component {
 class State extends React.Component {
 
   render() {
-    const { connectDragSource, id, data: { x, y },
-      addTransitionHandler, removeHandler, editHandler} = this.props;
+    const { connectDragSource, id, data,
+      addTransitionHandler, removeHandler, editHandler} = this.props,
+      { x, y, width, height } = data,
+      typeNames = [ 'income', 'outcome' ];
+
+    let sockets = {
+        income: [],
+        outcome: []
+      },
+      socketTags = [];
+
+    data.sockets.forEach( (socket) => {
+      sockets[socket.typeName].push( socket );
+    } );
+
+    typeNames.forEach( (typeName) => {
+      const step = height / ( sockets[typeName].length + 1 );
+
+      socketTags = socketTags.concat(
+        sockets[typeName].cmap( (socket, key) => (
+          <Socket data={socket} key={typeName + key}
+            x={ x + ( socket.type ? width : 0 ) }
+            y={ y + ( key + 1 ) * step } />
+        ) )
+      );
+    } );
 
     return connectDragSource(
       <g className="state">
         <rect className="state-rect" x={x} y={y} id={id}
           width={StateModel.default.width + 'px'} height={StateModel.default.height + 'px'}></rect>
         <text className="state-txt" x={x+7} y={y+18}>{this.props.data.short('name', 11)}</text>
+        {socketTags}
         <CircleButton clickHandler={(e) => addTransitionHandler(id, e)}
           x={x+25} y={y+35} caption="T"/>
         <CircleButton clickHandler={(e) => editHandler(id)}

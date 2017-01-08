@@ -21,7 +21,6 @@ export default class StateModel extends Model {
     this.sockets = [];
 
     if (typeof params == 'object' && params) {
-      console.log(params);
       if ('sockets' in params) {
         params.sockets.forEach(
           (socketParams) => this.sockets.push( new SocketModel( socketParams ) )

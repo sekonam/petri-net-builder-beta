@@ -20,8 +20,6 @@ export default class StateForm extends React.Component {
       );
     } );
 
-    console.log(socketHandlers);
-
     return (
       <Modal title={'State: ' + data.name} show={this.props.show}
         hide={this.props.afterEditHandler} remove={() => { this.props.removeHandler(data.id); }}>

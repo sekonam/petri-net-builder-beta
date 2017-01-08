@@ -3,10 +3,10 @@ import {Form, FormGroup, FormControl, ControlLabel, Checkbox} from 'react-bootst
 
 export default class Socket extends React.Component {
   render() {
-    const {data, state} = this.props;
+    const {data, x, y} = this.props;
     return (
       <g className="socket">
-        <circle  />
+        <circle cx={x} cy={y} r="4" />
       </g>
     );
   }
