@@ -17,7 +17,7 @@ class Model {
   }
 
   initProps(params) {
-    if ( typeof params != 'undefined') {
+    if ( typeof params == 'object' && params) {
       Object.keys(params).forEach( (name) => {
         this[name] = name in params ? params[name] : null;
       } );
@@ -29,7 +29,7 @@ class Model {
   }
 
   value(obj, name) {
-    if (typeof obj != 'undefined') {
+    if (typeof obj == 'object' && obj) {
       return name in obj ? obj[name] : null;
     }
 

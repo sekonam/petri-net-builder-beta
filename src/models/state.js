@@ -1,13 +1,15 @@
 import Model from './model.js';
+import SocketModel from './SocketModel.js';
 import {PropTypes} from 'react';
+//import MicroEvent from 'microevent';
 
 export default class StateModel extends Model {
 
-  constructor(params) {
+  constructor(params = null) {
     super();
     this.setPropValue( 'id', params, this.getId() );
 
-    [ 'name', 'start', 'finish', 'hover' ].forEach( (name) => {
+    [ 'name', 'width', 'height', 'start', 'finish', 'hover' ].forEach( (name) => {
       this.setPropValue( name, params, StateModel.default[name] );
     } );
 
@@ -16,7 +18,28 @@ export default class StateModel extends Model {
         StateModel.default[name] + StateModel.count * StateModel.default.step );
     });
 
+    this.sockets = [];
+
+    if (typeof params == 'object' && params) {
+      console.log(params);
+      if ('sockets' in params) {
+        params.sockets.forEach(
+          (socketParams) => this.sockets.push( new SocketModel( socketParams ) )
+        );
+      }
+    }
+
     StateModel.count++;
+  }
+
+  addSocket(params = null) {
+    this.sockets.push( new SocketModel(params) );
+  }
+
+  removeSocket(id) {
+    const key = this.sockets.indexById(id);
+    this.sockets[key].remove();
+    this.sockets.splice(key, 1);
   }
 
   setPropValue( name, params, defaultValue ) {
@@ -29,6 +52,7 @@ StateModel.count = 0;
 StateModel.maxShortLength = 18;
 StateModel.default = {
   name: 'State name',
+  sockets: [],
   x: 50,
   y: 50,
   step: 10,

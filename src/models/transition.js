@@ -1,10 +1,10 @@
 import Model from './model.js';
 
 export default class TransitionModel extends Model {
-  constructor(params) {
+  constructor(params = null) {
     super();
 
-    if (typeof params == 'object' && Object.keys(params).length > 0) {
+    if (typeof params == 'object' && params && Object.keys(params).length > 0) {
       this.initProps(params);
     } else {
       this.genId();

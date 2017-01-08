@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
 import Types from './types.js';
 import StateModel from '../models/state.js';
+import Socket from './Socket.js';
 
 const stateSource = {
   beginDrag(props, monitor, component) {

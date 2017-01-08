@@ -6,6 +6,7 @@ import EventModel from '../models/event.js';
 import ActionModel from '../models/action.js';
 import TransitionModel from '../models/transition.js';
 import VarModel from '../models/VarModel.js';
+import SocketModel from '../models/SocketModel.js';
 
 import Context from './context.js';
 import StateForm from './stateform.js';
@@ -230,6 +231,22 @@ export default class Engine extends React.Component {
       } );
     } );
 
+    this.methods.socket = {
+      add: (stateId, type) => () => this.saveToState(
+        (state) => {
+          let socket = new SocketModel;
+          socket.type = type;
+          state.store.states.valueById(stateId).sockets.push( socket );
+        }
+      ),
+      get: (stateId) => (id) => this.state.store.states.valueById(stateId).sockets.valueById(id),
+      set: (stateId) => (id) => (name, value) => this.saveToState(
+        (state) => state.store.states.valueById(stateId).sockets.valueById(id),
+        { name: value }
+      ),
+      remove: (stateId) => (id) => () => {}
+    };
+
     itemTypes.forEach( (itemType) => {
       for (let method in this.methods[itemType]) {
         this.methods[itemType][method] = this.methods[itemType][method].bind(this);
@@ -307,7 +324,8 @@ export default class Engine extends React.Component {
           data={modal.state.data}
           saveHandler={methods.state.save}
           afterEditHandler={methods.state.afterEdit}
-          removeHandler={methods.state.remove} />
+          removeHandler={methods.state.remove}
+          socketHandlers={methods.socket}/>
         <EventForm show={modal.event.show}
           data={modal.event.data}
           saveHandler={methods.event.save}

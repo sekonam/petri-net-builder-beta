@@ -21,6 +21,14 @@ body {
 }
 
 /*
+ * Modal State Sockets
+ */
+.sockets .form-control {
+  width: 65%;
+  margin-right:1%;
+}
+
+/*
  * SVG workflow 2D context
  */
 svg {
