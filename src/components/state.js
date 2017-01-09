@@ -58,7 +58,7 @@ class State extends React.Component {
   render() {
     const { connectDragSource, id, data,
       removeHandler, editHandler, methods} = this.props,
-      { x, y, width, height } = data,
+      { x, y, width, height, r } = data,
       typeNames = [ 'income', 'outcome' ];
 
     let sockets = {
@@ -87,13 +87,13 @@ class State extends React.Component {
     return connectDragSource(
       <g className="state">
         <rect className="state-rect" x={x} y={y} id={id}
-          width={StateModel.default.width + 'px'} height={StateModel.default.height + 'px'}></rect>
+          width={width + 'px'} height={height + 'px'} rx={r} ry={r}></rect>
         <text className="state-txt" x={x+7} y={y+18}>{this.props.data.short('name', 11)}</text>
         {socketTags}
         <CircleButton clickHandler={(e) => editHandler(id)}
-          x={x+36} y={y+35} caption="E"/>
+          x={x+36} y={y + height - 17} caption="E"/>
         <CircleButton clickHandler={(e) => removeHandler(id)}
-          x={x+58} y={y+35} caption="D"/>
+          x={x+58} y={y + height - 17} caption="D"/>
       </g>
     );
   }

@@ -41,12 +41,13 @@ StateModel.maxShortLength = 18;
 StateModel.default = {
   name: 'State name',
   sockets: [],
-  x: 50,
-  y: 50,
-  step: 10,
   start: false,
   finish: false,
+  x: 50,
+  y: 50,
   width: 100,
   height: 52,
+  r: 0,
+  step: 10,
   hover: false
 };

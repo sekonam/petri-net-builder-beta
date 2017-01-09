@@ -1,10 +1,32 @@
 import React from 'react';
 import Modal from './modal.js';
 import {Form, FormGroup, FormControl, ControlLabel, Checkbox, Button} from 'react-bootstrap';
+import Select from 'react-select';
 
 export default class StateForm extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.intVal = this.intVal.bind(this);
+  }
+
+  intVal(val) {
+    const int = parseInt(val);
+    return int ? int : 0;
+  }
+
   render() {
-    const {data, socketHandlers} = this.props;
+    const {data, socketHandlers} = this.props,
+      stateShapes = [
+        {
+          value: 0,
+          label: 'Rectangle'
+        },
+        {
+          value: 7,
+          label: 'Rounded Rectangle'
+        },
+      ];
     let sockets = {
         income: [],
         outcome: []
@@ -28,6 +50,21 @@ export default class StateForm extends React.Component {
             <ControlLabel>State Name</ControlLabel>
             <FormControl type="text" value={data.name}
               onChange={(e) => this.props.saveHandler('name', e.target.value)} />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>State Width</ControlLabel>
+            <FormControl type="text" value={data.width}
+              onChange={(e) => this.props.saveHandler('width', this.intVal(e.target.value))} />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>State Height</ControlLabel>
+            <FormControl type="text" value={data.height}
+              onChange={(e) => this.props.saveHandler('height', this.intVal(e.target.value))} />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>State Shape</ControlLabel><br/>
+            <Select value={this.intVal(data.r)} options={stateShapes}
+              onChange={(val) => this.props.saveHandler('r', this.intVal(val.value))} />
           </FormGroup>
           <Checkbox onChange={() => this.props.saveHandler('start', !data.start)}
             defaultChecked={data.start}>
