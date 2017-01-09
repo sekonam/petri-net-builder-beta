@@ -20,7 +20,7 @@ export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
-//    localStorage.setItem('store', '');
+    localStorage.setItem('store', '');
 
     const itemTypes = [
         'state',
