@@ -22,13 +22,13 @@ const stateSource = {
               y: clientOffset.y - shift.y
             },
             zoomedOffset = component.props.zoomedOffset(sourceOffset);
-            
+
           component.props.dragHandler(props.id, zoomedOffset.x, zoomedOffset.y);
         }
       }, 10
     );
 
-    component.props.dragStateId(props.id);
+    component.props.methods.state.active(props.id);
 
     return {
       id: props.id,
@@ -39,7 +39,7 @@ const stateSource = {
 
   endDrag(props, monitor, component) {
     clearInterval(this.timerId);
-    component.props.dragStateId(null);
+    component.props.methods.state.active(null);
   }
 };
 

@@ -18,9 +18,14 @@ class Context extends React.Component {
       mouseOffset: {
         x: 0,
         y: 0
-      }
+      },
+      mouseDownOffset: null
     };
+
     this.zoomedOffset = this.zoomedOffset.bind(this);
+    this.mouseDownHandler = this.mouseDownHandler.bind(this);
+    this.mouseUpHandler = this.mouseUpHandler.bind(this);
+    this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
   }
 
   componentDidMount() {
@@ -57,8 +62,31 @@ class Context extends React.Component {
     };
   }
 
+  mouseDownHandler(e) {
+    if (!this.props.active.state) {
+      this.setState({
+        mouseDown: {
+          x: e.pageX,
+          y: e.pageY
+        },
+        translateX: this.props.viewport.translateX,
+        translateY: this.props.viewport.translateY
+      });
+    }
+  }
+
+  mouseUpHandler(e) {
+    this.setState({
+      mouseDown: null,
+      translateX: 0,
+      translateY: 0
+    });
+  }
+
   mouseMoveHandler(e) {
-    if (this.props.transition) {
+    const {active} = this.props;
+
+    if (active.transition) {
       const x = e.pageX,
         y = e.pageY;
 
@@ -66,6 +94,11 @@ class Context extends React.Component {
         prevState.mouseOffset = this.zoomedOffset( { x, y } );
         return prevState;
       } );
+    } else if (!active.state && this.state.mouseDown) {
+      this.props.methods.translate.set(
+        this.state.translateX + e.pageX - this.state.mouseDown.x,
+        this.state.translateY + e.pageY - this.state.mouseDown.y
+      );
     }
   }
 
@@ -78,13 +111,11 @@ class Context extends React.Component {
   }
 
   render() {
-    const store = this.props.store,
-      methods = this.props.methods,
+    const { store, methods, active } = this.props,
 
       states = store.states.cmap( (state, id) => (
         <State data={state} id={state.id} key={id}
           dragHandler={methods.state.drag}
-          dragStateId={methods.dragStateId}
           editHandler={methods.state.edit}
           removeHandler={methods.state.remove}
           zoomedOffset={this.zoomedOffset}
@@ -102,18 +133,19 @@ class Context extends React.Component {
           getHandlers={getHandlers} />
       ) ),
 
-      activeTransition = this.props.transition ? (
-        <Transition data={this.props.transition} offset={this.state.mouseOffset}
-          editHandler={() => methods.transition.edit(this.props.transition.id)}
+      activeTransition = active.transition ? (
+        <Transition data={active.transition} offset={this.state.mouseOffset}
+          editHandler={() => methods.transition.edit(active.transition.id)}
           getHandlers={getHandlers} />
       ) : '',
 
       viewport = this.props.viewport,
-      transform = `translate( ${viewport.translateX}, ${viewport.translateY} ) scale(${viewport.zoom})`;
+      transform = `translate(${viewport.translateX}px,${viewport.translateY}px) scale(${viewport.zoom})`;
 
     return (
       <svg width={ this.svgWidth() } height={ this.svgHeight() }
-        onMouseMove={this.mouseMoveHandler.bind(this)} onClick={methods.transition.removeActive}
+        onMouseMove={this.mouseMoveHandler} onClick={methods.transition.removeActive}
+        onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler}
         ref={ (el) => { this.svg = el; } } >
         <g className="diagram-objects" style={{transform}}>
           <circle cx="1" cy="1" r="1" />

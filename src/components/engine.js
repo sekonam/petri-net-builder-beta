@@ -177,7 +177,7 @@ export default class Engine extends React.Component {
       {x,y}
     );
 
-    this.methods.dragStateId = (id) => {
+    this.methods.state.active = (id) => {
       this.setState( (prevState, props) => {
         prevState.active.state = id;
         return prevState;
@@ -322,9 +322,9 @@ export default class Engine extends React.Component {
     };
 
     this.methods.translate = {
-      change: (translateX, translateY) => this.setState( (prevState, props) => {
-        prevState.viewport.translateX += translateX;
-        prevState.viewport.translateY += translateY;
+      set: (translateX, translateY) => this.setState( (prevState, props) => {
+        prevState.viewport.translateX = translateX;
+        prevState.viewport.translateY = translateY;
         return prevState;
       } )
     };
@@ -334,8 +334,6 @@ export default class Engine extends React.Component {
         this.methods[itemType][method] = this.methods[itemType][method].bind(this);
       }
     }
-
-    this.methods.dragStateId = this.methods.dragStateId.bind(this);
   }
 
   saveToState(statePath, values='') {
@@ -380,7 +378,7 @@ export default class Engine extends React.Component {
 
   saveStateToStorage() {
     this.saveToStorage( 'store', this.state.store );
-    this.saveToStorage( 'viewport', this.state.viewport );
+//    this.saveToStorage( 'viewport', this.state.viewport );
   }
 
   componentDidMount() {
@@ -398,7 +396,7 @@ export default class Engine extends React.Component {
         return (
         <LeftMenuBlock key={key}
           itemName={itemType}
-          activeId={itemType == 'state' ? this.state.dragStateId : ''}
+          activeId={itemType == 'state' ? this.state.active.state : ''}
           data={methods[itemType].options()}
           editHandler={methods[itemType].edit}
           addHandler={methods[itemType].add}/>
@@ -416,7 +414,7 @@ export default class Engine extends React.Component {
           <Button onClick={ methods.zoom.set(1) } bsStyle="default">Default</Button>
         </div>
         <Context store={store} viewport={this.state.viewport}
-          methods={methods} transition={active.transition} />
+          methods={methods} active={active} />
         <StateForm show={modal.state.show}
           data={modal.state.data}
           saveHandler={methods.state.save}
