@@ -5,16 +5,25 @@ import StateModel from '../models/state.js';
 import Socket from './Socket.js';
 
 const stateSource = {
+
   beginDrag(props, monitor, component) {
     this.timerId = setInterval(
       () => {
         if (monitor.isDragging()) {
-          const item = monitor.getItem(),
-            offset = monitor.getClientOffset(),
-            initialOffset = monitor.getInitialClientOffset(),
-            x = item.x0 + offset.x - initialOffset.x,
-            y = item.y0 + offset.y - initialOffset.y;
-          component.props.dragHandler(props.id, x, y);
+          const initialOffset = monitor.getInitialClientOffset(),
+            initialSourceOffset = monitor.getInitialSourceClientOffset(),
+            shift = {
+              x: initialOffset.x - initialSourceOffset.x,
+              y: initialOffset.y - initialSourceOffset.y
+            },
+            clientOffset = monitor.getClientOffset(),
+            sourceOffset = {
+              x: clientOffset.x - shift.x,
+              y: clientOffset.y - shift.y
+            },
+            zoomedOffset = component.props.zoomedOffset(sourceOffset);
+            
+          component.props.dragHandler(props.id, zoomedOffset.x, zoomedOffset.y);
         }
       }, 10
     );

@@ -20,6 +20,7 @@ class Context extends React.Component {
         y: 0
       }
     };
+    this.zoomedOffset = this.zoomedOffset.bind(this);
   }
 
   componentDidMount() {
@@ -41,16 +42,28 @@ class Context extends React.Component {
     };
   }
 
+  zoomedOffset(offset) {
+    const svgOffset = this.fullElementOffset(this.svg),
+      zoom = this.props.viewport.zoom,
+      w = this.svgWidth(),
+      h = this.svgHeight();
+
+    let x = offset.x - svgOffset.x,
+      y = offset.y - svgOffset.y;
+
+    return {
+      x: w/2 + (x - w/2) / zoom,
+      y: h/2 + (y - h/2) / zoom
+    };
+  }
+
   mouseMoveHandler(e) {
     if (this.props.transition) {
-      const svgOffset = this.fullElementOffset(this.svg),
-        pageX = e.pageX,
-        pageY = e.pageY;
+      const x = e.pageX,
+        y = e.pageY;
+
       this.setState( (prevState, props) => {
-        prevState.mouseOffset = {
-          x: pageX - svgOffset.x,
-          y: pageY - svgOffset.y
-        };
+        prevState.mouseOffset = this.zoomedOffset( { x, y } );
         return prevState;
       } );
     }
@@ -61,7 +74,7 @@ class Context extends React.Component {
   }
 
   svgHeight() {
-    return Math.max( 0, this.state.documentSize.height - 20 );
+    return Math.max( 0, this.state.documentSize.height - 55 );
   }
 
   render() {
@@ -74,6 +87,7 @@ class Context extends React.Component {
           dragStateId={methods.dragStateId}
           editHandler={methods.state.edit}
           removeHandler={methods.state.remove}
+          zoomedOffset={this.zoomedOffset}
           methods={methods}/>
       ) ),
 
@@ -92,15 +106,26 @@ class Context extends React.Component {
         <Transition data={this.props.transition} offset={this.state.mouseOffset}
           editHandler={() => methods.transition.edit(this.props.transition.id)}
           getHandlers={getHandlers} />
-      ) : '';
+      ) : '',
+
+      viewport = this.props.viewport,
+      transform = `translate( ${viewport.translateX}, ${viewport.translateY} ) scale(${viewport.zoom})`;
 
     return (
       <svg width={ this.svgWidth() } height={ this.svgHeight() }
         onMouseMove={this.mouseMoveHandler.bind(this)} onClick={methods.transition.removeActive}
         ref={ (el) => { this.svg = el; } } >
-        {transitions}
-        {activeTransition}
-        {states}
+        <g className="diagram-objects" style={{transform}}>
+          <circle cx="1" cy="1" r="1" />
+          <circle cx={ this.svgWidth() - 1 } cy={ this.svgHeight() - 1 } r="1" />
+          <g className="transitions">
+            {transitions}
+          {activeTransition}
+          </g>
+          <g className="states">
+            {states}
+          </g>
+        </g>
       </svg>
     );
   }

@@ -20,6 +20,14 @@ body {
   margin-bottom:5px;
 }
 
+.buttons {
+  margin-left:185px;
+  margin-top:1px;
+}
+.buttons .btn {
+  margin-left:5px
+}
+
 /*
  * Modal State Sockets
  */
@@ -50,6 +58,11 @@ svg {
   background-color:#ccc;
   opacity:1;
   border:1px solid #fff;
+}
+.diagram-objects {
+  width:100%;
+  height:100%;
+  transform-origin: 50% 50%;
 }
 
 .state {
@@ -89,7 +102,10 @@ svg {
 }
 
 .transition-button .transition-text {
-  fill:#ddd;
+  stroke:#ddd;
+}
+.transition-button:hover .transition-text {
+  stroke:#eee;
 }
 
 .transition {

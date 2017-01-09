@@ -7,6 +7,7 @@ import ActionModel from '../models/action.js';
 import TransitionModel from '../models/transition.js';
 import VarModel from '../models/VarModel.js';
 import SocketModel from '../models/SocketModel.js';
+import ViewportModel from '../models/ViewportModel.js';
 
 import Context from './context.js';
 import StateForm from './stateform.js';
@@ -15,6 +16,8 @@ import ActionForm from './actionform.js';
 import TransitionForm from './transitionform.js';
 import VarForm from './VarForm.js';
 import LeftMenuBlock from './leftmenublock.js';
+
+import {Button} from 'react-bootstrap';
 
 export default class Engine extends React.Component {
 
@@ -38,12 +41,13 @@ export default class Engine extends React.Component {
       };
 
     this.state = {
-      store: new EngineModel(this.loadStore()),
+      store: new EngineModel( this.loadFromStorage( 'store' ) ),
       modal: {},
       active: {
         transition: null,
         state: null
-      }
+      },
+      viewport: new ViewportModel()
     };
 
     itemTypes.forEach( (key) => {
@@ -303,15 +307,35 @@ export default class Engine extends React.Component {
       } );
     };
 
-    itemTypes.forEach( (itemType) => {
+    this.methods.zoom = {
+
+      change: (shift) => () => this.setState( (prevState, props) => {
+        prevState.viewport.zoom += prevState.viewport.zoom + shift > 0.1 ? shift : 0;
+        return prevState;
+      } ),
+
+      set: (zoom) => () => this.setState( (prevState, props) => {
+        prevState.viewport.zoom = zoom;
+        return prevState;
+      } )
+
+    };
+
+    this.methods.translate = {
+      change: (translateX, translateY) => this.setState( (prevState, props) => {
+        prevState.viewport.translateX += translateX;
+        prevState.viewport.translateY += translateY;
+        return prevState;
+      } )
+    };
+
+    for (let itemType in this.methods) {
       for (let method in this.methods[itemType]) {
         this.methods[itemType][method] = this.methods[itemType][method].bind(this);
       }
-    } );
+    }
 
     this.methods.dragStateId = this.methods.dragStateId.bind(this);
-
-    window.addEventListener( 'beforeunload', this.saveStore.bind(this) );
   }
 
   saveToState(statePath, values='') {
@@ -336,22 +360,31 @@ export default class Engine extends React.Component {
     return sideName == 'start' ? 'finish' : 'start';
   }
 
-  loadStore() {
+  loadFromStorage( name ) {
     if (typeof(Storage) !== "undefined") {
-      const jsonStore = localStorage.getItem( 'store' );
+      const json = localStorage.getItem( name );
 
-      if (jsonStore) {
-        return JSON.parse( jsonStore );
+      if (json) {
+        return JSON.parse( json );
       }
     }
 
     return null;
   }
 
-  saveStore() {
+  saveToStorage( name, value ) {
     if (typeof(Storage) !== "undefined") {
-      localStorage.setItem('store', JSON.stringify(this.state.store));
+      localStorage.setItem(name, JSON.stringify( value ));
     }
+  }
+
+  saveStateToStorage() {
+    this.saveToStorage( 'store', this.state.store );
+    this.saveToStorage( 'viewport', this.state.viewport );
+  }
+
+  componentDidMount() {
+    window.addEventListener( 'beforeunload', this.saveStateToStorage.bind(this) );
   }
 
   render() {
@@ -376,7 +409,14 @@ export default class Engine extends React.Component {
         <div className="left-menu">
           {leftMenuBlocks}
         </div>
-        <Context store={store} methods={methods} transition={active.transition} />
+        <div className="buttons">
+          <span>Zoom:</span>
+          <Button onClick={ methods.zoom.change(-0.25) } bsStyle="default">-</Button>
+          <Button onClick={ methods.zoom.change(0.25) } bsStyle="default">+</Button>
+          <Button onClick={ methods.zoom.set(1) } bsStyle="default">Default</Button>
+        </div>
+        <Context store={store} viewport={this.state.viewport}
+          methods={methods} transition={active.transition} />
         <StateForm show={modal.state.show}
           data={modal.state.data}
           saveHandler={methods.state.save}

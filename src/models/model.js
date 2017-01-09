@@ -36,6 +36,14 @@ class Model {
     return null;
   }
 
+  getDefaultValue( name, params, defaultValue ) {
+    return this.value(params, name) ? params[name] : defaultValue;
+  }
+
+  setPropValue( name, params, defaultValue ) {
+    this[name] = this.getDefaultValue( name, params, defaultValue );
+  }
+
   short(propName, maxLength = Model.maxShortLength) {
     if (propName in this) {
       const prop = this[propName];

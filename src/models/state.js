@@ -30,10 +30,6 @@ export default class StateModel extends Model {
     StateModel.count++;
   }
 
-  setPropValue( name, params, defaultValue ) {
-    this[name] = this.value(params, name) != null ? params[name] : defaultValue;
-  }
-
 }
 
 StateModel.count = 0;
@@ -41,7 +37,6 @@ StateModel.maxShortLength = 18;
 StateModel.default = {
   name: 'State name',
   sockets: [],
-  start: false,
   finish: false,
   x: 50,
   y: 50,
