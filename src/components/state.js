@@ -91,9 +91,9 @@ class State extends React.Component {
         <text className="state-txt" x={x+7} y={y+18}>{this.props.data.short('name', 11)}</text>
         {socketTags}
         <CircleButton clickHandler={(e) => editHandler(id)}
-          x={x+36} y={y + height - 17} caption="E"/>
+          x={x + width/2 - 16} y={y + height - 17} caption="E"/>
         <CircleButton clickHandler={(e) => removeHandler(id)}
-          x={x+58} y={y + height - 17} caption="D"/>
+          x={x + width/2 + 8} y={y + height - 17} caption="D"/>
       </g>
     );
   }
