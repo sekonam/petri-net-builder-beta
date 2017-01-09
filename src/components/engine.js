@@ -20,7 +20,7 @@ export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
-//    localStorage.setItem('store', '');
+    localStorage.setItem('store', '');
 
     const itemTypes = [
         'state',
@@ -38,16 +38,12 @@ export default class Engine extends React.Component {
       };
 
     this.state = {
-      itemTypes: itemTypes,
       store: new EngineModel(this.loadStore()),
       modal: {},
-      leftMenuItems: [
-        'state',
-        'event',
-        'action',
-        'var',
-      ],
-      dragStateId: null
+      active: {
+        transition: null,
+        state: null
+      }
     };
 
     itemTypes.forEach( (key) => {
@@ -178,8 +174,9 @@ export default class Engine extends React.Component {
     );
 
     this.methods.dragStateId = (id) => {
-      this.setState({
-        dragStateId: id
+      this.setState( (prevState, props) => {
+        prevState.active.state = id;
+        return prevState;
       });
     };
 
@@ -203,9 +200,11 @@ export default class Engine extends React.Component {
     };
 
     this.methods.state.remove = customActions.remove('state', (state, sid) => {
-      state.store.transitions.spliceRecurcive(
-        (transition) => (transition.start.state == sid || transition.finish.state == sid)
-      );
+      state.store.states.valueById(sid).sockets.forEach( (socket) => {
+        state.store.transitions.spliceRecurcive(
+          (transition) => (transition.start.socket == socket.id || transition.finish.socket == socket.id)
+        );
+      } );
     } );
 
     this.methods.event.remove = customActions.remove('event', (state, eid) => {
@@ -231,20 +230,65 @@ export default class Engine extends React.Component {
       } );
     } );
 
+    this.methods.transition.edit = (id) => {
+      if (!this.state.active.transition) {
+        customActions.edit('transition')(id);
+      }
+    }
+
     this.methods.socket = {
+
       add: (stateId, type) => () => this.saveToState(
         (state) => {
           let socket = new SocketModel;
           socket.type = type;
+          socket.state = stateId;
           state.store.states.valueById(stateId).sockets.push( socket );
         }
       ),
+
       get: (stateId) => (id) => this.state.store.states.valueById(stateId).sockets.valueById(id),
+
       set: (stateId) => (id) => (name, value) => this.saveToState(
         (state) => state.store.states.valueById(stateId).sockets.valueById(id),
         { name: value }
       ),
+
       remove: (stateId) => (id) => () => {}
+
+    };
+
+    this.methods.transition.addActive = (socket) => {
+      if (socket.type) {
+
+        this.setState( (prevState, props) => {
+          let activeTransition = new TransitionModel;
+          activeTransition.start.socket = socket.id;
+          activeTransition.start.state = socket.state;
+          prevState.active.transition = activeTransition;
+          return prevState;
+        } );
+
+      }
+    };
+
+    this.methods.transition.linkActive = (socket) => {
+      if ( !socket.type && this.state.active.transition ) {
+        this.setState( (prevState, props) => {
+          let activeTransition = new TransitionModel( prevState.active.transition );
+          activeTransition.finish.socket = socket.id;
+          activeTransition.finish.state = socket.state;
+          prevState.store.transitions.push(activeTransition);
+          prevState.active.transition = null;
+        } );
+      }
+    };
+
+    this.methods.transition.removeActive = () => {
+      this.setState( (prevState, props) => {
+        prevState.active.transition = null;
+        return prevState;
+      } );
     };
 
     itemTypes.forEach( (itemType) => {
@@ -303,8 +347,9 @@ export default class Engine extends React.Component {
       modal = this.state.modal,
       store = this.state.store,
       methods = this.methods,
+      active = this.state.active,
 
-      leftMenuBlocks = this.state.leftMenuItems.map( (itemType, key) => {
+      leftMenuBlocks = [ 'state', 'event', 'action', 'var', ].map( (itemType, key) => {
         return (
         <LeftMenuBlock key={key}
           itemName={itemType}
@@ -319,7 +364,7 @@ export default class Engine extends React.Component {
         <div className="left-menu">
           {leftMenuBlocks}
         </div>
-        <Context store={store} methods={methods} />
+        <Context store={store} methods={methods} transition={active.transition} />
         <StateForm show={modal.state.show}
           data={modal.state.data}
           saveHandler={methods.state.save}

@@ -1,7 +1,6 @@
 import Model from './model.js';
 import SocketModel from './SocketModel.js';
 import {PropTypes} from 'react';
-//import MicroEvent from 'microevent';
 
 export default class StateModel extends Model {
 
@@ -29,16 +28,6 @@ export default class StateModel extends Model {
     }
 
     StateModel.count++;
-  }
-
-  addSocket(params = null) {
-    this.sockets.push( new SocketModel(params) );
-  }
-
-  removeSocket(id) {
-    const key = this.sockets.indexById(id);
-    this.sockets[key].remove();
-    this.sockets.splice(key, 1);
   }
 
   setPropValue( name, params, defaultValue ) {

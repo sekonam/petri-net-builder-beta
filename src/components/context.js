@@ -11,91 +11,49 @@ class Context extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      transition: null,
-      hoverState: null,
       documentSize: {
         width: 0,
         height: 0
+      },
+      mouseOffset: {
+        x: 0,
+        y: 0
       }
     };
-    this.documentMouseMove = this.documentMouseMove.bind(this);
-    this.documentMouseUp = this.documentMouseUp.bind(this);
   }
 
   componentDidMount() {
-    this.setState( { documentSize: {
-      width: document.documentElement.clientWidth,
-      height: document.documentElement.clientHeight
-    } } );
-
-    const svgPos = this.svg.getBoundingClientRect();
-    this.svgOffset = {
-      x: svgPos.left,
-      y: svgPos.top
-    };
-  }
-
-  currentOffset(e) {
-    return {
-      x: e.pageX - this.svgOffset.x,
-      y: e.pageY - this.svgOffset.y
-    };
-  }
-
-  addTransitionHandler(addTransition) {
-    return (stateId, e) => {
-      let transition = addTransition();
-      transition.start.state = stateId;
-      transition.finish.offset = this.currentOffset(e);
-      this.setState({ transition });
-      document.addEventListener('mousemove', this.documentMouseMove);
-      document.addEventListener('click', this.documentMouseUp, true);
-    }
-  }
-
-  documentMouseMove(e) {
-    if (this.state.transition != null) {
-      let offset = this.state.transition.finish.offset = this.currentOffset(e),
-        states = this.props.store.states;
-
-      let hoverState = null;
-      states.forEach( (state) => {
-        const hover = state.x <= offset.x
-          && offset.x <=state.x + StateModel.default.width
-          && state.y <= offset.y
-          && offset.y <=state.y + StateModel.default.height
-          && state.id != this.state.transition.start.state;
-        this.props.methods.state.set(state.id, 'hover', hover);
-
-        if (hover) {
-          hoverState = state.id;
-        }
-      } );
-
-      this.setState({hoverState});
-    }
-  }
-
-  documentMouseUp(e) {
-    if (this.state.transition) {
-      if (this.state.hoverState) {
-        this.state.transition.finish.state = this.state.hoverState;
-      } else {
-        this.props.methods.transition.remove(this.state.transition.id);
+    this.setState( {
+      documentSize: {
+        width: document.documentElement.clientWidth,
+        height: document.documentElement.clientHeight
       }
+    } );
+  }
 
-      document.removeEventListener('mousemove', this.documentMouseMove);
-      document.removeEventListener('click', this.documentMouseUp, true);
+  fullElementOffset(element) {
+    const rect = element.getBoundingClientRect(),
+      scrollX = window.pageXOffset || document.documentElement.scrollLeft,
+      scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    return {
+      x: scrollX + rect.left,
+      y: scrollY + rect.top
+    };
+  }
 
-      this.props.methods.state.each( {hover: false} );
-
-      this.setState({
-        transition: null,
-        haverState: null
-      });
+  mouseMoveHandler(e) {
+    if (this.props.transition) {
+      const svgOffset = this.fullElementOffset(this.svg),
+        pageX = e.pageX,
+        pageY = e.pageY;
+      this.setState( (prevState, props) => {
+        prevState.mouseOffset = {
+          x: pageX - svgOffset.x,
+          y: pageY - svgOffset.y
+        };
+        return prevState;
+      } );
     }
-
-//    e.stopPropagation();
   }
 
   svgWidth() {
@@ -110,27 +68,39 @@ class Context extends React.Component {
     const store = this.props.store,
       methods = this.props.methods,
 
-      stateRects = store.states.cmap( (state, id) => (
+      states = store.states.cmap( (state, id) => (
         <State data={state} id={state.id} key={id}
           dragHandler={methods.state.drag}
           dragStateId={methods.dragStateId}
-          addTransitionHandler={this.addTransitionHandler(methods.transition.add).bind(this)}
           editHandler={methods.state.edit}
-          removeHandler={methods.state.remove}/>
+          removeHandler={methods.state.remove}
+          methods={methods}/>
       ) ),
 
-      transitionArrows = store.transitions.cmap( (transition, id) => (
+      getHandlers = {
+        state: methods.state.get,
+        socket: methods.socket.get
+      },
+
+      transitions = store.transitions.cmap( (transition, id) => (
         <Transition data={transition} key={id}
           editHandler={() => methods.transition.edit(transition.id)}
-          stateHandler={methods.state.get} />
-      ) );
+          getHandlers={getHandlers} />
+      ) ),
+
+      activeTransition = this.props.transition ? (
+        <Transition data={this.props.transition} offset={this.state.mouseOffset}
+          editHandler={() => methods.transition.edit(this.props.transition.id)}
+          getHandlers={getHandlers} />
+      ) : '';
 
     return (
-      <svg width={ this.svgWidth() }
-        height={ this.svgHeight() }
-        ref={ (el) => { this.svg = el; } }>
-        {stateRects}
-        {transitionArrows}
+      <svg width={ this.svgWidth() } height={ this.svgHeight() }
+        onMouseMove={this.mouseMoveHandler.bind(this)} onClick={methods.transition.removeActive}
+        ref={ (el) => { this.svg = el; } } >
+        {transitions}
+        {activeTransition}
+        {states}
       </svg>
     );
   }

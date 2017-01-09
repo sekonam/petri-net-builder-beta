@@ -57,7 +57,7 @@ class State extends React.Component {
 
   render() {
     const { connectDragSource, id, data,
-      addTransitionHandler, removeHandler, editHandler} = this.props,
+      removeHandler, editHandler, methods} = this.props,
       { x, y, width, height } = data,
       typeNames = [ 'income', 'outcome' ];
 
@@ -78,7 +78,8 @@ class State extends React.Component {
         sockets[typeName].cmap( (socket, key) => (
           <Socket data={socket} key={typeName + key}
             x={ x + ( socket.type ? width : 0 ) }
-            y={ y + ( key + 1 ) * step } />
+            y={ y + ( key + 1 ) * step }
+            transitionHandlers={methods.transition} />
         ) )
       );
     } );
@@ -89,12 +90,10 @@ class State extends React.Component {
           width={StateModel.default.width + 'px'} height={StateModel.default.height + 'px'}></rect>
         <text className="state-txt" x={x+7} y={y+18}>{this.props.data.short('name', 11)}</text>
         {socketTags}
-        <CircleButton clickHandler={(e) => addTransitionHandler(id, e)}
-          x={x+25} y={y+35} caption="T"/>
         <CircleButton clickHandler={(e) => editHandler(id)}
-          x={x+47} y={y+35} caption="E"/>
+          x={x+36} y={y+35} caption="E"/>
         <CircleButton clickHandler={(e) => removeHandler(id)}
-          x={x+69} y={y+35} caption="D"/>
+          x={x+58} y={y+35} caption="D"/>
       </g>
     );
   }
