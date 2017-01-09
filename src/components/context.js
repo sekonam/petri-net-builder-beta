@@ -49,7 +49,7 @@ class Context extends React.Component {
 
   zoomedOffset(offset) {
     const svgOffset = this.fullElementOffset(this.svg),
-      zoom = this.props.viewport.zoom,
+      viewport = this.props.viewport,
       w = this.svgWidth(),
       h = this.svgHeight();
 
@@ -57,8 +57,8 @@ class Context extends React.Component {
       y = offset.y - svgOffset.y;
 
     return {
-      x: w/2 + (x - w/2) / zoom,
-      y: h/2 + (y - h/2) / zoom
+      x: w/2 + (x - w/2 - viewport.translateX) / viewport.zoom,
+      y: h/2 + (y - h/2 - viewport.translateY) / viewport.zoom
     };
   }
 
