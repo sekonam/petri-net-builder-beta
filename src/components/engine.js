@@ -20,7 +20,7 @@ export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
-    localStorage.setItem('store', '');
+//    localStorage.setItem('store', '');
 
     const itemTypes = [
         'state',
@@ -254,7 +254,18 @@ export default class Engine extends React.Component {
         { name: value }
       ),
 
-      remove: (stateId) => (id) => () => {}
+      remove: (stateId) => (id) => () => {
+        this.setState( (prevState, props) => {
+          const state = prevState.store.states.valueById(stateId);
+          state.sockets.splice( state.sockets.indexById(id), 1 );
+
+          prevState.store.transitions.spliceRecurcive(
+            (transition) => (transition.start.socket == id || transition.finish.socket == id)
+          );
+
+          return prevState;
+        } );
+      }
 
     };
 
@@ -280,6 +291,7 @@ export default class Engine extends React.Component {
           activeTransition.finish.state = socket.state;
           prevState.store.transitions.push(activeTransition);
           prevState.active.transition = null;
+          return prevState;
         } );
       }
     };

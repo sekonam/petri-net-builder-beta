@@ -14,7 +14,7 @@ export default class StateForm extends React.Component {
         <FormGroup key={key} className="row">
           <FormControl className="col-xs-8" type="text" value={socket.name}
             onChange={(e) => socketHandlers.set(data.id)(socket.id)( 'name', e.target.value ) } />
-          <Button onClick={() => socketHandlers.remove(data.id)(socket.id) }
+          <Button onClick={ socketHandlers.remove(data.id)(socket.id) }
             bsStyle="danger" className="col-xs-4">Delete</Button>
         </FormGroup>
       );

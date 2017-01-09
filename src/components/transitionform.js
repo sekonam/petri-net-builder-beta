@@ -9,6 +9,16 @@ export default class TransitionForm extends React.Component {
     const {data, startStates, finishStates, events, selectedStartEvents, selectedFinishEvents,
       saveHandler, saveToChildHandler, stateHandler} = this.props;
 
+      /*              <FormGroup controlId="TransitionStateSelectStart">
+                      <ControlLabel>Start State</ControlLabel><br/>
+                      <Select value={data.start.state} options={startStates}
+                        onChange={(val) => saveToChildHandler(['start'])('state', val.value)} />
+                    </FormGroup>*/
+                    /*              <FormGroup controlId="TransitionStateSelectFinish">
+                                    <ControlLabel>Finish State</ControlLabel><br/>
+                                    <Select value={data.finish.state} options={finishStates}
+                                      onChange={(val) => saveToChildHandler(['finish'])('state', val.value)} />
+                                  </FormGroup>*/
     return (
       <Modal title={'Transition: ' + data.name} show={this.props.show}
         hide={this.props.afterEditHandler} remove={() => { this.props.removeHandler(this.props.data.id); }}>
@@ -20,11 +30,6 @@ export default class TransitionForm extends React.Component {
           </FormGroup>
           <div className="columns">
             <div className="left-side">
-              <FormGroup controlId="TransitionStateSelectStart">
-                <ControlLabel>Start State</ControlLabel><br/>
-                <Select value={data.start.state} options={startStates}
-                  onChange={(val) => saveToChildHandler(['start'])('state', val.value)} />
-              </FormGroup>
               <FormGroup controlId="TransitionEventsSelectStart">
                 <ControlLabel>Income Events</ControlLabel><br/>
                 <Select multi={true} value={selectedStartEvents} options={events}
@@ -38,11 +43,6 @@ export default class TransitionForm extends React.Component {
               </FormGroup>
             </div>
             <div className="right-side">
-              <FormGroup controlId="TransitionStateSelectFinish">
-                <ControlLabel>Finish State</ControlLabel><br/>
-                <Select value={data.finish.state} options={finishStates}
-                  onChange={(val) => saveToChildHandler(['finish'])('state', val.value)} />
-              </FormGroup>
               <FormGroup controlId="TransitionEventsSelectFinish">
                 <ControlLabel>Outcome Events</ControlLabel><br/>
                 <Select multi={true} value={selectedFinishEvents} options={events}

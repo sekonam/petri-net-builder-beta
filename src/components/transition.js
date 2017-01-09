@@ -23,8 +23,8 @@ export default class Transition extends React.Component {
     let finishOffset = offset;
 
     if (transition.finish.socket) {
-      const finishState = getHandlers.state(transition.finish.socket.state),
-        finishSocket = getHandlers.socket(transition.finish.socket.state, transition.finish.socket);
+      const finishState = getHandlers.state(transition.finish.state),
+        finishSocket = getHandlers.socket(transition.finish.state)(transition.finish.socket);
       finishOffset = this.socketOffset( finishState, finishSocket );
     }
 
