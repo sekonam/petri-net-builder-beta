@@ -33,6 +33,7 @@ class Context extends React.Component {
     };
 
     this.zoomedOffset = this.zoomedOffset.bind(this);
+    this.zoomedDiff = this.zoomedDiff.bind(this);
     this.setMouseOffset = this.setMouseOffset.bind(this);
     this.mouseDownHandler = this.mouseDownHandler.bind(this);
     this.mouseUpHandler = this.mouseUpHandler.bind(this);
@@ -74,6 +75,17 @@ class Context extends React.Component {
     };
   }
 
+  zoomedDiff(diff) {
+    const viewport = this.props.viewport,
+      w = this.svgWidth(),
+      h = this.svgHeight();
+
+    return {
+      x: w/2 + (diff.x - w/2) / viewport.zoom,
+      y: h/2 + (diff.y - h/2) / viewport.zoom
+    };
+  }
+
   mouseDownHandler(e) {
     if (!this.props.active.state) {
       this.setState({
@@ -103,7 +115,7 @@ class Context extends React.Component {
         x: e.pageX,
         y: e.pageY
       } );
-    } else if (!active.state && !this.state.clickedState && this.state.mouseDown) {
+    } else if (!active.state && !active.group && !this.state.clickedState && this.state.mouseDown) {
       this.props.methods.translate.set(
         this.state.translateX + e.pageX - this.state.mouseDown.x,
         this.state.translateY + e.pageY - this.state.mouseDown.y
@@ -170,7 +182,7 @@ class Context extends React.Component {
       ) : '',
 
       groups = store.groups.cmap( (group, key) => (
-        <Group data={group} methods={methods} key={key} />
+        <Group data={group} methods={methods} zoomedDiff={this.zoomedDiff} key={key} />
       ) ),
 
       viewport = this.props.viewport,

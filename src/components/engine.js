@@ -49,7 +49,8 @@ export default class Engine extends React.Component {
       modal: {},
       active: {
         transition: null,
-        state: null
+        state: null,
+        group: null
       },
       viewport: new ViewportModel()
     };
@@ -182,12 +183,14 @@ export default class Engine extends React.Component {
       {x,y}
     );
 
-    this.methods.state.active = (id) => {
-      this.setState( (prevState, props) => {
-        prevState.active.state = id;
-        return prevState;
-      });
-    };
+    ['state', 'group'].forEach( (itemType) => {
+      this.methods[itemType].active = (id) => {
+        this.setState( (prevState, props) => {
+          prevState.active[itemType] = id;
+          return prevState;
+        });
+      };
+    } );
 
     this.methods.state.optionsForTransition = (sideName) => {
       const transition = this.state.modal.transition;
