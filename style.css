@@ -85,13 +85,10 @@ svg {
   fill:#fff;
 }
 
-.socket, .transition-button {
+.socket {
   stroke:#aaa;
   stroke-width:1;
   cursor: pointer;
-}
-.transition-button {
-  fill:#25a;
 }
 .socket {
   fill:#a44;
@@ -107,6 +104,15 @@ svg {
   stroke-width:1;
 }
 
+.transition-button {
+  fill:#25a;
+  stroke:#aaa;
+  stroke-width:1;
+  cursor: pointer;
+}
+.transition-circle.remove-button {
+  fill:#d9534f;
+}
 .transition-button:hover {
   stroke:#fff;
 }

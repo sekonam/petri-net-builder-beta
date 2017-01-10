@@ -51,12 +51,13 @@ function collect(connect, monitor) {
 
 class CircleButton extends React.Component {
   render() {
-    const {x, y} = this.props;
+    const {x, y, caption} = this.props,
+      className = 'transition-circle' + (caption == 'D' ? ' remove-button' : '');
     return (
       <g className='transition-button' onClick={this.props.clickHandler}>
-        <circle className="transition-circle" cx={x+4} cy={y} r='9' />
+        <circle className={className} cx={x+4} cy={y} r='9' />
         <text className="transition-text" x={x} y={y+5}>
-          {this.props.caption}</text>
+          {caption}</text>
       </g>
     );
   }
