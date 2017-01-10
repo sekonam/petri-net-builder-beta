@@ -2,6 +2,7 @@ import React from 'react';
 
 import EngineModel from '../models/engine.js';
 import StateModel from '../models/state.js';
+import GroupModel from '../models/GroupModel.js';
 import EventModel from '../models/event.js';
 import ActionModel from '../models/action.js';
 import TransitionModel from '../models/transition.js';
@@ -11,6 +12,7 @@ import ViewportModel from '../models/ViewportModel.js';
 
 import Context from './context.js';
 import StateForm from './stateform.js';
+import GroupForm from './GroupForm.js';
 import EventForm from './eventform.js';
 import ActionForm from './actionform.js';
 import TransitionForm from './transitionform.js';
@@ -27,6 +29,7 @@ export default class Engine extends React.Component {
 
     const itemTypes = [
         'state',
+        'group',
         'event',
         'action',
         'transition',
@@ -34,6 +37,7 @@ export default class Engine extends React.Component {
       ],
       itemFactory = {
         'state': () => new StateModel,
+        'group': () => new GroupModel,
         'event': () => new EventModel,
         'action': () => new ActionModel,
         'transition': () => new TransitionModel,
@@ -157,7 +161,7 @@ export default class Engine extends React.Component {
 
       selectedOptions: (itemType) => (selectedIds) => selectedIds.cmap((id) => ({
         'value': id,
-        'label': this.state.store[itemType + 's'].indexOfId(id).short('name')
+        'label': this.state.store[itemType + 's'].valueById(id).short('name')
       }))
     };
 
@@ -208,6 +212,14 @@ export default class Engine extends React.Component {
         state.store.transitions.spliceRecurcive(
           (transition) => (transition.start.socket == socket.id || transition.finish.socket == socket.id)
         );
+      } );
+
+      state.store.groups.forEach( (group) => {
+        const groupKey = group.states.indexById(sid);
+
+        if (groupKey > -1) {
+          group.states.splice(groupKey, 1);
+        }
       } );
     } );
 
@@ -392,7 +404,7 @@ export default class Engine extends React.Component {
       methods = this.methods,
       active = this.state.active,
 
-      leftMenuBlocks = [ 'state', 'event', 'action', 'var', ].map( (itemType, key) => {
+      leftMenuBlocks = [ 'state', 'group', 'event', 'action', 'var', ].map( (itemType, key) => {
         return (
         <LeftMenuBlock key={key}
           itemName={itemType}
@@ -450,6 +462,11 @@ export default class Engine extends React.Component {
           saveHandler={methods.var.save}
           afterEditHandler={methods.var.afterEdit}
           removeHandler={methods.var.remove} />
+        <GroupForm show={modal.group.show}
+          data={modal.group.data}
+          states={methods.state.options()}
+          selectedStates={methods.state.selectedOptions(modal.group.show ? modal.group.data.states : [])}
+          methods={methods.group} />
       </div>
     );
   }

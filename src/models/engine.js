@@ -4,11 +4,12 @@ import ActionModel from './action.js';
 import EventModel from './event.js';
 import TransitionModel from './transition.js';
 import VarModel from './VarModel.js';
+import GroupModel from './GroupModel.js';
 
 export default class EngineModel extends Model {
   constructor(store = null) {
     super();
-    const entities = ['state', 'action', 'event', 'transition', 'var',];
+    const entities = ['state', 'group', 'action', 'event', 'transition', 'var',];
     entities.forEach( (name) => { this[name + 's'] = []; } );
 
     if (store != null) {
@@ -17,7 +18,8 @@ export default class EngineModel extends Model {
         action: (params) => new ActionModel(params),
         event: (params) => new EventModel(params),
         transition: (params) => new TransitionModel(params),
-        'var': (params) => new VarModel(params)
+        'var': (params) => new VarModel(params),
+        group: (params) => new GroupModel(params)
       };
 
       entities.forEach( (name) => {
