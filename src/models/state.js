@@ -19,6 +19,15 @@ export default class StateModel extends Model {
 
     this.sockets = [];
 
+    if (!params) {
+      for (let i=0; i<2; i++) {
+        let socket = new SocketModel;
+        socket.type = i;
+        socket.state = this.id;
+        this.sockets.push(socket);
+      }
+    }
+
     if (typeof params == 'object' && params) {
       if ('sockets' in params) {
         params.sockets.forEach(
