@@ -13,6 +13,10 @@ export default class Socket extends React.Component {
 
     if (data.type) {
       transitionHandlers.addActive(data);
+      this.props.setMouseOffset({
+        x: e.pageX,
+        y: e.pageY
+      });
       e.stopPropagation();
     } else {
       transitionHandlers.linkActive(data);

@@ -88,7 +88,8 @@ class State extends React.Component {
           <Socket data={socket} key={typeName + key}
             x={ x + ( socket.type ? width : 0 ) }
             y={ y + ( key + 1 ) * step }
-            transitionHandlers={methods.transition} />
+            transitionHandlers={methods.transition}
+            setMouseOffset={this.props.setMouseOffset} />
         ) )
       );
     } );

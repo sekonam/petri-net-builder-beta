@@ -19,10 +19,13 @@ class Context extends React.Component {
         x: 0,
         y: 0
       },
-      mouseDownOffset: null
+      mouseDown: null,
+      translateX: 0,
+      translateY: 0
     };
 
     this.zoomedOffset = this.zoomedOffset.bind(this);
+    this.setMouseOffset = this.setMouseOffset.bind(this);
     this.mouseDownHandler = this.mouseDownHandler.bind(this);
     this.mouseUpHandler = this.mouseUpHandler.bind(this);
     this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
@@ -87,12 +90,9 @@ class Context extends React.Component {
     const {active} = this.props;
 
     if (active.transition) {
-      const x = e.pageX,
-        y = e.pageY;
-
-      this.setState( (prevState, props) => {
-        prevState.mouseOffset = this.zoomedOffset( { x, y } );
-        return prevState;
+      this.setMouseOffset( {
+        x: e.pageX,
+        y: e.pageY
       } );
     } else if (!active.state && this.state.mouseDown) {
       this.props.methods.translate.set(
@@ -100,6 +100,16 @@ class Context extends React.Component {
         this.state.translateY + e.pageY - this.state.mouseDown.y
       );
     }
+  }
+
+  setMouseOffset( offset ) {
+    this.setState( (prevState, props) => {
+      prevState.mouseOffset = this.zoomedOffset( {
+        x: offset.x,
+        y: offset.y
+      } );
+      return prevState;
+    } );
   }
 
   svgWidth() {
@@ -119,6 +129,7 @@ class Context extends React.Component {
           editHandler={methods.state.edit}
           removeHandler={methods.state.remove}
           zoomedOffset={this.zoomedOffset}
+          setMouseOffset={this.setMouseOffset}
           methods={methods}/>
       ) ),
 
