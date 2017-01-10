@@ -91,12 +91,12 @@ svg {
   cursor: pointer;
 }
 .transition-button {
-  fill:#337ab7;
+  fill:#25a;
 }
 .socket {
   fill:#a44;
 }
-.socket:hover, .transition-button:hover {
+.socket:hover {
   stroke:#fff;
   stroke-width:2px;
 }
@@ -107,11 +107,15 @@ svg {
   stroke-width:1;
 }
 
+.transition-button:hover {
+  stroke:#fff;
+}
 .transition-button .transition-text {
-  stroke:#ddd;
+  fill:#ddd;
+  stroke-width:0;
 }
 .transition-button:hover .transition-text {
-  stroke:#eee;
+  fill:#fff;
 }
 
 .transition {
@@ -124,11 +128,7 @@ svg {
   cursor:pointer;
   stroke-width:2;
 }
-/*.transition-line {
-}
 .transition-circle {
   stroke:#fff;
+  fill:#25a;
 }
-.transition-circle-text{
-  fill:#fff;
-}*/

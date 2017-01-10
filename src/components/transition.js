@@ -32,6 +32,10 @@ export default class Transition extends React.Component {
       diff = {
         x: b.x - a.x,
         y: b.y - a.y
+      },
+      c = {
+        x: (a.x + b.x) / 2,
+        y: (a.y + b.y) / 2
       };
 
     let pathStr = 'M' + a.x + ',' + a.y + ' ';
@@ -43,7 +47,7 @@ export default class Transition extends React.Component {
     return (
       <g className='transition' onClick={this.props.editHandler}>
         <path d={pathStr} className='transition-line' />
-        <circle cx={b.x} cy={b.y} r='2' className='transition-line' />
+        <circle cx={c.x} cy={c.y} r='7' className='transition-circle' />
       </g>
     );
   }
