@@ -178,7 +178,7 @@ export default class Engine extends React.Component {
     }
 
     this.methods.state.drag = (id,x,y) => this.saveToState(
-      (state) => state.store.states.indexOfId(id),
+      (state) => state.store.states.valueById(id),
       {x,y}
     );
 

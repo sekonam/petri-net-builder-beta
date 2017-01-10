@@ -15,13 +15,20 @@ class Context extends React.Component {
         width: 0,
         height: 0
       },
+
+      // active transition build
       mouseOffset: {
         x: 0,
         y: 0
       },
+
+      // tracking board
       mouseDown: null,
       translateX: 0,
-      translateY: 0
+      translateY: 0,
+
+      // show selected state dim everyone else
+      clickedState: null
     };
 
     this.zoomedOffset = this.zoomedOffset.bind(this);
@@ -29,6 +36,7 @@ class Context extends React.Component {
     this.mouseDownHandler = this.mouseDownHandler.bind(this);
     this.mouseUpHandler = this.mouseUpHandler.bind(this);
     this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
+    this.hideDimLayer = this.hideDimLayer.bind(this);
   }
 
   componentDidMount() {
@@ -94,7 +102,7 @@ class Context extends React.Component {
         x: e.pageX,
         y: e.pageY
       } );
-    } else if (!active.state && this.state.mouseDown) {
+    } else if (!active.state && !this.state.clickedState && this.state.mouseDown) {
       this.props.methods.translate.set(
         this.state.translateX + e.pageX - this.state.mouseDown.x,
         this.state.translateY + e.pageY - this.state.mouseDown.y
@@ -120,17 +128,27 @@ class Context extends React.Component {
     return Math.max( 0, this.state.documentSize.height - 55 );
   }
 
+  hideDimLayer(e) {
+    this.setState({
+      clickedState: null
+    });
+
+    e.stopPropagation();
+  }
+
   render() {
     const { store, methods, active } = this.props,
 
-      states = store.states.cmap( (state, id) => (
-        <State data={state} id={state.id} key={id}
+      states = store.states.cmap( (state, key) => (
+        <State data={state} id={state.id} key={key}
           dragHandler={methods.state.drag}
           editHandler={methods.state.edit}
           removeHandler={methods.state.remove}
           zoomedOffset={this.zoomedOffset}
           setMouseOffset={this.setMouseOffset}
-          methods={methods}/>
+          contextSetState={this.setState.bind(this)}
+          store={store}
+          methods={methods} />
       ) ),
 
       getHandlers = {
@@ -138,8 +156,8 @@ class Context extends React.Component {
         socket: methods.socket.get
       },
 
-      transitions = store.transitions.cmap( (transition, id) => (
-        <Transition data={transition} key={id}
+      transitions = store.transitions.cmap( (transition, key) => (
+        <Transition data={transition} key={key}
           editHandler={() => methods.transition.edit(transition.id)}
           getHandlers={getHandlers} />
       ) ),
@@ -153,7 +171,7 @@ class Context extends React.Component {
       groups = store.groups.cmap( (group, key) => {
         if (group.states.length) {
           const BIG_INT = 1000000,
-            INDENT = 5;
+            INDENT = 10;
 
           let max = {
               x: -BIG_INT,
@@ -183,7 +201,17 @@ class Context extends React.Component {
       } ),
 
       viewport = this.props.viewport,
-      transform = `translate(${viewport.translateX}px,${viewport.translateY}px) scale(${viewport.zoom})`;
+      transform = `scale(${viewport.zoom}) translate(${viewport.translateX}px,${viewport.translateY}px)`;
+
+    let dimLayerStyles = {
+        display: 'none'
+      },
+      redrawState = '';
+
+    if (this.state.clickedState) {
+      dimLayerStyles = {};
+      redrawState = <use href={'#' + this.state.clickedState} style={{transform}}/>;
+    }
 
     return (
       <svg width={ this.svgWidth() } height={ this.svgHeight() }
@@ -191,8 +219,8 @@ class Context extends React.Component {
         onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler}
         ref={ (el) => { this.svg = el; } } >
         <g className="diagram-objects" style={{transform}}>
-          <circle cx="1" cy="1" r="1" className="tactical"/>
-          <circle cx={ this.svgWidth() - 1 } cy={ this.svgHeight() - 1 } r="1" className="tactical"/>
+          <circle cx="0" cy="0" r="1" className="tactical"/>
+          <circle cx={ this.svgWidth() } cy={ this.svgHeight() } r="1" className="tactical"/>
           <g className="groups">
             {groups}
           </g>
@@ -204,6 +232,10 @@ class Context extends React.Component {
             {states}
           </g>
         </g>
+        <rect x="0" y="0" width={ this.svgWidth() } height={ this.svgHeight() }
+          className="dim-layer" style={dimLayerStyles}
+          onClick={this.hideDimLayer} />
+        {redrawState}
       </svg>
     );
   }

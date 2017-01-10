@@ -139,3 +139,11 @@ svg {
   stroke:#fff;
   fill:#25a;
 }
+
+.dim-layer {
+  fill:#000;
+  opacity: 0.5;
+}
+.groups, .transitions, .states {
+  z-index: 0;
+}

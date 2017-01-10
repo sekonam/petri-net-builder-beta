@@ -23,15 +23,15 @@ const stateSource = {
             },
             zoomedOffset = component.props.zoomedOffset(sourceOffset);
 
-          component.props.dragHandler(props.id, zoomedOffset.x, zoomedOffset.y);
+          component.props.dragHandler(props.data.id, zoomedOffset.x, zoomedOffset.y);
         }
       }, 10
     );
 
-    component.props.methods.state.active(props.id);
+    component.props.methods.state.active(props.data.id);
 
     return {
-      id: props.id,
+      id: props.data.id,
       x0: component.props.data.x,
       y0: component.props.data.y
     };
@@ -82,7 +82,9 @@ class State extends React.Component {
         wasDragged: false
       });
     } else {
-      console.log('click!');
+      this.props.contextSetState({
+        clickedState: this.props.data.id
+      });
     }
   }
 
@@ -117,8 +119,8 @@ class State extends React.Component {
     } );
 
     return connectDragSource(
-      <g className="state" onClick={this.clickHandler}>
-        <rect className="state-rect" x={x} y={y} id={id}
+      <g className="state" id={id} onClick={this.clickHandler}>
+        <rect className="state-rect" x={x} y={y}
           width={width + 'px'} height={height + 'px'} rx={r} ry={r}></rect>
         <text className="state-txt" x={x+7} y={y+18}>{this.props.data.short('name', 11)}</text>
         {socketTags}
