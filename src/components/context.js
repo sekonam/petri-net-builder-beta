@@ -139,6 +139,38 @@ class Context extends React.Component {
           getHandlers={getHandlers} />
       ) : '',
 
+      groups = store.groups.cmap( (group, key) => {
+        if (group.states.length) {
+          const BIG_INT = 1000000,
+            INDENT = 5;
+
+          let max = {
+              x: -BIG_INT,
+              y: -BIG_INT
+            },
+            min = {
+              x: BIG_INT,
+              y: BIG_INT
+            };
+
+            group.states.forEach( (sid) => {
+              const state = methods.state.get(sid);
+              min.x = Math.min( min.x, state.x );
+              min.y = Math.min( min.y, state.y );
+              max.x = Math.max( max.x, state.x + state.width );
+              max.y = Math.max( max.y, state.y + state.height );
+            } );
+
+            return (
+              <g className="group" key={key}>
+                <rect x={min.x - INDENT} y={min.y - INDENT}
+                  width={max.x - min.x + 2 * INDENT} height={max.y - min.y + 2 * INDENT}
+                  rx={INDENT} ry={INDENT} className="group-rect"/>
+              </g>
+            );
+          }
+      } ),
+
       viewport = this.props.viewport,
       transform = `translate(${viewport.translateX}px,${viewport.translateY}px) scale(${viewport.zoom})`;
 
@@ -150,6 +182,9 @@ class Context extends React.Component {
         <g className="diagram-objects" style={{transform}}>
           <circle cx="1" cy="1" r="1" />
           <circle cx={ this.svgWidth() - 1 } cy={ this.svgHeight() - 1 } r="1" />
+          <g className="groups">
+            {groups}
+          </g>
           <g className="transitions">
             {transitions}
           {activeTransition}

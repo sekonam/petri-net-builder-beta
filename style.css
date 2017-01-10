@@ -94,11 +94,17 @@ svg {
   fill:#337ab7;
 }
 .socket {
-  fill:#f0ad4e;
+  fill:#a44;
 }
 .socket:hover, .transition-button:hover {
   stroke:#fff;
   stroke-width:2px;
+}
+
+.group-rect {
+  fill:#777;
+  stroke:#333;
+  stroke-width:1;
 }
 
 .transition-button .transition-text {

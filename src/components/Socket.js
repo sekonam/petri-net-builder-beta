@@ -29,7 +29,7 @@ export default class Socket extends React.Component {
 
     return (
       <g className={className}>
-        <circle cx={x} cy={y} r="7" onClick={this.socketClick}/>
+        <circle cx={x} cy={y} r="5" onClick={this.socketClick}/>
       </g>
     );
   }

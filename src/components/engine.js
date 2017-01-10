@@ -140,11 +140,12 @@ export default class Engine extends React.Component {
               key = data.findIndexById(id);
 
             if (key > -1) {
-              data.splice(key, 1);
 
               if (callback) {
                 callback.call(this, state, id);
               }
+
+              data.splice(key, 1);
             }
 
             return state;
@@ -215,7 +216,7 @@ export default class Engine extends React.Component {
       } );
 
       state.store.groups.forEach( (group) => {
-        const groupKey = group.states.indexById(sid);
+        const groupKey = group.states.indexOf(sid);
 
         if (groupKey > -1) {
           group.states.splice(groupKey, 1);
