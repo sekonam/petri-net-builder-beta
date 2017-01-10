@@ -186,7 +186,7 @@ class Context extends React.Component {
       ) ),
 
       viewport = this.props.viewport,
-      transform = `scale(${viewport.zoom}) translate(${viewport.translateX}px,${viewport.translateY}px)`;
+      transform = `translate(${viewport.translateX}px,${viewport.translateY}px) scale(${viewport.zoom})`;
 
     let dimLayerStyles = {
         display: 'none'
@@ -202,6 +202,7 @@ class Context extends React.Component {
       <svg width={ this.svgWidth() } height={ this.svgHeight() }
         onMouseMove={this.mouseMoveHandler} onClick={methods.transition.removeActive}
         onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler}
+        onWheel={ (e) => methods.zoom.change( e.deltaY > 0 ? 0.25 : -0.25 )() }
         ref={ (el) => { this.svg = el; } } >
         <g className="diagram-objects" style={{transform}}>
           <circle cx="0" cy="0" r="1" className="tactical"/>

@@ -350,6 +350,9 @@ export default class Engine extends React.Component {
         this.methods[itemType][method] = this.methods[itemType][method].bind(this);
       }
     }
+
+    this.saveStateToStorage = this.saveStateToStorage.bind(this);
+    this.keyDownHandler = this.keyDownHandler.bind(this);
   }
 
   saveToState(statePath, values='') {
@@ -396,14 +399,20 @@ export default class Engine extends React.Component {
     this.saveToStorage( 'store', this.state.store );
   }
 
-  componentDidMount() {
-    window.addEventListener( 'beforeunload', this.saveStateToStorage.bind(this) );
-    document.body.addEventListener( 'keydown', (e) => {
-      if (e.keyCode == 27 && this.state.active.transition) {
-        this.methods.transition.removeActive();
-      }
-    } );
+  keyDownHandler(e) {
+    if (e.keyCode == 27 && this.state.active.transition) {
+      this.methods.transition.removeActive();
+    }
+  }
 
+  componentDidMount() {
+    window.addEventListener( 'beforeunload', this.saveStateToStorage );
+    document.body.addEventListener( 'keydown', this.keyDownHandler);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener( 'beforeunload', this.saveStateToStorage );
+    document.body.removeEventListener( 'keydown', this.keyDownHandler);
   }
 
   render() {
