@@ -391,11 +391,16 @@ export default class Engine extends React.Component {
 
   saveStateToStorage() {
     this.saveToStorage( 'store', this.state.store );
-//    this.saveToStorage( 'viewport', this.state.viewport );
   }
 
   componentDidMount() {
     window.addEventListener( 'beforeunload', this.saveStateToStorage.bind(this) );
+    document.body.addEventListener( 'keydown', (e) => {
+      if (e.keyCode == 27 && this.state.active.transition) {
+        this.methods.transition.removeActive();
+      }
+    } );
+
   }
 
   render() {

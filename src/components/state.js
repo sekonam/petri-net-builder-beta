@@ -3,6 +3,7 @@ import { DragSource } from 'react-dnd';
 import Types from './types.js';
 import StateModel from '../models/state.js';
 import Socket from './Socket.js';
+import CircleButton from './CircleButton.js';
 
 const stateSource = {
 
@@ -49,20 +50,6 @@ const stateSource = {
 function collect(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
-  }
-}
-
-class CircleButton extends React.Component {
-  render() {
-    const {x, y, caption} = this.props,
-      className = 'transition-circle' + (caption == 'D' ? ' remove-button' : '');
-    return (
-      <g className='transition-button' onClick={this.props.clickHandler}>
-        <circle className={className} cx={x+4} cy={y} r='9' />
-        <text className="transition-text" x={x} y={y+5}>
-          {caption}</text>
-      </g>
-    );
   }
 }
 

@@ -4,6 +4,7 @@ import { DragDropContext } from 'react-dnd';
 
 import State from './state.js';
 import Transition from './transition.js';
+import Group from './Group.js';
 
 import StateModel from '../models/state.js';
 
@@ -168,37 +169,9 @@ class Context extends React.Component {
           getHandlers={getHandlers} />
       ) : '',
 
-      groups = store.groups.cmap( (group, key) => {
-        if (group.states.length) {
-          const BIG_INT = 1000000,
-            INDENT = 10;
-
-          let max = {
-              x: -BIG_INT,
-              y: -BIG_INT
-            },
-            min = {
-              x: BIG_INT,
-              y: BIG_INT
-            };
-
-            group.states.forEach( (sid) => {
-              const state = methods.state.get(sid);
-              min.x = Math.min( min.x, state.x );
-              min.y = Math.min( min.y, state.y );
-              max.x = Math.max( max.x, state.x + state.width );
-              max.y = Math.max( max.y, state.y + state.height );
-            } );
-
-            return (
-              <g className="group" key={key}>
-                <rect x={min.x - INDENT} y={min.y - INDENT}
-                  width={max.x - min.x + 2 * INDENT} height={max.y - min.y + 2 * INDENT}
-                  rx={INDENT} ry={INDENT} className="group-rect"/>
-              </g>
-            );
-          }
-      } ),
+      groups = store.groups.cmap( (group, key) => (
+        <Group data={group} methods={methods} key={key} />
+      ) ),
 
       viewport = this.props.viewport,
       transform = `scale(${viewport.zoom}) translate(${viewport.translateX}px,${viewport.translateY}px)`;

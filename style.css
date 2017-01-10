@@ -99,6 +99,9 @@ svg {
   stroke-width:2px;
 }
 
+.group .group-header {
+  fill : #fff;
+}
 .group-rect {
   fill:#777;
   stroke:#333;
