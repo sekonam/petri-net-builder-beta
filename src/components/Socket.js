@@ -17,10 +17,11 @@ export default class Socket extends React.Component {
         x: e.pageX,
         y: e.pageY
       });
-      e.stopPropagation();
     } else {
       transitionHandlers.linkActive(data);
     }
+    
+    e.stopPropagation();
   }
 
   render() {

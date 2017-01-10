@@ -40,6 +40,9 @@ const stateSource = {
   endDrag(props, monitor, component) {
     clearInterval(this.timerId);
     component.props.methods.state.active(null);
+    component.setState({
+      wasDragged: true
+    });
   }
 };
 
@@ -64,6 +67,24 @@ class CircleButton extends React.Component {
 }
 
 class State extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      wasDragged: false
+    };
+    this.clickHandler = this.clickHandler.bind(this);
+  }
+
+  clickHandler (e) {
+    if (this.state.wasDragged) {
+      this.setState({
+        wasDragged: false
+      });
+    } else {
+      console.log('click!');
+    }
+  }
 
   render() {
     const { connectDragSource, id, data,
@@ -96,14 +117,14 @@ class State extends React.Component {
     } );
 
     return connectDragSource(
-      <g className="state">
+      <g className="state" onClick={this.clickHandler}>
         <rect className="state-rect" x={x} y={y} id={id}
           width={width + 'px'} height={height + 'px'} rx={r} ry={r}></rect>
         <text className="state-txt" x={x+7} y={y+18}>{this.props.data.short('name', 11)}</text>
         {socketTags}
-        <CircleButton clickHandler={(e) => editHandler(id)}
+        <CircleButton clickHandler={(e) => { editHandler(id); e.stopPropagation(); }}
           x={x + width/2 - 16} y={y + height - 17} caption="E"/>
-        <CircleButton clickHandler={(e) => removeHandler(id)}
+        <CircleButton clickHandler={(e) => { removeHandler(id); e.stopPropagation(); }}
           x={x + width/2 + 8} y={y + height - 17} caption="D"/>
       </g>
     );

@@ -191,8 +191,8 @@ class Context extends React.Component {
         onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler}
         ref={ (el) => { this.svg = el; } } >
         <g className="diagram-objects" style={{transform}}>
-          <circle cx="1" cy="1" r="1" />
-          <circle cx={ this.svgWidth() - 1 } cy={ this.svgHeight() - 1 } r="1" />
+          <circle cx="1" cy="1" r="1" className="tactical"/>
+          <circle cx={ this.svgWidth() - 1 } cy={ this.svgHeight() - 1 } r="1" className="tactical"/>
           <g className="groups">
             {groups}
           </g>
