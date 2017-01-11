@@ -13,20 +13,6 @@ const stateSource = {
     this.timerId = setInterval(
       () => {
         if (monitor.isDragging()) {
-/*          const initialOffset = monitor.getInitialClientOffset(),
-            initialSourceOffset = monitor.getInitialSourceClientOffset(),
-            shift = {
-              x: initialOffset.x - initialSourceOffset.x,
-              y: initialOffset.y - initialSourceOffset.y
-            },
-            clientOffset = monitor.getClientOffset(),
-            sourceOffset = {
-              x: clientOffset.x - shift.x,
-              y: clientOffset.y - shift.y
-            },
-            zoomedOffset = component.props.zoomedOffset(sourceOffset);
-
-          component.props.dragHandler(props.data.id, zoomedOffset.x, zoomedOffset.y);*/
           const diff = monitor.getDifferenceFromInitialOffset(),
             zDiff = component.props.zoomedDiff(diff);
 
@@ -77,9 +63,10 @@ class State extends React.Component {
         wasDragged: false
       });
     } else {
-      this.props.contextSetState({
+/*      this.props.contextSetState({
         clickedState: this.props.data.id
-      });
+      });*/
+      this.props.methods.state.edit(this.props.data.id);
     }
   }
 
