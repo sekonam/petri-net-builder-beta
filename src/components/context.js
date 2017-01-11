@@ -167,7 +167,6 @@ class Context extends React.Component {
       <g>
         <circle cx={ -indents.x + 1 } cy={ -indents.y + 1 } r="1" className="tactical"/>
         <circle cx={ w + indents.x - 1 } cy={ h + indents.y - 1 } r="1" className="tactical"/>
-        <circle cx={ this.svgWidth()/2 } cy={ this.svgHeight()/2 } r="1"/>
       </g>
     );
   }
