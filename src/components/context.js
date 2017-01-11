@@ -2,6 +2,7 @@ import React from 'react';
 import { default as TouchBackend } from 'react-dnd-touch-backend';
 import { DragDropContext } from 'react-dnd';
 
+import GroupModel from './../models/GroupModel.js';
 import State from './state.js';
 import Transition from './transition.js';
 import Group from './Group.js';
@@ -62,12 +63,11 @@ class Context extends React.Component {
 
   zoomedOffset(offset) {
     const svgOffset = this.fullElementOffset(this.svg),
+      x = offset.x - svgOffset.x,
+      y = offset.y - svgOffset.y,
       viewport = this.props.viewport,
       w = this.svgWidth(),
-      h = this.svgHeight();
-
-    let x = offset.x - svgOffset.x,
-      y = offset.y - svgOffset.y;
+      h = this.svgHeight()
 
     return {
       x: w/2 + (x - w/2 - viewport.translateX) / viewport.zoom,
@@ -76,18 +76,21 @@ class Context extends React.Component {
   }
 
   zoomedDiff(diff) {
-    const viewport = this.props.viewport,
-      w = this.svgWidth(),
-      h = this.svgHeight();
+    const viewport = this.props.viewport;
 
     return {
-      x: w/2 + (diff.x - w/2) / viewport.zoom,
-      y: h/2 + (diff.y - h/2) / viewport.zoom
+      x: diff.x / viewport.zoom,
+      y: diff.y / viewport.zoom
     };
   }
 
+  canChangeTranslate() {
+    const {active} = this.props;
+    return !active.state && !active.group && !this.state.clickedState;
+  }
+
   mouseDownHandler(e) {
-    if (!this.props.active.state) {
+    if (this.canChangeTranslate()) {
       this.setState({
         mouseDown: {
           x: e.pageX,
@@ -100,25 +103,27 @@ class Context extends React.Component {
   }
 
   mouseUpHandler(e) {
-    this.setState({
-      mouseDown: null,
-      translateX: 0,
-      translateY: 0
-    });
+    if (this.canChangeTranslate() && this.state.mouseDown) {
+      this.setState({
+        mouseDown: null,
+        translateX: 0,
+        translateY: 0
+      });
+    }
   }
 
   mouseMoveHandler(e) {
-    const {active} = this.props;
+    const {active, viewport} = this.props;
 
     if (active.transition) {
       this.setMouseOffset( {
         x: e.pageX,
         y: e.pageY
       } );
-    } else if (!active.state && !active.group && !this.state.clickedState && this.state.mouseDown) {
+    } else if (this.canChangeTranslate() && this.state.mouseDown) {
       this.props.methods.translate.set(
-        this.state.translateX + e.pageX - this.state.mouseDown.x,
-        this.state.translateY + e.pageY - this.state.mouseDown.y
+        this.state.translateX + (e.pageX - this.state.mouseDown.x) / viewport.zoom,
+        this.state.translateY + (e.pageY - this.state.mouseDown.y) / viewport.zoom
       );
     }
   }
@@ -149,6 +154,24 @@ class Context extends React.Component {
     e.stopPropagation();
   }
 
+  drawTactical() {
+    const { store, methods } = this.props,
+      { min, max } = GroupModel.findMinMax( store.states ),
+      w = this.svgWidth(),
+      h = this.svgHeight(),
+      indents = {
+        x: Math.max( Math.abs( Math.min( 0, min.x ) ), Math.max( 0, max.x - w ) ),
+        y: Math.max( Math.abs( Math.min( 0, min.y ) ), Math.max( 0, max.y - h ) )
+      }
+    return (
+      <g>
+        <circle cx={ -indents.x + 1 } cy={ -indents.y + 1 } r="1" className="tactical"/>
+        <circle cx={ w + indents.x - 1 } cy={ h + indents.y - 1 } r="1" className="tactical"/>
+        <circle cx={ this.svgWidth()/2 } cy={ this.svgHeight()/2 } r="1"/>
+      </g>
+    );
+  }
+
   render() {
     const { store, methods, active } = this.props,
 
@@ -158,6 +181,7 @@ class Context extends React.Component {
           editHandler={methods.state.edit}
           removeHandler={methods.state.remove}
           zoomedOffset={this.zoomedOffset}
+          zoomedDiff={this.zoomedDiff}
           setMouseOffset={this.setMouseOffset}
           contextSetState={this.setState.bind(this)}
           store={store}
@@ -186,7 +210,12 @@ class Context extends React.Component {
       ) ),
 
       viewport = this.props.viewport,
-      transform = `translate(${viewport.translateX}px,${viewport.translateY}px) scale(${viewport.zoom})`;
+      transform = `translate(${viewport.translateX}px,${viewport.translateY}px) scale(${viewport.zoom})`,
+//      transform = `scale(${viewport.zoom})`,
+      transformStyle = {
+        transform,
+        transformOrigin: '50% 50%'
+      };
 
     let dimLayerStyles = {
         display: 'none'
@@ -205,8 +234,7 @@ class Context extends React.Component {
         onWheel={ (e) => methods.zoom.change( e.deltaY > 0 ? 0.25 : -0.25 )() }
         ref={ (el) => { this.svg = el; } } >
         <g className="diagram-objects" style={{transform}}>
-          <circle cx="0" cy="0" r="1" className="tactical"/>
-          <circle cx={ this.svgWidth() } cy={ this.svgHeight() } r="1" className="tactical"/>
+          {this.drawTactical()}
           <g className="groups">
             {groups}
           </g>

@@ -2,6 +2,7 @@ import React from 'react';
 import { DragSource } from 'react-dnd';
 
 import Types from './types.js';
+import GroupModel from './../models/GroupModel.js';
 import CircleButton from './CircleButton.js';
 
 const groupSource = {
@@ -62,26 +63,10 @@ class Group extends React.Component {
     const {data, methods , connectDragSource} = this.props;
 
     if (data.states.length) {
-      const BIG_INT = 1000000,
-        INDENT = 10,
-        HEADER = 20;
-
-      let max = {
-          x: -BIG_INT,
-          y: -BIG_INT
-        },
-        min = {
-          x: BIG_INT,
-          y: BIG_INT
-        };
-
-      data.states.forEach( (sid) => {
-        const state = methods.state.get(sid);
-        min.x = Math.min( min.x, state.x );
-        min.y = Math.min( min.y, state.y );
-        max.x = Math.max( max.x, state.x + state.width );
-        max.y = Math.max( max.y, state.y + state.height );
-      } );
+      const INDENT = 10,
+        HEADER = 20,
+        states = data.states.cmap( (sid) => methods.state.get(sid) ),
+        {min, max} = GroupModel.findMinMax(states);
 
       const x = min.x - INDENT,
         y = min.y - INDENT - HEADER,
@@ -100,6 +85,8 @@ class Group extends React.Component {
         </g>
       );
     }
+
+    return null;
   }
 }
 

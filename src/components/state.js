@@ -8,10 +8,12 @@ import CircleButton from './CircleButton.js';
 const stateSource = {
 
   beginDrag(props, monitor, component) {
+    const {data, methods} = component.props;
+
     this.timerId = setInterval(
       () => {
         if (monitor.isDragging()) {
-          const initialOffset = monitor.getInitialClientOffset(),
+/*          const initialOffset = monitor.getInitialClientOffset(),
             initialSourceOffset = monitor.getInitialSourceClientOffset(),
             shift = {
               x: initialOffset.x - initialSourceOffset.x,
@@ -24,17 +26,23 @@ const stateSource = {
             },
             zoomedOffset = component.props.zoomedOffset(sourceOffset);
 
-          component.props.dragHandler(props.data.id, zoomedOffset.x, zoomedOffset.y);
+          component.props.dragHandler(props.data.id, zoomedOffset.x, zoomedOffset.y);*/
+          const diff = monitor.getDifferenceFromInitialOffset(),
+            zDiff = component.props.zoomedDiff(diff);
+
+          component.props.dragHandler(props.data.id, this.start.x + zDiff.x, this.start.y + zDiff.y);
         }
       }, 10
     );
 
-    component.props.methods.state.active(props.data.id);
+    this.start = {
+      x: data.x,
+      y: data.y
+    };
+    methods.state.active(props.data.id);
 
     return {
-      id: props.data.id,
-      x0: component.props.data.x,
-      y0: component.props.data.y
+      id: props.data.id
     };
   },
 
