@@ -1,4 +1,4 @@
-import Model from './model.js';
+import Model from './Model.js';
 
 export default class SocketModel extends Model {
   constructor(params = null) {

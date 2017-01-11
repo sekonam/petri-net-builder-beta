@@ -1,8 +1,8 @@
-import Model from './model.js';
-import StateModel from './state.js';
-import ActionModel from './action.js';
-import EventModel from './event.js';
-import TransitionModel from './transition.js';
+import Model from './Model.js';
+import StateModel from './StateModel.js';
+import ActionModel from './ActionModel.js';
+import EventModel from './EventModel.js';
+import TransitionModel from './TransitionModel.js';
 import VarModel from './VarModel.js';
 import GroupModel from './GroupModel.js';
 

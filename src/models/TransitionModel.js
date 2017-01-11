@@ -1,4 +1,6 @@
-import Model from './model.js';
+import Model from './Model.js';
+
+import {PropTypes} from 'react';
 
 export default class TransitionModel extends Model {
   constructor(params = null) {

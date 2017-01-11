@@ -1,7 +1,7 @@
 import React from 'react';
 import { DragSource } from 'react-dnd';
 
-import Types from './types.js';
+import Types from './Types.js';
 import GroupModel from './../models/GroupModel.js';
 import CircleButton from './CircleButton.js';
 

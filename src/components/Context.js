@@ -3,11 +3,11 @@ import { default as TouchBackend } from 'react-dnd-touch-backend';
 import { DragDropContext } from 'react-dnd';
 
 import GroupModel from './../models/GroupModel.js';
-import State from './state.js';
-import Transition from './transition.js';
+import State from './State.js';
+import Transition from './Transition.js';
 import Group from './Group.js';
 
-import StateModel from '../models/state.js';
+import StateModel from '../models/StateModel.js';
 
 class Context extends React.Component {
   constructor(props) {

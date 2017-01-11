@@ -1,7 +1,8 @@
 import React from 'react';
-import Modal from './modal.js';
 import {Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 import Select from 'react-select';
+
+import Modal from './Modal.js';
 
 export default class GroupForm extends React.Component {
 

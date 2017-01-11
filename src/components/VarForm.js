@@ -1,6 +1,7 @@
 import React from 'react';
-import Modal from './modal.js';
 import {Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
+
+import Modal from './Modal.js';
 
 export default class VarForm extends React.Component {
   render() {

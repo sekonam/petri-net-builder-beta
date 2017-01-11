@@ -1,5 +1,5 @@
 import React from 'react';
-import StateModel from '../models/state.js';
+import StateModel from '../models/StateModel.js';
 
 export default class Transition extends React.Component {
 

@@ -1,25 +1,24 @@
 import React from 'react';
+import {Button} from 'react-bootstrap';
 
-import EngineModel from '../models/engine.js';
-import StateModel from '../models/state.js';
+import EngineModel from '../models/EngineModel.js';
+import StateModel from '../models/StateModel.js';
 import GroupModel from '../models/GroupModel.js';
-import EventModel from '../models/event.js';
-import ActionModel from '../models/action.js';
-import TransitionModel from '../models/transition.js';
+import EventModel from '../models/EventModel.js';
+import ActionModel from '../models/ActionModel.js';
+import TransitionModel from '../models/TransitionModel.js';
 import VarModel from '../models/VarModel.js';
 import SocketModel from '../models/SocketModel.js';
 import ViewportModel from '../models/ViewportModel.js';
 
-import Context from './context.js';
-import StateForm from './stateform.js';
+import Context from './Context.js';
+import StateForm from './StateForm.js';
 import GroupForm from './GroupForm.js';
-import EventForm from './eventform.js';
-import ActionForm from './actionform.js';
-import TransitionForm from './transitionform.js';
+import EventForm from './EventForm.js';
+import ActionForm from './ActionForm.js';
+import TransitionForm from './TransitionForm.js';
 import VarForm from './VarForm.js';
-import LeftMenuBlock from './leftmenublock.js';
-
-import {Button} from 'react-bootstrap';
+import LeftMenuBlock from './LeftMenuBlock.js';
 
 export default class Engine extends React.Component {
 

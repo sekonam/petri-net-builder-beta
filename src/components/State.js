@@ -1,7 +1,9 @@
 import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
-import Types from './types.js';
-import StateModel from '../models/state.js';
+
+import Types from './Types.js';
+import StateModel from '../models/StateModel.js';
+
 import Socket from './Socket.js';
 import CircleButton from './CircleButton.js';
 
