@@ -122,8 +122,8 @@ class Context extends React.Component {
       } );
     } else if (this.canChangeTranslate() && this.state.mouseDown) {
       this.props.methods.translate.set(
-        this.state.translateX + (e.pageX - this.state.mouseDown.x) / viewport.zoom,
-        this.state.translateY + (e.pageY - this.state.mouseDown.y) / viewport.zoom
+        this.state.translateX + e.pageX - this.state.mouseDown.x,
+        this.state.translateY + e.pageY - this.state.mouseDown.y
       );
     }
   }
