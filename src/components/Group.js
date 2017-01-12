@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
 
 import Types from './Types.js';
@@ -89,5 +89,11 @@ class Group extends React.Component {
     return null;
   }
 }
+
+Group.propTypes = {
+    data: PropTypes.instanceOf(GroupModel).isRequired,
+    methods: PropTypes.object.isRequired,
+    zoomedDiff: PropTypes.func.isRequired
+};
 
 export default DragSource(Types.GROUP, groupSource, collect)(Group);

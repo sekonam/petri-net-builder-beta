@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import { default as TouchBackend } from 'react-dnd-touch-backend';
 import { DragDropContext } from 'react-dnd';
 
+import EngineModel from './../models/EngineModel.js';
+import ViewportModel from './../models/ViewportModel.js';
 import GroupModel from './../models/GroupModel.js';
+
 import State from './State.js';
 import Transition from './Transition.js';
 import Group from './Group.js';
@@ -176,10 +179,6 @@ class Context extends React.Component {
 
       states = store.states.cmap( (state, key) => (
         <State data={state} id={state.id} key={key}
-          dragHandler={methods.state.drag}
-          editHandler={methods.state.edit}
-          removeHandler={methods.state.remove}
-          zoomedOffset={this.zoomedOffset}
           zoomedDiff={this.zoomedDiff}
           setMouseOffset={this.setMouseOffset}
           contextSetState={this.setState.bind(this)}
@@ -210,7 +209,6 @@ class Context extends React.Component {
 
       viewport = this.props.viewport,
       transform = `translate(${viewport.translateX}px,${viewport.translateY}px) scale(${viewport.zoom})`,
-//      transform = `scale(${viewport.zoom})`,
       transformStyle = {
         transform,
         transformOrigin: '50% 50%'
@@ -253,5 +251,12 @@ class Context extends React.Component {
     );
   }
 }
+
+Context.propTypes = {
+  store: PropTypes.instanceOf(EngineModel).isRequired,
+  viewport: PropTypes.instanceOf(ViewportModel).isRequired,
+  methods: PropTypes.object.isRequired,
+  active: PropTypes.object.isRequired
+};
 
 export default DragDropContext(TouchBackend({ enableMouseEvents: true }))(Context);

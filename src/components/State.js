@@ -18,7 +18,9 @@ const stateSource = {
           const diff = monitor.getDifferenceFromInitialOffset(),
             zDiff = component.props.zoomedDiff(diff);
 
-          component.props.dragHandler(props.data.id, this.start.x + zDiff.x, this.start.y + zDiff.y);
+          methods.state.drag(props.data.id,
+            this.start.x + zDiff.x,
+            this.start.y + zDiff.y);
         }
       }, 10
     );
@@ -73,8 +75,7 @@ class State extends React.Component {
   }
 
   render() {
-    const { connectDragSource, id, data,
-      removeHandler, editHandler, methods} = this.props,
+    const { connectDragSource, id, data, methods} = this.props,
       { x, y, width, height, r } = data,
       typeNames = [ 'income', 'outcome' ];
 
@@ -108,13 +109,23 @@ class State extends React.Component {
           width={width + 'px'} height={height + 'px'} rx={r} ry={r}></rect>
         <text className="state-txt" x={x+7} y={y+18}>{this.props.data.short('name', 11)}</text>
         {socketTags}
-        <CircleButton clickHandler={(e) => { editHandler(id); e.stopPropagation(); }}
+        <CircleButton clickHandler={(e) => { methods.state.edit(id); e.stopPropagation(); }}
           x={x + width/2 - 16} y={y + height - 17} caption="E"/>
-        <CircleButton clickHandler={(e) => { removeHandler(id); e.stopPropagation(); }}
+        <CircleButton clickHandler={(e) => { methods.state.remove(id); e.stopPropagation(); }}
           x={x + width/2 + 8} y={y + height - 17} caption="D"/>
       </g>
     );
   }
 }
+
+State.propTypes = {
+  data: PropTypes.instanceOf(StateModel).isRequired,
+  id: PropTypes.string.isRequired,
+  zoomedDiff: PropTypes.func.isRequired,
+  setMouseOffset: PropTypes.func.isRequired,
+  contextSetState: PropTypes.func.isRequired,
+  store: PropTypes.object.isRequired,
+  methods: PropTypes.object.isRequired
+};
 
 export default DragSource(Types.STATE, stateSource, collect)(State);

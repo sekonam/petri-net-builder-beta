@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {Modal, Button} from 'react-bootstrap';
 
 export default class ModalDialog extends React.Component {
@@ -26,11 +26,9 @@ export default class ModalDialog extends React.Component {
   }
 }
 
-/*
-ModalDialog.create = (title, content, callback) => {
-  ReactDOM.render(
-    <ModalDialog title={title} onExiting={callback}>{content}</ModalDialog>,
-    ModalDialog.rootNode
-  );
-}
-*/
+Modal.propTypes = {
+  title: PropTypes.string,
+  show: PropTypes.bool,
+  hide: PropTypes.func,
+  remove: PropTypes.func
+};

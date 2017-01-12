@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import { Button } from 'react-bootstrap';
 
 class LeftMenuElement extends React.Component {
@@ -14,6 +14,11 @@ class LeftMenuElement extends React.Component {
     );
   }
 }
+
+LeftMenuElement.propTypes = {
+  clickHandler: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired
+};
 
 export default class LeftMenuBlock extends React.Component {
   render() {
@@ -34,3 +39,11 @@ export default class LeftMenuBlock extends React.Component {
     );
   }
 }
+
+LeftMenuBlock.propTypes = {
+  itemName: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,
+  editHandler: PropTypes.func.isRequired,
+  addHandler: PropTypes.func.isRequired,
+  activeId: PropTypes.string
+};

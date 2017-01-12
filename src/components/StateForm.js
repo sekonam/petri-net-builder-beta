@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {Form, FormGroup, FormControl, ControlLabel, Checkbox, Button} from 'react-bootstrap';
 import Select from 'react-select';
 
 import Modal from './Modal.js';
+
+import StateModel from '../models/StateModel.js';
 
 export default class StateForm extends React.Component {
 
@@ -98,3 +100,12 @@ export default class StateForm extends React.Component {
     );
   }
 }
+
+StateForm.propTypes = {
+  data: PropTypes.instanceOf(StateModel).isRequired,
+  saveHandler: PropTypes.func.isRequired,
+  afterEditHandler: PropTypes.func.isRequired,
+  removeHandler: PropTypes.func.isRequired,
+  socketHandlers: PropTypes.object.isRequired,
+  show: PropTypes.bool.isRequired
+};

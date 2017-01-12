@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 import Select from 'react-select';
 
 import Modal from './Modal.js';
+
+import GroupModel from '../models/GroupModel.js';
 
 export default class GroupForm extends React.Component {
 
@@ -29,3 +31,9 @@ export default class GroupForm extends React.Component {
     );
   }
 }
+
+GroupForm.propTypes = {
+  data: PropTypes.instanceOf(GroupModel).isRequired,
+  methods: PropTypes.object.isRequired,
+  show: PropTypes.bool.isRequired
+};

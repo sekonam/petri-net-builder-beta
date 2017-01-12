@@ -1,7 +1,5 @@
 import Model from './Model.js';
 
-import {PropTypes} from 'react';
-
 export default class ViewportModel extends Model {
   constructor(params = null) {
     super();

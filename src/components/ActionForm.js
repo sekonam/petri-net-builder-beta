@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Modal from './Modal.js';
 import {Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 import Select from 'react-select';
+
+import ActionModel from '../models/ActionModel.js';
 
 export default class ActionForm extends React.Component {
 
@@ -33,3 +35,13 @@ export default class ActionForm extends React.Component {
     );
   }
 }
+
+ActionForm.propTypes = {
+  data: PropTypes.instanceOf(ActionModel).isRequired,
+  saveHandler: PropTypes.func.isRequired,
+  afterEditHandler: PropTypes.func.isRequired,
+  removeHandler: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired,
+  events: PropTypes.array.isRequired,
+  selectedEvents: PropTypes.array.isRequired
+};

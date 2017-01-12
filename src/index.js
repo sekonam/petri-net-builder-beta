@@ -7,6 +7,6 @@ import Engine from './components/Engine.js';
 const rootNode = document.getElementById('root');
 
 ReactDOM.render(
-  <Engine/>,
+  <Engine />,
   rootNode
 );

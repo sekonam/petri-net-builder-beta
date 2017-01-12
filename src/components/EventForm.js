@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Modal from './Modal.js';
 import {Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
+
+import EventModel from '../models/EventModel.js';
 
 export default class EventForm extends React.Component {
   render() {
@@ -19,3 +21,11 @@ export default class EventForm extends React.Component {
     );
   }
 }
+
+EventForm.propTypes = {
+  data: PropTypes.instanceOf(EventModel).isRequired,
+  saveHandler: PropTypes.func.isRequired,
+  afterEditHandler: PropTypes.func.isRequired,
+  removeHandler: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired
+};

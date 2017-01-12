@@ -1,8 +1,6 @@
 import Model from './Model.js';
 import SocketModel from './SocketModel.js';
 
-import {PropTypes} from 'react';
-
 export default class StateModel extends Model {
 
   constructor(params = null) {

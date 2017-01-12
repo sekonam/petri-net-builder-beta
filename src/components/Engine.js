@@ -464,21 +464,13 @@ export default class Engine extends React.Component {
           removeHandler={methods.action.remove} />
         <TransitionForm show={modal.transition.show}
           data={modal.transition.data}
-          startStates={methods.state.optionsForTransition('start')}
-          finishStates={methods.state.optionsForTransition('finish')}
-          stateHandler={(id) => store.states.indexOfId(id)}
           events={methods.event.options()}
           selectedStartEvents={methods.event.selectedOptions(modal.transition.show ? modal.transition.data.start.events : [])}
           selectedFinishEvents={methods.event.selectedOptions(modal.transition.show ? modal.transition.data.finish.events : [])}
-          saveHandler={methods.transition.save}
-          saveToChildHandler={methods.transition.saveToChild}
-          afterEditHandler={methods.transition.afterEdit}
-          removeHandler={methods.transition.remove} />
+          methods={methods.transition} />
         <VarForm show={modal.var.show}
           data={modal.var.data}
-          saveHandler={methods.var.save}
-          afterEditHandler={methods.var.afterEdit}
-          removeHandler={methods.var.remove} />
+          methods={methods.var} />
         <GroupForm show={modal.group.show}
           data={modal.group.data}
           states={methods.state.options()}

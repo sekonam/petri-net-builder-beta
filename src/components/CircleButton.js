@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 export default class CircleButton extends React.Component {
   render() {
@@ -13,3 +13,10 @@ export default class CircleButton extends React.Component {
     );
   }
 }
+
+CircleButton.propTypes = {
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  caption: PropTypes.string,
+  clickHandler: PropTypes.func.isRequired
+};

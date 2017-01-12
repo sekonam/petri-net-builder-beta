@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {Form, FormGroup, FormControl, ControlLabel, Checkbox} from 'react-bootstrap';
+
+import SocketModel from '../models/SocketModel.js';
 
 export default class Socket extends React.Component {
 
@@ -20,7 +22,7 @@ export default class Socket extends React.Component {
     } else {
       transitionHandlers.linkActive(data);
     }
-    
+
     e.stopPropagation();
   }
 
@@ -39,3 +41,11 @@ export default class Socket extends React.Component {
     );
   }
 }
+
+Socket.propTypes = {
+  data: PropTypes.instanceOf(SocketModel).isRequired,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  transitionHandlers: PropTypes.object.isRequired,
+  setMouseOffset: PropTypes.func.isRequired
+};

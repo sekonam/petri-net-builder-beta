@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
+
 import StateModel from '../models/StateModel.js';
+import TransitionModel from '../models/TransitionModel.js';
 
 export default class Transition extends React.Component {
 
@@ -52,3 +54,10 @@ export default class Transition extends React.Component {
     );
   }
 }
+
+Transition.propTypes = {
+  data: PropTypes.instanceOf(TransitionModel).isRequired,
+  offset: PropTypes.object,
+  editHandler: PropTypes.func.isRequired,
+  getHandlers: PropTypes.object.isRequired
+};
