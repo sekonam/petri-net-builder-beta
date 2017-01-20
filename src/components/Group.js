@@ -16,7 +16,7 @@ const groupSource = {
           const diff = monitor.getDifferenceFromInitialOffset(),
             zDiff = component.props.zoomedDiff(diff);
 
-          data.places.forEach( (sid) => {
+          data.placeIds.forEach( (sid) => {
             const place = methods.place.get(sid);
             methods.place.drag( sid, this.start[sid].x + zDiff.x, this.start[sid].y + zDiff.y );
           } );
@@ -26,7 +26,7 @@ const groupSource = {
 
     this.start = {};
 
-    data.places.forEach( (sid) => {
+    data.placeIds.forEach( (sid) => {
       const place = methods.place.get(sid);
       this.start[sid] = {
         x: place.x,
@@ -62,11 +62,11 @@ class Group extends React.Component {
   render() {
     const {data, methods , connectDragSource} = this.props;
 
-    if (data.places.length) {
+    if (data.placeIds.length) {
       const INDENT = 10,
         HEADER = 20,
-        places = data.places.cmap( (sid) => methods.place.get(sid) ),
-        {min, max} = GroupModel.findMinMax(places);
+        placeIds = data.placeIds.cmap( (sid) => methods.place.get(sid) ),
+        {min, max} = GroupModel.findMinMax(placeIds);
 
       const x = min.x - INDENT,
         y = min.y - INDENT - HEADER,

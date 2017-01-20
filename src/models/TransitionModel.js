@@ -10,15 +10,13 @@ export default class TransitionModel extends Model {
       this.genId();
       this.name = 'Transition name';
       this.start = {
-        socket: null,
-        node: null,
-        events: [],
+        socketId: null,
+        nodeId: null,
         condition: ''
       };
       this.finish = {
-        socket: null,
-        node: null,
-        events: [],
+        socketId: null,
+        nodeId: null,
         condition: ''
       };
     }

@@ -188,15 +188,15 @@ export default class Engine extends React.Component {
     this.methods.place.remove = customActions.remove('place', (state, sid) => {
       state.store.places.valueById(sid).sockets.forEach( (socket) => {
         state.store.transitions.spliceRecurcive(
-          (transition) => (transition.start.socket == socket.id || transition.finish.socket == socket.id)
+          (transition) => (transition.start.socketId == socket.id || transition.finish.socketId == socket.id)
         );
       } );
 
       state.store.groups.forEach( (group) => {
-        const groupKey = group.places.indexOf(sid);
+        const groupKey = group.placeIds.indexOf(sid);
 
         if (groupKey > -1) {
-          group.places.splice(groupKey, 1);
+          group.placeIds.splice(groupKey, 1);
         }
       } );
     } );
@@ -210,7 +210,7 @@ export default class Engine extends React.Component {
         }
       } );
 
-      state.store.transitions.forEach( (transition) => {
+/*      state.store.transitions.forEach( (transition) => {
 
         [ 'start', 'finish' ].forEach( (name) => {
           const data = transition[name].events,
@@ -222,8 +222,8 @@ export default class Engine extends React.Component {
         } );
 
       } );
+      */
     } );
-
     this.methods.transition.edit = (id) => {
       if (!this.state.active.transition) {
         customActions.edit('transition')(id);
@@ -236,7 +236,7 @@ export default class Engine extends React.Component {
         (state) => {
           let socket = new SocketModel;
           socket.type = type;
-          socket.node = nodeId;
+          socket.nodeId = nodeId;
           state.store.places.valueById(nodeId).sockets.push( socket );
         }
       ),
@@ -254,7 +254,7 @@ export default class Engine extends React.Component {
           place.sockets.splice( place.sockets.indexById(id), 1 );
 
           prevState.store.transitions.spliceRecurcive(
-            (transition) => (transition.start.socket == id || transition.finish.socket == id)
+            (transition) => (transition.start.socketId == id || transition.finish.socketId == id)
           );
 
           return prevState;
@@ -264,12 +264,13 @@ export default class Engine extends React.Component {
     };
 
     this.methods.transition.addActive = (socket) => {
+      console.log(socket);
       if (socket.type) {
 
         this.setState( (prevState, props) => {
           let activeTransition = new TransitionModel;
-          activeTransition.start.socket = socket.id;
-          activeTransition.start.node = socket.node;
+          activeTransition.start.socketId = socket.id;
+          activeTransition.start.nodeId = socket.nodeId;
           prevState.active.transition = activeTransition;
           return prevState;
         } );
@@ -281,8 +282,8 @@ export default class Engine extends React.Component {
       if ( !socket.type && this.state.active.transition ) {
         this.setState( (prevState, props) => {
           let activeTransition = new TransitionModel( prevState.active.transition );
-          activeTransition.finish.socket = socket.id;
-          activeTransition.finish.node = socket.node;
+          activeTransition.finish.socketId = socket.id;
+          activeTransition.finish.nodeId = socket.nodeId;
           prevState.store.transitions.push(activeTransition);
           prevState.active.transition = null;
           return prevState;
@@ -413,8 +414,8 @@ export default class Engine extends React.Component {
         </div>
         <div className="buttons">
           <span>Zoom:</span>
-          <Button onClick={ methods.zoom.change(-0.25) } bsStyle="default">-</Button>
-          <Button onClick={ methods.zoom.change(0.25) } bsStyle="default">+</Button>
+          <Button onClick={ methods.zoom.change(-0.1) } bsStyle="default">-</Button>
+          <Button onClick={ methods.zoom.change(0.1) } bsStyle="default">+</Button>
           <Button onClick={ methods.zoom.set(1) } bsStyle="default">Default</Button>
         </div>
         <Context store={store} viewport={this.state.viewport}
@@ -439,9 +440,6 @@ export default class Engine extends React.Component {
           removeHandler={methods.action.remove} />
         <TransitionForm show={modal.transition.show}
           data={modal.transition.data}
-          events={methods.event.options()}
-          selectedStartEvents={methods.event.selectedOptions(modal.transition.show ? modal.transition.data.start.events : [])}
-          selectedFinishEvents={methods.event.selectedOptions(modal.transition.show ? modal.transition.data.finish.events : [])}
           methods={methods.transition} />
         <VarForm show={modal.var.show}
           data={modal.var.data}
@@ -449,7 +447,7 @@ export default class Engine extends React.Component {
         <GroupForm show={modal.group.show}
           data={modal.group.data}
           places={methods.place.options()}
-          selectedPlaces={methods.place.selectedOptions(modal.group.show ? modal.group.data.places : [])}
+          selectedPlaces={methods.place.selectedOptions(modal.group.show ? modal.group.data.placeIds : [])}
           methods={methods.group} />
       </div>
     );

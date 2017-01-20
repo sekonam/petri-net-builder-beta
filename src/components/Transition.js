@@ -17,15 +17,15 @@ export default class Transition extends React.Component {
   render() {
     const transition = this.props.data,
       {getHandlers, offset} = this.props,
-      startPlace = getHandlers.place(transition.start.place),
-      startSocket = getHandlers.socket(transition.start.place)(transition.start.socket),
+      startPlace = getHandlers.place(transition.start.nodeId),
+      startSocket = getHandlers.socket(transition.start.nodeId)(transition.start.socketId),
       startOffset = this.socketOffset( startPlace, startSocket );
 
     let finishOffset = offset;
 
-    if (transition.finish.socket) {
-      const finishPlace = getHandlers.place(transition.finish.place),
-        finishSocket = getHandlers.socket(transition.finish.place)(transition.finish.socket);
+    if (transition.finish.socketId) {
+      const finishPlace = getHandlers.place(transition.finish.nodeId),
+        finishSocket = getHandlers.socket(transition.finish.nodeId)(transition.finish.socketId);
       finishOffset = this.socketOffset( finishPlace, finishSocket );
     }
 

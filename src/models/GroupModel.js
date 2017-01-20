@@ -33,5 +33,5 @@ GroupModel.findMinMax = function(items) {
 
 GroupModel.default = {
   name: 'Group name',
-  places: []
+  placeIds: []
 };

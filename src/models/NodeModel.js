@@ -8,12 +8,12 @@ export default class NodeModel extends Model {
   constructor(params = null) {
     super();
     this.init(params, NodeModel.default);
-    
+
     if (_.isEmpty(params)) {
       for (let i=0; i<2; i++) {
         this.sockets.add({
           type: i,
-          node: this.id
+          nodeId: this.id
         });
       }
     }

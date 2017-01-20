@@ -9,7 +9,7 @@ import TransitionModel from '../models/TransitionModel.js';
 export default class TransitionForm extends React.Component {
 
   render() {
-    const {data, events, selectedStartEvents, selectedFinishEvents, methods} = this.props;
+    const {data, methods} = this.props;
 
     return (
       <Modal title={'Transition: ' + data.name} show={this.props.show}
@@ -22,12 +22,6 @@ export default class TransitionForm extends React.Component {
           </FormGroup>
           <div className="columns">
             <div className="left-side">
-              <FormGroup controlId="TransitionEventsSelectStart">
-                <ControlLabel>Income Events</ControlLabel><br/>
-                <Select multi={true} value={selectedStartEvents} options={events}
-                  onChange={(val) => methods.saveToChild(['start'])('events',
-                    val.cmap( (el) => el.value ) )} />
-              </FormGroup>
               <FormGroup controlId="ConditionStart">
                 <ControlLabel>Income Condition</ControlLabel>
                 <FormControl componentClass="textarea" placeholder="JavaScript Code Here..."
@@ -37,12 +31,6 @@ export default class TransitionForm extends React.Component {
               </FormGroup>
             </div>
             <div className="right-side">
-              <FormGroup controlId="TransitionEventsSelectFinish">
-                <ControlLabel>Outcome Events</ControlLabel><br/>
-                <Select multi={true} value={selectedFinishEvents} options={events}
-                  onChange={(val) => methods.saveToChild(['finish'])('events',
-                    val.cmap( (el) => el.value ) )} />
-              </FormGroup>
               <FormGroup controlId="ConditionFinish">
                 <ControlLabel>Outcome Condition</ControlLabel>
                 <FormControl componentClass="textarea" placeholder="JavaScript Code Here..."
@@ -62,8 +50,5 @@ export default class TransitionForm extends React.Component {
 TransitionForm.propTypes = {
   data: PropTypes.instanceOf(TransitionModel).isRequired,
   methods: PropTypes.object.isRequired,
-  events: PropTypes.array.isRequired,
-  selectedStartEvents: PropTypes.array.isRequired,
-  selectedFinishEvents: PropTypes.array.isRequired,
   show: PropTypes.bool.isRequired
 };

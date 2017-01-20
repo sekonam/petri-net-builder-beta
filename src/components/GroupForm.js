@@ -23,7 +23,7 @@ export default class GroupForm extends React.Component {
           <FormGroup>
             <ControlLabel>Places</ControlLabel>
             <Select multi={true} value={selectedPlaces} options={places}
-              onChange={(val) => methods.save('places',
+              onChange={(val) => methods.save('placeIds',
                 typeof val == 'undefined' ? [] : val.cmap( (el) => el.value ) )} />
           </FormGroup>
         </Form>

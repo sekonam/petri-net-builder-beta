@@ -14,5 +14,5 @@ export default class SocketModel extends Model {
 SocketModel.default = {
   name: 'Socket name',
   type: 0, // 0 - input, 1 - output
-  node: null
+  nodeId: null
 };
