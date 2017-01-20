@@ -4,6 +4,7 @@
   "description": "Workflow manager",
   "main": "index.js",
   "dependencies": {
+    "lodash": "^4.17.4",
     "microevent": "^1.0.0",
     "react": "^15.4.1",
     "react-bootstrap": "^0.30.7",

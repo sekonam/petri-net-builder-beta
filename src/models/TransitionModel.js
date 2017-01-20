@@ -1,11 +1,11 @@
-import Model from './Model.js';
+import Model from './../core/Model.js';
 
 export default class TransitionModel extends Model {
   constructor(params = null) {
     super();
 
     if (typeof params == 'object' && params && Object.keys(params).length > 0) {
-      this.initProps(params);
+      this.init(params);
     } else {
       this.genId();
       this.name = 'Transition name';

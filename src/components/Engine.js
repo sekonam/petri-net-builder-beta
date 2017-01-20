@@ -1,6 +1,8 @@
 import React from 'react';
 import {Button} from 'react-bootstrap';
 
+import EntityFactory from '../core/EntityFactory.js';
+
 import EngineModel from '../models/EngineModel.js';
 import StateModel from '../models/StateModel.js';
 import GroupModel from '../models/GroupModel.js';
@@ -56,7 +58,7 @@ export default class Engine extends React.Component {
 
     itemTypes.forEach( (key) => {
       this.state.modal[key] = {
-        data: itemFactory[key](),
+        data: EntityFactory[key](),
         show: false
       };
     } );
@@ -89,7 +91,7 @@ export default class Engine extends React.Component {
       add: (itemType) => {
         const storageName = itemType + 's';
         return () => {
-          const newItem = itemFactory[itemType]();
+          const newItem = EntityFactory[itemType]();
           this.saveToState(
             (state) => {
               state.store[storageName].push( newItem );

@@ -1,4 +1,4 @@
-import Model from './Model.js';
+import Model from './../core/Model.js';
 
 export default class EventModel extends Model {
   constructor(params = null) {

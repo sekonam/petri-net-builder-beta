@@ -1,4 +1,4 @@
-import Model from './Model.js';
+import Model from './../core/Model.js';
 import SocketModel from './SocketModel.js';
 
 export default class StateModel extends Model {
