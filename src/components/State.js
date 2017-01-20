@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
 
 import Types from './Types.js';
-import StateModel from '../models/StateModel.js';
+import PlaceModel from '../models/PlaceModel.js';
 
 import Socket from './Socket.js';
 import CircleButton from './CircleButton.js';
@@ -119,7 +119,7 @@ class State extends React.Component {
 }
 
 State.propTypes = {
-  data: PropTypes.instanceOf(StateModel).isRequired,
+  data: PropTypes.instanceOf(PlaceModel).isRequired,
   id: PropTypes.string.isRequired,
   zoomedDiff: PropTypes.func.isRequired,
   setMouseOffset: PropTypes.func.isRequired,

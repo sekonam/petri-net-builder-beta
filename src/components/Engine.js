@@ -4,7 +4,7 @@ import {Button} from 'react-bootstrap';
 import EntityFactory from '../core/EntityFactory.js';
 
 import EngineModel from '../models/EngineModel.js';
-import StateModel from '../models/StateModel.js';
+import PlaceModel from '../models/PlaceModel.js';
 import GroupModel from '../models/GroupModel.js';
 import EventModel from '../models/EventModel.js';
 import ActionModel from '../models/ActionModel.js';
@@ -26,24 +26,16 @@ export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
-//    localStorage.setItem('store', '');
+    localStorage.setItem('store', '');
 
     const itemTypes = [
-        'state',
+        'place',
         'group',
         'event',
         'action',
         'transition',
         'var',
-      ],
-      itemFactory = {
-        'state': () => new StateModel,
-        'group': () => new GroupModel,
-        'event': () => new EventModel,
-        'action': () => new ActionModel,
-        'transition': () => new TransitionModel,
-        'var': () => new VarModel
-      };
+      ];
 
     this.state = {
       store: new EngineModel( this.loadFromStorage( 'store' ) ),
@@ -179,12 +171,12 @@ export default class Engine extends React.Component {
       }
     }
 
-    this.methods.state.drag = (id,x,y) => this.saveToState(
+    this.methods.place.drag = (id,x,y) => this.saveToState(
       (state) => state.store.states.valueById(id),
       {x,y}
     );
 
-    ['state', 'group'].forEach( (itemType) => {
+    ['place', 'group'].forEach( (itemType) => {
       this.methods[itemType].active = (id) => {
         this.setState( (prevState, props) => {
           prevState.active[itemType] = id;
@@ -193,9 +185,9 @@ export default class Engine extends React.Component {
       };
     } );
 
-    this.methods.state.optionsForTransition = (sideName) => {
+    this.methods.place.optionsForTransition = (sideName) => {
       const transition = this.state.modal.transition;
-      let options = this.methods.state.options(),
+      let options = this.methods.place.options(),
         splice = [];
 
       if (transition.show) {
@@ -212,7 +204,7 @@ export default class Engine extends React.Component {
       return options;
     };
 
-    this.methods.state.remove = customActions.remove('state', (state, sid) => {
+    this.methods.place.remove = customActions.remove('state', (state, sid) => {
       state.store.states.valueById(sid).sockets.forEach( (socket) => {
         state.store.transitions.spliceRecurcive(
           (transition) => (transition.start.socket == socket.id || transition.finish.socket == socket.id)
@@ -423,11 +415,12 @@ export default class Engine extends React.Component {
       methods = this.methods,
       active = this.state.active,
 
-      leftMenuBlocks = [ 'state', 'group', 'event', 'action', 'var', ].map( (itemType, key) => {
+      leftMenuBlocks = [ 'place', 'group', 'event', 'action', 'var', ].map( (itemType, key) => {
+        console.log(itemType);
         return (
         <LeftMenuBlock key={key}
           itemName={itemType}
-          activeId={itemType == 'state' ? this.state.active.state : ''}
+          activeId={itemType == 'place' ? this.state.active.state : ''}
           data={methods[itemType].options()}
           editHandler={methods[itemType].edit}
           addHandler={methods[itemType].add}/>
@@ -446,11 +439,11 @@ export default class Engine extends React.Component {
         </div>
         <Context store={store} viewport={this.state.viewport}
           methods={methods} active={active} />
-        <StateForm show={modal.state.show}
-          data={modal.state.data}
-          saveHandler={methods.state.save}
-          afterEditHandler={methods.state.afterEdit}
-          removeHandler={methods.state.remove}
+        <StateForm show={modal.place.show}
+          data={modal.place.data}
+          saveHandler={methods.place.save}
+          afterEditHandler={methods.place.afterEdit}
+          removeHandler={methods.place.remove}
           socketHandlers={methods.socket}/>
         <EventForm show={modal.event.show}
           data={modal.event.data}
@@ -475,8 +468,8 @@ export default class Engine extends React.Component {
           methods={methods.var} />
         <GroupForm show={modal.group.show}
           data={modal.group.data}
-          states={methods.state.options()}
-          selectedStates={methods.state.selectedOptions(modal.group.show ? modal.group.data.states : [])}
+          states={methods.place.options()}
+          selectedStates={methods.place.selectedOptions(modal.group.show ? modal.group.data.states : [])}
           methods={methods.group} />
       </div>
     );

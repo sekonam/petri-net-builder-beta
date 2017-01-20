@@ -4,7 +4,7 @@ import Select from 'react-select';
 
 import Modal from './Modal.js';
 
-import StateModel from '../models/StateModel.js';
+import PlaceModel from '../models/PlaceModel.js';
 
 export default class StateForm extends React.Component {
 
@@ -102,7 +102,7 @@ export default class StateForm extends React.Component {
 }
 
 StateForm.propTypes = {
-  data: PropTypes.instanceOf(StateModel).isRequired,
+  data: PropTypes.instanceOf(PlaceModel).isRequired,
   saveHandler: PropTypes.func.isRequired,
   afterEditHandler: PropTypes.func.isRequired,
   removeHandler: PropTypes.func.isRequired,

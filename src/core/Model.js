@@ -1,6 +1,9 @@
 import _ from 'lodash';
 import MicroEvent from 'microevent';
 
+import ModelArray from './ModelArray.js';
+import EntityFactory from './EntityFactory.js';
+
 class Model {
 
   getId() {
@@ -13,13 +16,38 @@ class Model {
 
   init(params, defaults = []) {
     if (!_.isEmpty(params)) {
-      _.defaultsDeep(this, params);
+      this.initEntityDeep(params);
     } else if (!_.isEmpty(defaults)) {
-      _.defaultsDeep(this, defaults);
+      this.initEntityDeep(defaults);
     }
 
     if (!this.id) {
       this.genId();
+    }
+  }
+
+  initEntityDeep(params) {
+    if (typeof(params) == 'object' && !_.isEmpty(params)) {
+      for( let name in params) {
+        const value = params[name],
+          entityName = name.substring(0, name.length - 1);
+
+        console.log(name,value, value.constructor,entityName, EntityFactory,name.substring(name.length - 1, name.length));
+
+        if (value && value.constructor === Array
+          && entityName in EntityFactory
+          && name.substring(name.length - 1, name.length) == 's'
+        ) {
+          console.log('qqqqqq');
+          this[name] = new ModelArray(entityName, value);
+
+        } else if (typeof value == 'object' && name in EntityFactory) {
+          this[name] = EntityFactory[name](value);
+
+        } else {
+          this[name] = _.cloneDeep(value);
+        }
+      }
     }
   }
 

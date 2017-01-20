@@ -10,8 +10,6 @@ import State from './State.js';
 import Transition from './Transition.js';
 import Group from './Group.js';
 
-import StateModel from '../models/StateModel.js';
-
 class Context extends React.Component {
   constructor(props) {
     super(props);

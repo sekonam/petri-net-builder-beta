@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 
-import StateModel from '../models/StateModel.js';
 import TransitionModel from '../models/TransitionModel.js';
 
 export default class Transition extends React.Component {
