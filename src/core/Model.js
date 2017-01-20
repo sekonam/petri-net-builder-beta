@@ -32,13 +32,10 @@ class Model {
         const value = params[name],
           entityName = name.substring(0, name.length - 1);
 
-        console.log(name,value, value.constructor,entityName, EntityFactory,name.substring(name.length - 1, name.length));
-
         if (value && value.constructor === Array
           && entityName in EntityFactory
           && name.substring(name.length - 1, name.length) == 's'
         ) {
-          console.log('qqqqqq');
           this[name] = new ModelArray(entityName, value);
 
         } else if (typeof value == 'object' && name in EntityFactory) {

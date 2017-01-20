@@ -14,7 +14,7 @@ import SocketModel from '../models/SocketModel.js';
 import ViewportModel from '../models/ViewportModel.js';
 
 import Context from './Context.js';
-import StateForm from './StateForm.js';
+import PlaceForm from './PlaceForm.js';
 import GroupForm from './GroupForm.js';
 import EventForm from './EventForm.js';
 import ActionForm from './ActionForm.js';
@@ -42,7 +42,7 @@ export default class Engine extends React.Component {
       modal: {},
       active: {
         transition: null,
-        state: null,
+        place: null,
         group: null
       },
       viewport: new ViewportModel()
@@ -172,7 +172,7 @@ export default class Engine extends React.Component {
     }
 
     this.methods.place.drag = (id,x,y) => this.saveToState(
-      (state) => state.store.states.valueById(id),
+      (state) => state.store.places.valueById(id),
       {x,y}
     );
 
@@ -185,37 +185,18 @@ export default class Engine extends React.Component {
       };
     } );
 
-    this.methods.place.optionsForTransition = (sideName) => {
-      const transition = this.state.modal.transition;
-      let options = this.methods.place.options(),
-        splice = [];
-
-      if (transition.show) {
-        const anotherSideName = this.anotherSide(sideName);
-
-        for ( let key in options ) {
-          if (options[key].value == transition.data[anotherSideName].state)
-          {
-            options.splice(key,1);
-          }
-        }
-      }
-
-      return options;
-    };
-
-    this.methods.place.remove = customActions.remove('state', (state, sid) => {
-      state.store.states.valueById(sid).sockets.forEach( (socket) => {
+    this.methods.place.remove = customActions.remove('place', (state, sid) => {
+      state.store.places.valueById(sid).sockets.forEach( (socket) => {
         state.store.transitions.spliceRecurcive(
           (transition) => (transition.start.socket == socket.id || transition.finish.socket == socket.id)
         );
       } );
 
       state.store.groups.forEach( (group) => {
-        const groupKey = group.states.indexOf(sid);
+        const groupKey = group.places.indexOf(sid);
 
         if (groupKey > -1) {
-          group.states.splice(groupKey, 1);
+          group.places.splice(groupKey, 1);
         }
       } );
     } );
@@ -251,26 +232,26 @@ export default class Engine extends React.Component {
 
     this.methods.socket = {
 
-      add: (stateId, type) => () => this.saveToState(
+      add: (nodeId, type) => () => this.saveToState(
         (state) => {
           let socket = new SocketModel;
           socket.type = type;
-          socket.state = stateId;
-          state.store.states.valueById(stateId).sockets.push( socket );
+          socket.node = nodeId;
+          state.store.places.valueById(nodeId).sockets.push( socket );
         }
       ),
 
-      get: (stateId) => (id) => this.state.store.states.valueById(stateId).sockets.valueById(id),
+      get: (nodeId) => (id) => this.state.store.places.valueById(nodeId).sockets.valueById(id),
 
-      set: (stateId) => (id) => (name, value) => this.saveToState(
-        (state) => state.store.states.valueById(stateId).sockets.valueById(id),
+      set: (nodeId) => (id) => (name, value) => this.saveToState(
+        (state) => state.store.places.valueById(nodeId).sockets.valueById(id),
         { name: value }
       ),
 
-      remove: (stateId) => (id) => () => {
+      remove: (nodeId) => (id) => () => {
         this.setState( (prevState, props) => {
-          const state = prevState.store.states.valueById(stateId);
-          state.sockets.splice( state.sockets.indexById(id), 1 );
+          const place = prevState.store.places.valueById(nodeId);
+          place.sockets.splice( place.sockets.indexById(id), 1 );
 
           prevState.store.transitions.spliceRecurcive(
             (transition) => (transition.start.socket == id || transition.finish.socket == id)
@@ -288,7 +269,7 @@ export default class Engine extends React.Component {
         this.setState( (prevState, props) => {
           let activeTransition = new TransitionModel;
           activeTransition.start.socket = socket.id;
-          activeTransition.start.state = socket.state;
+          activeTransition.start.node = socket.node;
           prevState.active.transition = activeTransition;
           return prevState;
         } );
@@ -301,7 +282,7 @@ export default class Engine extends React.Component {
         this.setState( (prevState, props) => {
           let activeTransition = new TransitionModel( prevState.active.transition );
           activeTransition.finish.socket = socket.id;
-          activeTransition.finish.state = socket.state;
+          activeTransition.finish.node = socket.node;
           prevState.store.transitions.push(activeTransition);
           prevState.active.transition = null;
           return prevState;
@@ -416,11 +397,10 @@ export default class Engine extends React.Component {
       active = this.state.active,
 
       leftMenuBlocks = [ 'place', 'group', 'event', 'action', 'var', ].map( (itemType, key) => {
-        console.log(itemType);
         return (
         <LeftMenuBlock key={key}
           itemName={itemType}
-          activeId={itemType == 'place' ? this.state.active.state : ''}
+          activeId={itemType == 'place' ? this.state.active.place : ''}
           data={methods[itemType].options()}
           editHandler={methods[itemType].edit}
           addHandler={methods[itemType].add}/>
@@ -439,7 +419,7 @@ export default class Engine extends React.Component {
         </div>
         <Context store={store} viewport={this.state.viewport}
           methods={methods} active={active} />
-        <StateForm show={modal.place.show}
+        <PlaceForm show={modal.place.show}
           data={modal.place.data}
           saveHandler={methods.place.save}
           afterEditHandler={methods.place.afterEdit}
@@ -468,8 +448,8 @@ export default class Engine extends React.Component {
           methods={methods.var} />
         <GroupForm show={modal.group.show}
           data={modal.group.data}
-          states={methods.place.options()}
-          selectedStates={methods.place.selectedOptions(modal.group.show ? modal.group.data.states : [])}
+          places={methods.place.options()}
+          selectedPlaces={methods.place.selectedOptions(modal.group.show ? modal.group.data.places : [])}
           methods={methods.group} />
       </div>
     );

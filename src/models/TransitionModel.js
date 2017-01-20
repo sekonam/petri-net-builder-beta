@@ -11,13 +11,13 @@ export default class TransitionModel extends Model {
       this.name = 'Transition name';
       this.start = {
         socket: null,
-        state: null,
+        node: null,
         events: [],
         condition: ''
       };
       this.finish = {
         socket: null,
-        state: null,
+        node: null,
         events: [],
         condition: ''
       };

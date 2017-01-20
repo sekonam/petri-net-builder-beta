@@ -7,7 +7,7 @@ import PlaceModel from '../models/PlaceModel.js';
 import Socket from './Socket.js';
 import CircleButton from './CircleButton.js';
 
-const stateSource = {
+const placeSource = {
 
   beginDrag(props, monitor, component) {
     const {data, methods} = component.props;
@@ -18,7 +18,7 @@ const stateSource = {
           const diff = monitor.getDifferenceFromInitialOffset(),
             zDiff = component.props.zoomedDiff(diff);
 
-          methods.state.drag(props.data.id,
+          methods.place.drag(props.data.id,
             this.start.x + zDiff.x,
             this.start.y + zDiff.y);
         }
@@ -29,7 +29,7 @@ const stateSource = {
       x: data.x,
       y: data.y
     };
-    methods.state.active(props.data.id);
+    methods.place.active(props.data.id);
 
     return {
       id: props.data.id
@@ -38,7 +38,7 @@ const stateSource = {
 
   endDrag(props, monitor, component) {
     clearInterval(this.timerId);
-    component.props.methods.state.active(null);
+    component.props.methods.place.active(null);
     component.setState({
       wasDragged: true
     });
@@ -51,7 +51,7 @@ function collect(connect, monitor) {
   }
 }
 
-class State extends React.Component {
+class Place extends React.Component {
 
   constructor(props) {
     super(props);
@@ -67,10 +67,7 @@ class State extends React.Component {
         wasDragged: false
       });
     } else {
-/*      this.props.contextSetState({
-        clickedState: this.props.data.id
-      });*/
-      this.props.methods.state.edit(this.props.data.id);
+      this.props.methods.place.edit(this.props.data.id);
     }
   }
 
@@ -109,16 +106,16 @@ class State extends React.Component {
           width={width + 'px'} height={height + 'px'} rx={r} ry={r}></rect>
         <text className="state-txt" x={x+7} y={y+18}>{this.props.data.short('name', 11)}</text>
         {socketTags}
-        <CircleButton clickHandler={(e) => { methods.state.edit(id); e.stopPropagation(); }}
+        <CircleButton clickHandler={(e) => { methods.place.edit(id); e.stopPropagation(); }}
           x={x + width/2 - 16} y={y + height - 17} caption="E"/>
-        <CircleButton clickHandler={(e) => { methods.state.remove(id); e.stopPropagation(); }}
+        <CircleButton clickHandler={(e) => { methods.place.remove(id); e.stopPropagation(); }}
           x={x + width/2 + 8} y={y + height - 17} caption="D"/>
       </g>
     );
   }
 }
 
-State.propTypes = {
+Place.propTypes = {
   data: PropTypes.instanceOf(PlaceModel).isRequired,
   id: PropTypes.string.isRequired,
   zoomedDiff: PropTypes.func.isRequired,
@@ -128,4 +125,4 @@ State.propTypes = {
   methods: PropTypes.object.isRequired
 };
 
-export default DragSource(Types.STATE, stateSource, collect)(State);
+export default DragSource(Types.PLACE, placeSource, collect)(Place);

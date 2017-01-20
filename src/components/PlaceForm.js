@@ -6,7 +6,7 @@ import Modal from './Modal.js';
 
 import PlaceModel from '../models/PlaceModel.js';
 
-export default class StateForm extends React.Component {
+export default class PlaceForm extends React.Component {
 
   constructor(props) {
     super(props);
@@ -20,7 +20,7 @@ export default class StateForm extends React.Component {
 
   render() {
     const {data, socketHandlers} = this.props,
-      stateShapes = [
+      placeShapes = [
         {
           value: 0,
           label: 'Rectangle'
@@ -46,36 +46,36 @@ export default class StateForm extends React.Component {
     } );
 
     return (
-      <Modal title={'State: ' + data.name} show={this.props.show}
+      <Modal title={'Place: ' + data.name} show={this.props.show}
         hide={this.props.afterEditHandler} remove={() => { this.props.removeHandler(data.id); }}>
         <Form>
           <FormGroup>
-            <ControlLabel>State Name</ControlLabel>
+            <ControlLabel>Place Name</ControlLabel>
             <FormControl type="text" value={data.name}
               onChange={(e) => this.props.saveHandler('name', e.target.value)} />
           </FormGroup>
           <FormGroup>
-            <ControlLabel>State Width</ControlLabel>
+            <ControlLabel>Place Width</ControlLabel>
             <FormControl type="text" value={data.width}
               onChange={(e) => this.props.saveHandler('width', this.intVal(e.target.value))} />
           </FormGroup>
           <FormGroup>
-            <ControlLabel>State Height</ControlLabel>
+            <ControlLabel>Place Height</ControlLabel>
             <FormControl type="text" value={data.height}
               onChange={(e) => this.props.saveHandler('height', this.intVal(e.target.value))} />
           </FormGroup>
           <FormGroup>
-            <ControlLabel>State Shape</ControlLabel><br/>
-            <Select value={this.intVal(data.r)} options={stateShapes}
+            <ControlLabel>Place Shape</ControlLabel><br/>
+            <Select value={this.intVal(data.r)} options={placeShapes}
               onChange={(val) => this.props.saveHandler('r', this.intVal(val.value))} />
           </FormGroup>
           <Checkbox onChange={() => this.props.saveHandler('start', !data.start)}
             defaultChecked={data.start}>
-            Start State
+            Start Place
           </Checkbox>
           <Checkbox onChange={(e) => this.props.saveHandler('finish', !data.finish)}
             defaultChecked={data.finish}>
-            Finish State
+            Finish Place
           </Checkbox>
           <div className="columns sockets">
             <div className="left-side container">
@@ -101,7 +101,7 @@ export default class StateForm extends React.Component {
   }
 }
 
-StateForm.propTypes = {
+PlaceForm.propTypes = {
   data: PropTypes.instanceOf(PlaceModel).isRequired,
   saveHandler: PropTypes.func.isRequired,
   afterEditHandler: PropTypes.func.isRequired,

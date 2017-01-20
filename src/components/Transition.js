@@ -4,29 +4,29 @@ import TransitionModel from '../models/TransitionModel.js';
 
 export default class Transition extends React.Component {
 
-  socketOffset(state, socket) {
-    const sockets = state.sockets.filter( (el) => el.type == socket.type ),
+  socketOffset(place, socket) {
+    const sockets = place.sockets.filter( (el) => el.type == socket.type ),
       pos = sockets.indexOf(socket),
-      step = state.height / (sockets.length + 1);
+      step = place.height / (sockets.length + 1);
     return {
-      x: state.x + (socket.type ? state.width : 0),
-      y: state.y + step * (pos + 1)
+      x: place.x + (socket.type ? place.width : 0),
+      y: place.y + step * (pos + 1)
     };
   }
 
   render() {
     const transition = this.props.data,
       {getHandlers, offset} = this.props,
-      startState = getHandlers.state(transition.start.state),
-      startSocket = getHandlers.socket(transition.start.state)(transition.start.socket),
-      startOffset = this.socketOffset( startState, startSocket );
+      startPlace = getHandlers.place(transition.start.place),
+      startSocket = getHandlers.socket(transition.start.place)(transition.start.socket),
+      startOffset = this.socketOffset( startPlace, startSocket );
 
     let finishOffset = offset;
 
     if (transition.finish.socket) {
-      const finishState = getHandlers.state(transition.finish.state),
-        finishSocket = getHandlers.socket(transition.finish.state)(transition.finish.socket);
-      finishOffset = this.socketOffset( finishState, finishSocket );
+      const finishPlace = getHandlers.place(transition.finish.place),
+        finishSocket = getHandlers.socket(transition.finish.place)(transition.finish.socket);
+      finishOffset = this.socketOffset( finishPlace, finishSocket );
     }
 
     const a = startOffset, b = finishOffset,

@@ -5,7 +5,7 @@ export default class PlaceModel extends NodeModel {
 
   constructor(params = null) {
     super(params);
-    this.init(params, PlaceModel.defaults);
+    this.init(params, PlaceModel.default);
 
     if (!params) {
       [ 'x', 'y' ].forEach( (name) => {
@@ -20,7 +20,7 @@ export default class PlaceModel extends NodeModel {
 
 PlaceModel.count = 0;
 PlaceModel.default = {
-  name: 'State name',
+  name: 'Place name',
   x: 50,
   y: 50,
   width: 100,

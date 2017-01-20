@@ -6,7 +6,7 @@ import EngineModel from './../models/EngineModel.js';
 import ViewportModel from './../models/ViewportModel.js';
 import GroupModel from './../models/GroupModel.js';
 
-import State from './State.js';
+import Place from './Place.js';
 import Transition from './Transition.js';
 import Group from './Group.js';
 
@@ -31,7 +31,7 @@ class Context extends React.Component {
       translateY: 0,
 
       // show selected state dim everyone else
-      clickedState: null
+      clickedPlace: null
     };
 
     this.zoomedOffset = this.zoomedOffset.bind(this);
@@ -87,7 +87,7 @@ class Context extends React.Component {
 
   canChangeTranslate() {
     const {active} = this.props;
-    return !active.state && !active.group && !this.state.clickedState;
+    return !active.place && !active.group && !this.state.clickedPlace;
   }
 
   mouseDownHandler(e) {
@@ -149,7 +149,7 @@ class Context extends React.Component {
 
   hideDimLayer(e) {
     this.setState({
-      clickedState: null
+      clickedPlace: null
     });
 
     e.stopPropagation();
@@ -157,7 +157,7 @@ class Context extends React.Component {
 
   drawTactical() {
     const { store, methods } = this.props,
-      { min, max } = GroupModel.findMinMax( store.states ),
+      { min, max } = GroupModel.findMinMax( store.places ),
       w = this.svgWidth(),
       h = this.svgHeight(),
       indents = {
@@ -175,8 +175,8 @@ class Context extends React.Component {
   render() {
     const { store, methods, active } = this.props,
 
-      states = store.states.cmap( (state, key) => (
-        <State data={state} id={state.id} key={key}
+      places = store.places.cmap( (place, key) => (
+        <Place data={place} id={place.id} key={key}
           zoomedDiff={this.zoomedDiff}
           setMouseOffset={this.setMouseOffset}
           contextSetState={this.setState.bind(this)}
@@ -185,7 +185,7 @@ class Context extends React.Component {
       ) ),
 
       getHandlers = {
-        state: methods.state.get,
+        place: methods.place.get,
         socket: methods.socket.get
       },
 
@@ -214,12 +214,10 @@ class Context extends React.Component {
 
     let dimLayerStyles = {
         display: 'none'
-      },
-      redrawState = '';
+      };
 
-    if (this.state.clickedState) {
+    if (this.state.clickedPlace) {
       dimLayerStyles = {};
-      redrawState = <use href={'#' + this.state.clickedState} style={{transform}}/>;
     }
 
     return (
@@ -238,13 +236,12 @@ class Context extends React.Component {
           {activeTransition}
           </g>
           <g className="states">
-            {states}
+            {places}
           </g>
         </g>
         <rect x="0" y="0" width={ this.svgWidth() } height={ this.svgHeight() }
           className="dim-layer" style={dimLayerStyles}
           onClick={this.hideDimLayer} />
-        {redrawState}
       </svg>
     );
   }
