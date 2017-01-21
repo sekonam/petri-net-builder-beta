@@ -3,13 +3,25 @@ import SocketModel from './SocketModel.js';
 
 export default class PlaceModel extends NodeModel {
 
-  constructor(params = null) {
-    super(params);
-    this.init(params, PlaceModel.default);
+  defaults() {
+    super.defaults();
+
+    this.set({
+      name: 'Place name',
+      width: 100,
+      height: 52,
+      r: 0
+    });
+
+console.log(this);
+    const init = {
+      x: 50,
+      y: 50
+    }, step = 10;
 
     if (!params) {
       [ 'x', 'y' ].forEach( (name) => {
-        this[name] = PlaceModel.default[name] + PlaceModel.count * 10;
+        this[name] = init[name] + PlaceModel.count * 10;
       });
     }
 
@@ -19,11 +31,3 @@ export default class PlaceModel extends NodeModel {
 }
 
 PlaceModel.count = 0;
-PlaceModel.default = {
-  name: 'Place name',
-  x: 50,
-  y: 50,
-  width: 100,
-  height: 52,
-  r: 0
-};

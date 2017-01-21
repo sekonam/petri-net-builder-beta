@@ -2,9 +2,11 @@ import Model from './../core/Model.js';
 
 export default class GroupModel extends Model {
 
-  constructor(params = null) {
-    super();
-    this.init(params, GroupModel.default);
+  defaults() {
+    this.set({
+      name: 'Group name',
+      placeIds: []
+    });
   }
 
 }
@@ -29,9 +31,4 @@ GroupModel.findMinMax = function(items) {
   } );
 
   return {min, max};
-};
-
-GroupModel.default = {
-  name: 'Group name',
-  placeIds: []
 };

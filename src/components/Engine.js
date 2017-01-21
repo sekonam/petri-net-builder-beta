@@ -26,7 +26,7 @@ export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
-//    localStorage.setItem('store', '');
+    localStorage.setItem('store', '');
 
     const itemTypes = [
         'place',
@@ -50,7 +50,7 @@ export default class Engine extends React.Component {
 
     itemTypes.forEach( (key) => {
       this.state.modal[key] = {
-        data: EntityFactory[key](),
+        data: null,
         show: false
       };
     } );
@@ -84,6 +84,8 @@ export default class Engine extends React.Component {
         const storageName = itemType + 's';
         return () => {
           const newItem = EntityFactory[itemType]();
+          newItem.defaults();
+
           this.saveToState(
             (state) => {
               state.store[storageName].push( newItem );
@@ -420,35 +422,35 @@ export default class Engine extends React.Component {
         </div>
         <Context store={store} viewport={this.state.viewport}
           methods={methods} active={active} />
-        <PlaceForm show={modal.place.show}
+        { modal.place.show ? <PlaceForm show={modal.place.show}
           data={modal.place.data}
           saveHandler={methods.place.save}
           afterEditHandler={methods.place.afterEdit}
           removeHandler={methods.place.remove}
-          socketHandlers={methods.socket}/>
-        <EventForm show={modal.event.show}
+          socketHandlers={methods.socket}/> : '' }
+        { modal.event.show ? <EventForm show={modal.event.show}
           data={modal.event.data}
           saveHandler={methods.event.save}
           afterEditHandler={methods.event.afterEdit}
-          removeHandler={methods.event.remove} />
-        <ActionForm show={modal.action.show}
+          removeHandler={methods.event.remove} /> : '' }
+        { modal.action.show ? <ActionForm show={modal.action.show}
           data={modal.action.data}
           events={methods.event.options()}
           selectedEvents={methods.event.selectedOptions(modal.action.show ? modal.action.data.events : [])}
           saveHandler={methods.action.save}
           afterEditHandler={methods.action.afterEdit}
-          removeHandler={methods.action.remove} />
-        <TransitionForm show={modal.transition.show}
+          removeHandler={methods.action.remove} /> : '' }
+        { modal.transition.show ? <TransitionForm show={modal.transition.show}
           data={modal.transition.data}
-          methods={methods.transition} />
-        <VarForm show={modal.var.show}
+          methods={methods.transition} /> : '' }
+        { modal.var.show ? <VarForm show={modal.var.show}
           data={modal.var.data}
-          methods={methods.var} />
-        <GroupForm show={modal.group.show}
+          methods={methods.var} /> : '' }
+        { modal.group.show ? <GroupForm show={modal.group.show}
           data={modal.group.data}
           places={methods.place.options()}
           selectedPlaces={methods.place.selectedOptions(modal.group.show ? modal.group.data.placeIds : [])}
-          methods={methods.group} />
+          methods={methods.group} /> : '' }
       </div>
     );
   }

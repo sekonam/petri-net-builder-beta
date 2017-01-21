@@ -1,13 +1,10 @@
 import Model from './../core/Model.js';
 
 export default class VarModel extends Model {
-  constructor(params = null) {
-    super();
-    this.init(params, VarModel.default);
+  defaults() {
+    this.set({
+      name: 'var',
+      params: ''
+    });
   }
 }
-
-VarModel.default = {
-  name: 'var',
-  value: ''
-};

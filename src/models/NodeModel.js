@@ -1,27 +1,21 @@
 import _ from 'lodash';
 
 import Model from './../core/Model.js';
-import ModelArray from './../core/ModelArray.js';
 
 export default class NodeModel extends Model {
 
-  constructor(params = null) {
-    super();
-    this.init(params, NodeModel.default);
+  defaults() {
+    this.set({
+      name: 'Node name',
+      sockets: []
+    });
 
-    if (_.isEmpty(params)) {
-      for (let i=0; i<2; i++) {
-        this.sockets.add({
+/*    for (let i=0; i<2; i++) {
+      const socket   this.sockets.add({
           type: i,
           nodeId: this.id
         });
-      }
-    }
+      }*/
   }
 
 }
-
-NodeModel.default = {
-  name: 'Node name',
-  sockets: new ModelArray('socket')
-};
