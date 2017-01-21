@@ -82,9 +82,11 @@ class Place extends React.Component {
       },
       socketTags = [];
 
-    data.sockets.forEach( (socket) => {
-      sockets[socket.typeName].push( socket );
-    } );
+    if (data.sockets.length) {
+      data.sockets.forEach( (socket) => {
+        sockets[socket.typeName].push( socket );
+      } );
+    }
 
     typeNames.forEach( (typeName) => {
       const step = height / ( sockets[typeName].length + 1 );

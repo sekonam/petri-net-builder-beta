@@ -2,13 +2,16 @@ import _ from 'lodash';
 import Model from './Model.js';
 import EntityFactory from './EntityFactory.js';
 
-function ModelArray(entityName, params = []) {
+function ModelArray(entityName, params = null) {
   Array.call(this);
   this.entityName = entityName;
 
-  if (!_.isEmpty(params)) {
-    params.forEach( (param) => this.add(param) );
+  if (typeof params == 'object' && params && params.hasOwnProperty('entityName')) {
+    for (let i=0; i < params.length; i++) {
+      this.add(params[i]);
+    }
   }
+//  console.log(params, this);
 }
 
 ModelArray.prototype = Object.create( Array.prototype );
@@ -39,6 +42,7 @@ ModelArray.prototype.map = function (f) {
 
   ModelArray.prototype.add = function (params = null) {
     const entity = EntityFactory[this.entityName](params);
+    console.log(entity);
     entity.bind( 'remove', (id) => this.removeById(id) );
     return this.push( entity );
   };

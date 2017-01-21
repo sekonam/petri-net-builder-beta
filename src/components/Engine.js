@@ -26,7 +26,7 @@ export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
-    localStorage.setItem('store', '');
+//    localStorage.setItem('store', '');
 
     const itemTypes = [
         'place',
@@ -264,7 +264,6 @@ export default class Engine extends React.Component {
     };
 
     this.methods.transition.addActive = (socket) => {
-      console.log(socket);
       if (socket.type) {
 
         this.setState( (prevState, props) => {
@@ -306,6 +305,7 @@ export default class Engine extends React.Component {
       } ),
 
       set: (zoom) => () => this.setState( (prevState, props) => {
+        console.log(this.state.store);
         prevState.viewport.zoom = zoom;
         return prevState;
       } )

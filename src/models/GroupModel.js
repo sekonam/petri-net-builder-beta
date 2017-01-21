@@ -2,7 +2,7 @@ import Model from './../core/Model.js';
 
 export default class GroupModel extends Model {
 
-  constructor(params) {
+  constructor(params = null) {
     super();
     this.init(params, GroupModel.default);
   }

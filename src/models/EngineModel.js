@@ -1,20 +1,16 @@
+import _ from 'lodash';
+
 import Model from './../core/Model.js';
+import ModelArray from './../core/ModelArray.js';
 import EntityFactory from './../core/EntityFactory.js';
 
 export default class EngineModel extends Model {
   constructor(store = null) {
     super();
-    const entities = ['place', 'group', 'action', 'event', 'transition', 'var',];
-    entities.forEach( (name) => { this[name + 's'] = []; } );
-
-    if (store != null) {
-      entities.forEach( (name) => {
-        if (typeof store[name +'s'] != 'undefined') {
-          store[name +'s'].forEach( (item) => {
-            this[name +'s'].push( EntityFactory[name](item) );
-          } );
-        }
-      } );
-    }
+    ['place', 'group', 'action', 'event', 'transition', 'var'].forEach( (name) => {
+      const names = name + 's',
+        defaults = !_.isEmpty(store) && names in store ? store[names] : null;
+      this[names] = new ModelArray( name, defaults );
+    } );
   }
 }
