@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
 
+import Query from '../core/Query.js';
 import Types from './Types.js';
 import PlaceModel from '../models/PlaceModel.js';
 
@@ -18,9 +19,10 @@ const placeSource = {
           const diff = monitor.getDifferenceFromInitialOffset(),
             zDiff = component.props.zoomedDiff(diff);
 
-          methods.place.drag(props.data.id,
-            this.start.x + zDiff.x,
-            this.start.y + zDiff.y);
+          methods.place.set( props.data.id, {
+            x: this.start.x + zDiff.x,
+            y: this.start.y + zDiff.y
+          } );
         }
       }, 10
     );
@@ -74,7 +76,8 @@ class Place extends React.Component {
   render() {
     const { connectDragSource, id, data, methods} = this.props,
       { x, y, width, height, r } = data,
-      typeNames = [ 'income', 'outcome' ];
+      typeNames = [ 'income', 'outcome' ],
+      query = Query.instance;
 
     let sockets = {
         income: [],
@@ -82,8 +85,9 @@ class Place extends React.Component {
       },
       socketTags = [];
 
-    if (data.sockets.length) {
-      data.sockets.forEach( (socket) => {
+    if (data.socketIds.length) {
+      data.socketIds.forEach( (sid) => {
+        const socket = query.socket.get(sid);
         sockets[socket.typeName].push( socket );
       } );
     }

@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {Form, FormGroup, FormControl, ControlLabel, Checkbox, Button} from 'react-bootstrap';
 import Select from 'react-select';
 
+import Query from '../core/Query.js';
 import Modal from './Modal.js';
 
 import PlaceModel from '../models/PlaceModel.js';
@@ -20,6 +21,7 @@ export default class PlaceForm extends React.Component {
 
   render() {
     const {data, socketHandlers} = this.props,
+      query = Query.instance,
       placeShapes = [
         {
           value: 0,
@@ -34,12 +36,13 @@ export default class PlaceForm extends React.Component {
         income: [],
         outcome: []
       };
-    data.sockets.forEach( (socket, key) => {
+    data.socketIds.forEach( (sid, key) => {
+      const socket = query.socket.get(sid);
       sockets[ socket.typeName ].push(
         <FormGroup key={key} className="row">
           <FormControl className="col-xs-8" type="text" value={socket.name}
-            onChange={(e) => socketHandlers.set(data.id)(socket.id)( 'name', e.target.value ) } />
-          <Button onClick={ socketHandlers.remove(data.id)(socket.id) }
+            onChange={(e) => socketHandlers.set(socket.id, { name: e.target.value } ) } />
+          <Button onClick={ () => socketHandlers.remove(socket.id) }
             bsStyle="danger" className="col-xs-4">Delete</Button>
         </FormGroup>
       );
@@ -82,7 +85,7 @@ export default class PlaceForm extends React.Component {
               <ControlLabel>Income Sockets</ControlLabel>
               {sockets['income']}
               <FormGroup controlId="AddIncomeSocket">
-              <Button onClick={ socketHandlers.add(data.id, 0) }
+              <Button onClick={ () => socketHandlers.addToPlace({type: 0}) }
                 bsStyle="primary">Add Income Socket</Button>
               </FormGroup>
             </div>
@@ -90,7 +93,7 @@ export default class PlaceForm extends React.Component {
               <ControlLabel>Outcome Sockets</ControlLabel>
               {sockets['outcome']}
               <FormGroup controlId="AddOutcomeSocket">
-              <Button onClick={ socketHandlers.add(data.id, 1) }
+              <Button onClick={ () => socketHandlers.addToPlace({type: 1}) }
                 bsStyle="primary">Add Outcome Socket</Button>
               </FormGroup>
             </div>

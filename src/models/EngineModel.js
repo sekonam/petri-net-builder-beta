@@ -1,12 +1,11 @@
 import _ from 'lodash';
 
-import EntityFactory from './../core/EntityFactory.js';
+import {EntityFactory, EntityNames} from '../core/Entities.js';
 
 export default class EngineModel {
 
   constructor(params = null) {
-    this.tables = ['place', 'group', 'action', 'event', 'transition', 'var'];
-    this.tables.forEach( (name) => {
+    EntityNames.forEach( (name) => {
       const names = name + 's';
       this[names] = [];
 
@@ -16,6 +15,26 @@ export default class EngineModel {
         } );
       }
     } );
+  }
+
+  entities(name) {
+    return this[entityName + 's'];
+  }
+
+  get(entityName) {
+    return (id) => this.entities(entityName).valueById(id);
+  }
+
+  getAll(entityName) {
+    return (ids = null) => {
+      const entities = this.entities(entityName);
+
+      if (ids) {
+        return entities.filter( (entity) => ids.has(entity.id) );
+      }
+
+      return entities;
+    };
   }
 
 }

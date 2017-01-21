@@ -7,7 +7,7 @@ export default class NodeModel extends Model {
   defaults() {
     this.set({
       name: 'Node name',
-      sockets: []
+      socketIds: []
     });
 
 /*    for (let i=0; i<2; i++) {

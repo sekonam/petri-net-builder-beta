@@ -12,6 +12,10 @@ String.random = function (count) {
     return text;
 };
 
+Array.prototype.has = function (value) {
+  return this.indexOf(value) > -1;
+};
+
 Array.prototype.cmap = function(f) {
   return this.length == 0 ? this : this.map(f);
 };

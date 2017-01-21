@@ -6,7 +6,8 @@ export default class SocketModel extends Model {
     this.set({
       name: 'Socket name',
       type: 0, // 0 - input, 1 - output
-      nodeId: null
+      nodeId: null,
+      nodeType: 'place'
     });
   }
 

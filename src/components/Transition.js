@@ -1,11 +1,13 @@
 import React, {PropTypes} from 'react';
 
+import Query from '../core/Query.js';
 import TransitionModel from '../models/TransitionModel.js';
 
 export default class Transition extends React.Component {
 
   socketOffset(place, socket) {
-    const sockets = place.sockets.filter( (el) => el.type == socket.type ),
+    const query = Query.instance,
+      sockets = query.sockets( place.socketIds ).filter( (el) => el.type == socket.type ),
       pos = sockets.indexOf(socket),
       step = place.height / (sockets.length + 1);
     return {
@@ -16,16 +18,17 @@ export default class Transition extends React.Component {
 
   render() {
     const transition = this.props.data,
-      {getHandlers, offset} = this.props,
-      startPlace = getHandlers.place(transition.start.nodeId),
-      startSocket = getHandlers.socket(transition.start.nodeId)(transition.start.socketId),
+      {offset} = this.props,
+      query = Query.instance,
+      startPlace = query.nodeBySocketId(transition.startSocketId),
+      startSocket = query.socket(transition.startSocketId),
       startOffset = this.socketOffset( startPlace, startSocket );
 
     let finishOffset = offset;
 
     if (transition.finish.socketId) {
-      const finishPlace = getHandlers.place(transition.finish.nodeId),
-        finishSocket = getHandlers.socket(transition.finish.nodeId)(transition.finish.socketId);
+      const finishPlace = query.nodeBySocketId(transition.finishSocketId),
+        finishSocket = query.socket(transition.finishSocketId);
       finishOffset = this.socketOffset( finishPlace, finishSocket );
     }
 
@@ -57,6 +60,5 @@ export default class Transition extends React.Component {
 Transition.propTypes = {
   data: PropTypes.instanceOf(TransitionModel).isRequired,
   offset: PropTypes.object,
-  editHandler: PropTypes.func.isRequired,
-  getHandlers: PropTypes.object.isRequired
+  editHandler: PropTypes.func.isRequired
 };
