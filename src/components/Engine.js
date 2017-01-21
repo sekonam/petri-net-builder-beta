@@ -2,6 +2,7 @@ import React from 'react';
 import {Button} from 'react-bootstrap';
 
 import EntityFactory from '../core/EntityFactory.js';
+import StorageEngine from '../core/StorageEngine.js';
 
 import EngineModel from '../models/EngineModel.js';
 import PlaceModel from '../models/PlaceModel.js';
@@ -26,7 +27,7 @@ export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
-    localStorage.setItem('store', '');
+//    localStorage.setItem('store', '');
 
     const itemTypes = [
         'place',
@@ -38,7 +39,7 @@ export default class Engine extends React.Component {
       ];
 
     this.state = {
-      store: new EngineModel( this.loadFromStorage( 'store' ) ),
+      store: new EngineModel(StorageEngine.loadFromStorage( 'store' )),
       modal: {},
       active: {
         transition: null,
@@ -353,26 +354,8 @@ export default class Engine extends React.Component {
     return sideName == 'start' ? 'finish' : 'start';
   }
 
-  loadFromStorage( name ) {
-    if (typeof(Storage) !== "undefined") {
-      const json = localStorage.getItem( name );
-
-      if (json) {
-        return JSON.parse( json );
-      }
-    }
-
-    return null;
-  }
-
-  saveToStorage( name, value ) {
-    if (typeof(Storage) !== "undefined") {
-      localStorage.setItem(name, JSON.stringify( value ));
-    }
-  }
-
   saveStateToStorage() {
-    this.saveToStorage( 'store', this.state.store );
+    StorageEngine.saveToStorage( 'store', this.state.store );
   }
 
   keyDownHandler(e) {

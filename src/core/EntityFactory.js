@@ -7,13 +7,13 @@ import VarModel from './../models/VarModel.js';
 import GroupModel from './../models/GroupModel.js';
 
 const EntityFactory = {
-  place: (params) => new PlaceModel,
-  socket: (params) => new SocketModel,
-  action: (params) => new ActionModel,
-  event: (params) => new EventModel,
-  transition: (params) => new TransitionModel,
-  'var': (params) => new VarModel,
-  group: (params) => new GroupModel
+  place: (params) => new PlaceModel(params),
+  socket: (params) => new SocketModel(params),
+  action: (params) => new ActionModel(params),
+  event: (params) => new EventModel(params),
+  transition: (params) => new TransitionModel(params),
+  'var': (params) => new VarModel(params),
+  group: (params) => new GroupModel(params)
 };
 
 export default EntityFactory;
