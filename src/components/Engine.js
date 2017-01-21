@@ -84,7 +84,6 @@ export default class Engine extends React.Component {
         const storageName = itemType + 's';
         return () => {
           const newItem = EntityFactory[itemType]();
-          newItem.defaults();
 
           this.saveToState(
             (state) => {

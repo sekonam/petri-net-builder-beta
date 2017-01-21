@@ -13,17 +13,14 @@ export default class PlaceModel extends NodeModel {
       r: 0
     });
 
-console.log(this);
     const init = {
       x: 50,
       y: 50
     }, step = 10;
 
-    if (!params) {
-      [ 'x', 'y' ].forEach( (name) => {
-        this[name] = init[name] + PlaceModel.count * 10;
-      });
-    }
+    [ 'x', 'y' ].forEach( (name) => {
+      this[name] = init[name] + PlaceModel.count * 10;
+    });
 
     PlaceModel.count++;
   }

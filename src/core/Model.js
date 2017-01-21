@@ -1,7 +1,12 @@
 import _ from 'lodash';
 
-function Model() {
-  this.genId();
+function Model(params = null) {
+  if (params) {
+    this.set(params);
+  } else {
+    this.genId();
+    this.defaults();
+  }
 };
 
 Model.prototype.getId = function() {
@@ -16,9 +21,9 @@ Model.prototype.defaults = function () {};
 
 Model.prototype.set = function (params) {
   if (!_.isEmpty(params)) {
-    params.forEach( (val, key) => {
-    this[key] = _.cloneDeep(params[key]);
-    } );
+    for (let key in params) {
+      this[key] = _.cloneDeep(params[key]);
+    }
   }
 };
 
