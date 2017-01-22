@@ -22,18 +22,11 @@ export default function Store(setState) {
     this.state.modal[key] = null;
   } );
 
-  const ss = (changeState) => {
-    setState( (state) => {
-      changeState(state);
-      return state;
-    } );
-  };
-
   const s = (entityName) => entityName + 's';
 
   const handlerFactory = {
 
-    add: (entityName, callback = null) => (params = null) => ss( (state) => {
+    add: (entityName, callback = null) => (params = null) => (state) => {
       const entity = EntityFactory[entityName]();
 
       if (params) {
@@ -45,25 +38,31 @@ export default function Store(setState) {
       if (callback) {
         callback.call(null, state, entity);
       }
-    } ),
 
-    set: (entityName) => (id, params) => ss( (state) => {
+      return state;
+    },
+
+    set: (entityName) => (id, params) => (state) => {
       state.db[ s(entityName) ].valueById(id).set(params);
-    } ),
+      return state;
+    },
 
-    edit: (entityName) => (id) => ss( (state) => {
+    edit: (entityName) => (id) => (state) => {
       state.modal[entityName] = state.db[ s(entityName) ].valueById(id);
-    } ),
+      return state;
+    },
 
-    save: (entityName) => (key, value) => ss( (state) => {
+    save: (entityName) => (key, value) => (state) => {
       state.modal[entityName].set({ [ key ]: value });
-    } ),
+      return state;
+    },
 
-    afterEdit: (entityName) => () => ss( (state) => {
+    afterEdit: (entityName) => () => (state) => {
       state.modal[entityName] = null;
-    } ),
+      return state;
+    },
 
-    remove: (entityName, callback = null) => (id) => ss( (state) => {
+    remove: (entityName, callback = null) => (id) => (state) => {
       const data = state.db[ s(entityName) ],
         key = data.indexById(id);
 
@@ -74,38 +73,42 @@ export default function Store(setState) {
 
         data.splice(key, 1);
       }
-    } )
+
+      return state;
+    }
   };
+
+  const methods = {};
 
   for (let key in EntityNames) {
     const entityName = EntityNames[key];
-    this[entityName] = {};
+    methods[entityName] = {};
 
     for (let methodName in handlerFactory) {
-      this[entityName][methodName] = handlerFactory[methodName](entityName);
+      methods[entityName][methodName] = handlerFactory[methodName](entityName);
     }
   }
 
-  this.place.add = handlerFactory.add( 'place', (state, place) => {
+  methods.place.add = handlerFactory.add( 'place', (state, place) => {
     for (let i=0; i<2; i++) {
-      this.socket.add({
+      methods.socket.add({
         type: i,
         nodeType: 'place',
         nodeId: place.id
-      });
+      })(state);
     }
   } );
 
-  this.socket.add = handlerFactory.add( 'socket', (state, socket) => {
+  methods.socket.add = handlerFactory.add( 'socket', (state, socket) => {
     state.db[ s(socket.nodeType) ].valueById(socket.nodeId).socketIds.push( socket.id );
   } );
 
-  this.socket.addToPlace = () => this.socket.add({
+  methods.socket.addToPlace = (params) => methods.socket.add( Object.assign({
     nodeType: 'place',
     nodeId: this.state.modal.place.id
-  });
+  }, params));
 
-  this.place.remove = handlerFactory.remove('place', (state, pid) => {
+  methods.place.remove = handlerFactory.remove('place', (state, pid) => {
     state.db.places.valueById(pid).socketIds.forEach( (sid) => {
       state.db.arcs.spliceRecurcive(
         (arc) => (arc.startSocketId == sid || arc.finishSocketId == sid)
@@ -121,7 +124,7 @@ export default function Store(setState) {
     } );
   } );
 
-  this.event.remove = handlerFactory.remove('event', (state, eid) => {
+  methods.event.remove = handlerFactory.remove('event', (state, eid) => {
     state.db.actions.forEach( (action) => {
       const eventKey = action.events.indexOf(eid);
 
@@ -145,7 +148,7 @@ export default function Store(setState) {
     */
   } );
 
-  this.socket.remove = handlerFactory.remove( 'socket', (state, sid) => {
+  methods.socket.remove = handlerFactory.remove( 'socket', (state, sid) => {
     const socket = state.db.sockets.valueById(sid),
       node = state.db[ s(socket.nodeType) ].valueById(socket.nodeId);
     node.socketIds.splice( node.socketIds.indexOf(sid), 1 );
@@ -155,62 +158,73 @@ export default function Store(setState) {
     );
   } );
 
-  this.arc.addActive = (socket) => {
+  methods.arc.addActive = (socket) => (state) => {
     if (socket.type) {
-
-      ss( (state) => {
-        let activeArc = EntityFactory['arc']();
-        activeArc.startSocketId = socket.id;
-        state.active.arc = activeArc;
-      } );
-
+      let activeArc = EntityFactory['arc']();
+      activeArc.startSocketId = socket.id;
+      state.active.arc = activeArc;
     }
+
+    return state;
   };
 
-  this.arc.linkActive = (socket) => {
-    if ( !socket.type ) {
-      ss( (state) => {
-        if (state.active.arc) {
-          let activeArc = EntityFactory['arc']( state.active.arc );
-          activeArc.finishSocketId = socket.id;
-          state.db.arcs.push(activeArc);
-          state.active.arc = null;
-        }
-      } );
+  methods.arc.linkActive = (socket) => (state) => {
+    if ( !socket.type && state.active.arc) {
+      let activeArc = EntityFactory['arc']( state.active.arc );
+      activeArc.finishSocketId = socket.id;
+      state.db.arcs.push(activeArc);
+      state.active.arc = null;
     }
+
+    return state;
   };
 
-  this.arc.removeActive = () => {
-    ss( (state) => {
-      if (state.active.arc) {
-        state.active.arc = null;
-      }
-    } );
+  methods.arc.removeActive = () => (state) => {
+    if (state.active.arc) {
+      state.active.arc = null;
+    }
+
+    return state;
   };
 
   ['place', 'group'].forEach( (entityName) => {
-    this[entityName].active = (id) => ss( (state) => {
+    methods[entityName].active = (id) => (state) => {
       state.active[entityName] = id;
-    } );
+      return state;
+    };
   } );
 
-  this.zoom = {
+  methods.zoom = {
 
-    change: (shift) => () => ss( (state) => {
+    change: (shift) => (state) => {
       state.viewport.zoom += state.viewport.zoom + shift > 0.1 ? shift : 0;
-    } ),
+      return state;
+    },
 
-    set: (zoom) => () => ss( (state) => {
+    set: (zoom) => (state) => {
       state.viewport.zoom = zoom;
-    } )
+      return state;
+    }
 
   };
 
-  this.translate = {
-    set: (translateX, translateY) => ss( (state) => {
+  methods.translate = {
+    set: (translateX, translateY) => (state) => {
       state.viewport.translateX = translateX;
       state.viewport.translateY = translateY;
-    } )
+      return state;
+    }
   };
+
+  EntityNames.concat(['zoom', 'translate']).forEach( (entityName) => {
+    this[entityName] = {};
+
+    Object.getOwnPropertyNames( methods[entityName] ).forEach( (methodName) => {
+      this[entityName][methodName] = (...params) => setState(
+        methods[entityName][methodName](...params)
+      );
+    } );
+
+  } );
 
 }

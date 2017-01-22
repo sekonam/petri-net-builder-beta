@@ -80,9 +80,9 @@ export default class Engine extends React.Component {
         </div>
         <div className="buttons">
           <span>Zoom:</span>
-          <Button onClick={ methods.zoom.change(-0.1) } bsStyle="default">-</Button>
-          <Button onClick={ methods.zoom.change(0.1) } bsStyle="default">+</Button>
-          <Button onClick={ methods.zoom.set(1) } bsStyle="default">Default</Button>
+          <Button onClick={ () => methods.zoom.change(-0.1) } bsStyle="default">-</Button>
+          <Button onClick={ () => methods.zoom.change(0.1) } bsStyle="default">+</Button>
+          <Button onClick={ () => methods.zoom.set(1) } bsStyle="default">Default</Button>
         </div>
         <Context viewport={this.state.viewport}
           methods={methods} active={active} />
