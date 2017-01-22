@@ -86,11 +86,24 @@ export default function Store(setState) {
     }
   }
 
-  ['place', 'group'].forEach( (entityName) => {
-    this[entityName].active = (id) => ss( (state) => {
-      state.active[entityName] = id;
-    } );
+  this.place.add = handlerFactory.add( 'place', (state, place) => {
+    for (let i=0; i<2; i++) {
+      this.socket.add({
+        type: i,
+        nodeType: 'place',
+        nodeId: place.id
+      });
+    }
   } );
+
+  this.socket.add = handlerFactory.add( 'socket', (state, socket) => {
+    state.db[ s(socket.nodeType) ].valueById(socket.nodeId).socketIds.push( socket.id );
+  } );
+
+  this.socket.addToPlace = () => this.socket.add({
+    nodeType: 'place',
+    nodeId: this.state.modal.place.id
+  });
 
   this.place.remove = handlerFactory.remove('place', (state, pid) => {
     state.db.places.valueById(pid).socketIds.forEach( (sid) => {
@@ -130,12 +143,6 @@ export default function Store(setState) {
 
     } );
     */
-  } );
-
-  this.socket.addToPlace = handlerFactory.add( 'socket', (state, socket) => {
-    socket.nodeType = 'place';
-    socket.nodeId = state.modal.place.id;
-    state.db[ s(socket.nodeType) ].valueById(socket.nodeId).socketIds.push( socket.id );
   } );
 
   this.socket.remove = handlerFactory.remove( 'socket', (state, sid) => {
@@ -180,6 +187,12 @@ export default function Store(setState) {
       }
     } );
   };
+
+  ['place', 'group'].forEach( (entityName) => {
+    this[entityName].active = (id) => ss( (state) => {
+      state.active[entityName] = id;
+    } );
+  } );
 
   this.zoom = {
 
