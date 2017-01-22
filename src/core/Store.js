@@ -11,8 +11,9 @@ export default function Store(setState) {
     db: new EngineModel(StorageEngine.loadFromStorage( 'db' )),
     modal: {},
     active: {
-      arc: null,
       place: null,
+      arc: null,
+      net: null,
       group: null
     },
     viewport: new ViewportModel()
@@ -108,6 +109,10 @@ export default function Store(setState) {
     nodeId: this.state.modal.place.id
   }, params));
 
+  methods.net.add = handlerFactory.add( 'net', (state, net) => {
+    state.active.net = net.id;
+  } );
+
   methods.place.remove = handlerFactory.remove('place', (state, pid) => {
     state.db.places.valueById(pid).socketIds.forEach( (sid) => {
       state.db.arcs.spliceRecurcive(
@@ -158,6 +163,13 @@ export default function Store(setState) {
     );
   } );
 
+  ['place', 'group', 'net'].forEach( (entityName) => {
+    methods[entityName].active = (id) => (state) => {
+      state.active[entityName] = id;
+      return state;
+    };
+  } );
+
   methods.arc.addActive = (socket) => (state) => {
     if (socket.type) {
       let activeArc = EntityFactory['arc']();
@@ -186,13 +198,6 @@ export default function Store(setState) {
 
     return state;
   };
-
-  ['place', 'group'].forEach( (entityName) => {
-    methods[entityName].active = (id) => (state) => {
-      state.active[entityName] = id;
-      return state;
-    };
-  } );
 
   methods.zoom = {
 

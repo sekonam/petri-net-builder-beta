@@ -7,15 +7,9 @@ export default class NodeModel extends Model {
   defaults() {
     this.set({
       name: 'Node name',
-      socketIds: []
+      socketIds: [],
+      netId: null
     });
-
-/*    for (let i=0; i<2; i++) {
-      const socket   this.sockets.add({
-          type: i,
-          nodeId: this.id
-        });
-      }*/
   }
 
 }

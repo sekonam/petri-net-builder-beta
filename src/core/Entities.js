@@ -5,16 +5,18 @@ import EventModel from './../models/EventModel.js';
 import ArcModel from './../models/ArcModel.js';
 import VarModel from './../models/VarModel.js';
 import GroupModel from './../models/GroupModel.js';
+import NetModel from './../models/NetModel.js';
 
 const EntityFactory = {
     place: (params) => new PlaceModel(params),
     socket: (params) => new SocketModel(params),
+    net: (params) => new NetModel(params),
     action: (params) => new ActionModel(params),
     event: (params) => new EventModel(params),
     arc: (params) => new ArcModel(params),
     'var': (params) => new VarModel(params),
     group: (params) => new GroupModel(params)
   },
-  EntityNames = ['place', 'socket', 'group', 'action', 'event', 'arc', 'var'];
+  EntityNames = ['place', 'socket', 'arc', 'net', 'group', 'action', 'event', 'var'];
 
 export { EntityNames, EntityFactory };
