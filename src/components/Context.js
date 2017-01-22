@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import { default as TouchBackend } from 'react-dnd-touch-backend';
 import { DragDropContext } from 'react-dnd';
 
+import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 
 import EngineModel from './../models/EngineModel.js';
@@ -21,7 +22,7 @@ class Context extends React.Component {
         height: 0
       },
 
-      // active Arc build
+      // drawing Arc offset
       mouseOffset: {
         x: 0,
         y: 0
@@ -31,9 +32,6 @@ class Context extends React.Component {
       mouseDown: null,
       translateX: 0,
       translateY: 0,
-
-      // show selected state dim everyone else
-      clickedPlace: null
     };
 
     this.zoomedOffset = this.zoomedOffset.bind(this);
@@ -88,8 +86,8 @@ class Context extends React.Component {
   }
 
   canChangeTranslate() {
-    const {active} = this.props;
-    return !active.place && !active.group && !this.state.clickedPlace;
+    const {dragging} = this.props;
+    return !dragging.place && !dragging.group;
   }
 
   mouseDownHandler(e) {
@@ -116,15 +114,15 @@ class Context extends React.Component {
   }
 
   mouseMoveHandler(e) {
-    const {active, viewport} = this.props;
+    const {drawing, viewport} = this.props;
 
-    if (active.arc) {
+    if (drawing.arc) {
       this.setMouseOffset( {
         x: e.pageX,
         y: e.pageY
       } );
     } else if (this.canChangeTranslate() && this.state.mouseDown) {
-      this.props.methods.translate.set(
+      Store.instance.translate.set(
         this.state.translateX + e.pageX - this.state.mouseDown.x,
         this.state.translateY + e.pageY - this.state.mouseDown.y
       );
@@ -150,16 +148,11 @@ class Context extends React.Component {
   }
 
   hideDimLayer(e) {
-    this.setState({
-      clickedPlace: null
-    });
-
     e.stopPropagation();
   }
 
   drawTactical() {
-    const { methods } = this.props,
-      { min, max } = GroupModel.findMinMax( Query.instance.places() ),
+    const { min, max } = GroupModel.findMinMax( Query.instance.places() ),
       w = this.svgWidth(),
       h = this.svgHeight(),
       indents = {
@@ -175,15 +168,15 @@ class Context extends React.Component {
   }
 
   render() {
-    const { methods, active } = this.props,
+    const { drawing } = this.props,
+      methods = Store.instance,
       query = Query.instance,
 
       places = query.places().cmap( (place, key) => (
         <Place data={place} id={place.id} key={key}
           zoomedDiff={this.zoomedDiff}
           setMouseOffset={this.setMouseOffset}
-          contextSetState={this.setState.bind(this)}
-          methods={methods} />
+          contextSetState={this.setState.bind(this)} />
       ) ),
 
       arcs = query.arcs().cmap( (arc, key) => (
@@ -191,12 +184,12 @@ class Context extends React.Component {
           editHandler={() => methods.arc.edit(arc.id)} />
       ) ),
 
-      activeArc = active.arc ? (
-        <Arc data={active.arc} offset={this.state.mouseOffset} editHandler={() => {}} />
+      drawingArc = drawing.arc ? (
+        <Arc data={drawing.arc} offset={this.state.mouseOffset} editHandler={() => {}} />
       ) : '',
 
       groups = query.groups().cmap( (group, key) => (
-        <Group data={group} methods={methods} zoomedDiff={this.zoomedDiff} key={key} />
+        <Group data={group} zoomedDiff={this.zoomedDiff} key={key} />
       ) ),
 
       viewport = this.props.viewport,
@@ -210,15 +203,15 @@ class Context extends React.Component {
         display: 'none'
       };
 
-    if (this.state.clickedPlace) {
+    if (false) {
       dimLayerStyles = {};
     }
 
     return (
       <svg width={ this.svgWidth() } height={ this.svgHeight() } className="context"
-        onMouseMove={this.mouseMoveHandler} onClick={methods.arc.removeActive}
+        onMouseMove={this.mouseMoveHandler} onClick={methods.arc.escapeDraw}
         onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler}
-        onWheel={ (e) => methods.zoom.change( e.deltaY > 0 ? 0.25 : -0.25 ) }
+        onWheel={ (e) => methods.zoom.change( e.deltaY > 0 ? 0.05 : -0.05 ) }
         ref={ (el) => { this.svg = el; } } >
         <g className="diagram-objects" style={{transform}}>
           {this.drawTactical()}
@@ -227,7 +220,7 @@ class Context extends React.Component {
           </g>
           <g className="arcs">
             {arcs}
-          {activeArc}
+          {drawingArc}
           </g>
           <g className="states">
             {places}
@@ -243,8 +236,7 @@ class Context extends React.Component {
 
 Context.propTypes = {
   viewport: PropTypes.instanceOf(ViewportModel).isRequired,
-  methods: PropTypes.object.isRequired,
-  active: PropTypes.object.isRequired
+  drawing: PropTypes.object.isRequired
 };
 
 export default DragDropContext(TouchBackend({ enableMouseEvents: true }))(Context);

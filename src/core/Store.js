@@ -9,17 +9,24 @@ export default function Store(setState) {
 
   this.state = {
     db: new EngineModel(StorageEngine.loadFromStorage( 'db' )),
-    modal: {},
-    active: {
-      place: null,
-      arc: null,
-      net: null,
-      group: null
-    },
     viewport: new ViewportModel()
+    modal: {
+      data: null,
+      type: null
+    },
+    active: {},
+    drawing: {
+      arc: null
+    },
+    dragging: {
+      place: null,
+      transition: null,
+      group: null
+    }
   };
 
   EntityNames.forEach( (key) => {
+    this.state.active[key] = null;
     this.state.modal[key] = null;
   } );
 
@@ -170,36 +177,36 @@ export default function Store(setState) {
   } );
 
   ['place', 'group', 'net'].forEach( (entityName) => {
-    methods[entityName].active = (id) => (state) => {
-      state.active[entityName] = id;
+    methods[entityName].dragging = (id) => (state) => {
+      state.dragging[entityName] = id;
       return state;
     };
   } );
 
-  methods.arc.addActive = (socket) => (state) => {
+  methods.arc.startDraw = (socket) => (state) => {
     if (socket.type) {
-      let activeArc = EntityFactory['arc']();
-      activeArc.startSocketId = socket.id;
-      state.active.arc = activeArc;
+      let tmpArc = EntityFactory['arc']();
+      tmpArc.startSocketId = socket.id;
+      state.drawing.arc = tmpArc;
     }
 
     return state;
   };
 
-  methods.arc.linkActive = (socket) => (state) => {
-    if ( !socket.type && state.active.arc) {
-      let activeArc = EntityFactory['arc']( state.active.arc );
-      activeArc.finishSocketId = socket.id;
-      state.db.arcs.push(activeArc);
-      state.active.arc = null;
+  methods.arc.finishDraw = (socket) => (state) => {
+    if ( !socket.type && state.drawing.arc) {
+      let tmpArc = EntityFactory['arc']( state.drawing.arc );
+      tmpArc.finishSocketId = socket.id;
+      state.db.arcs.push(tmpArc);
+      state.drawing.arc = null;
     }
 
     return state;
   };
 
-  methods.arc.removeActive = () => (state) => {
-    if (state.active.arc) {
-      state.active.arc = null;
+  methods.arc.escapeDraw = () => (state) => {
+    if (state.drawing.arc) {
+      state.drawing.arc = null;
     }
 
     return state;

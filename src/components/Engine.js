@@ -45,8 +45,8 @@ export default class Engine extends React.Component {
   }
 
   keyDownHandler(e) {
-    if (e.keyCode == 27 && this.state.active.arc) {
-      this.methods.arc.removeActive();
+    if (e.keyCode == 27 && this.state.drawing.arc) {
+      this.methods.arc.escapeDraw();
     }
   }
 
@@ -78,7 +78,7 @@ export default class Engine extends React.Component {
         return (
         <LeftMenuBlock key={key}
           itemName={itemType}
-          activeId={itemType == 'place' ? this.state.active.place : ''}
+          activeId={this.state.active[itemType]}
           data={query[itemType].options()}
           editHandler={methods[itemType].edit}
           addHandler={methods[itemType].add}/>
@@ -102,8 +102,8 @@ export default class Engine extends React.Component {
           <Button onClick={ () => methods.zoom.change(0.1) } bsStyle="default">+</Button>
           <Button onClick={ () => methods.zoom.set(1) } bsStyle="default">Default</Button>
         </div>
-        <Context viewport={this.state.viewport}
-          methods={methods} active={active} />
+        <Context viewport={this.state.viewport} active={active}
+          drawing={this.state.drawing} dragging={this.state.dragging} />
         { modal.place ? <PlaceForm show={!_.isEmpty(modal.place)}
           data={modal.place}
           saveHandler={methods.place.save}

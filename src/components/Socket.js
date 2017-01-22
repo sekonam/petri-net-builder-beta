@@ -14,13 +14,13 @@ export default class Socket extends React.Component {
     const {data, arcHandlers} = this.props;
 
     if (data.type) {
-      arcHandlers.addActive(data);
+      arcHandlers.startDraw(data);
       this.props.setMouseOffset({
         x: e.pageX,
         y: e.pageY
       });
     } else {
-      arcHandlers.linkActive(data);
+      arcHandlers.finishDraw(data);
     }
 
     e.stopPropagation();

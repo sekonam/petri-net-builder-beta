@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
 
 import Query from '../core/Query.js';
+import Store from '../core/Store.js';
 import Types from './Types.js';
 import PlaceModel from '../models/PlaceModel.js';
 
@@ -11,7 +12,8 @@ import CircleButton from './CircleButton.js';
 const placeSource = {
 
   beginDrag(props, monitor, component) {
-    const {data, methods} = component.props;
+    const {data} = component.props,
+      methods = Store.instance;
 
     this.timerId = setInterval(
       () => {
@@ -31,7 +33,7 @@ const placeSource = {
       x: data.x,
       y: data.y
     };
-    methods.place.active(props.data.id);
+    methods.place.dragging(props.data.id);
 
     return {
       id: props.data.id
@@ -40,7 +42,7 @@ const placeSource = {
 
   endDrag(props, monitor, component) {
     clearInterval(this.timerId);
-    component.props.methods.place.active(null);
+    Store.instance.place.dragging(null);
     component.setState({
       wasDragged: true
     });
@@ -69,12 +71,13 @@ class Place extends React.Component {
         wasDragged: false
       });
     } else {
-      this.props.methods.place.edit(this.props.data.id);
+      Store.instance.place.edit(this.props.data.id);
     }
   }
 
   render() {
-    const { connectDragSource, id, data, methods} = this.props,
+    const { connectDragSource, id, data} = this.props,
+      methods = Store.instance,
       { x, y, width, height, r } = data,
       typeNames = [ 'income', 'outcome' ],
       query = Query.instance;
@@ -100,7 +103,6 @@ class Place extends React.Component {
           <Socket data={socket} key={typeName + key}
             x={ x + ( socket.type ? width : 0 ) }
             y={ y + ( key + 1 ) * step }
-            arcHandlers={methods.arc}
             setMouseOffset={this.props.setMouseOffset} />
         ) )
       );
@@ -126,8 +128,7 @@ Place.propTypes = {
   id: PropTypes.string.isRequired,
   zoomedDiff: PropTypes.func.isRequired,
   setMouseOffset: PropTypes.func.isRequired,
-  contextSetState: PropTypes.func.isRequired,
-  methods: PropTypes.object.isRequired
+  contextSetState: PropTypes.func.isRequired
 };
 
 export default DragSource(Types.PLACE, placeSource, collect)(Place);

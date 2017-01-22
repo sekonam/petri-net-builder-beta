@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
 
+import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import Types from './Types.js';
 import GroupModel from './../models/GroupModel.js';
@@ -9,7 +10,8 @@ import CircleButton from './CircleButton.js';
 const groupSource = {
 
   beginDrag(props, monitor, component) {
-    const {data, methods} = component.props;
+    const {data} = component.props,
+      methods = Store.instance;
 
     this.timerId = setInterval(
       () => {
@@ -37,7 +39,7 @@ const groupSource = {
       };
     } );
 
-    methods.group.active(props.data.id);
+    methods.group.dragging(props.data.id);
 
     return {
       id: props.data.id
@@ -46,7 +48,7 @@ const groupSource = {
 
   endDrag(props, monitor, component) {
     clearInterval(this.timerId);
-    component.props.methods.group.active(null);
+    Store.instance.group.dragging(null);
   }
 };
 
@@ -63,7 +65,7 @@ class Group extends React.Component {
   }
 
   render() {
-    const {data, methods , connectDragSource} = this.props,
+    const {data, connectDragSource} = this.props,
       query = Query.instance;
 
     if (data.placeIds.length) {
@@ -83,7 +85,7 @@ class Group extends React.Component {
           <g className="header">
             <text x={x+10} y={y+18} className="group-header">{data.name}</text>
             <CircleButton x = {x+w-18} y = {y+15} caption="E"
-              clickHandler={() => methods.group.edit(data.id)}/>
+              clickHandler={() => Store.instance.group.edit(data.id)}/>
           </g>
         </g>
       );
@@ -95,7 +97,6 @@ class Group extends React.Component {
 
 Group.propTypes = {
     data: PropTypes.instanceOf(GroupModel).isRequired,
-    methods: PropTypes.object.isRequired,
     zoomedDiff: PropTypes.func.isRequired
 };
 
