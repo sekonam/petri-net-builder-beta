@@ -5,7 +5,8 @@ export default class GroupModel extends Model {
   defaults() {
     this.set({
       name: 'Group name',
-      placeIds: []
+      placeIds: [],
+      netId: null
     });
   }
 

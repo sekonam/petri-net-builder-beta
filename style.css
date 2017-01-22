@@ -6,11 +6,26 @@ body {
 /* orange: #f0ad4e */
 
 /*
+ * Top menu
+ */
+.buttons {
+   margin-left:185px;
+   margin-top:1px;
+}
+.buttons .btn {
+  margin-left:5px
+}
+.buttons span {
+  margin-left: 15px;
+}
+
+/*
  * Left menu
  */
 .engine .left-menu {
   float:left;
   width:180px;
+  padding-top: 5px;
 }
 .list-type-style-none {
   list-style-type:none;
@@ -18,14 +33,6 @@ body {
 }
 .list-type-style-none li {
   margin-bottom:5px;
-}
-
-.buttons {
-  margin-left:185px;
-  margin-top:1px;
-}
-.buttons .btn {
-  margin-left:5px
 }
 
 /*
@@ -52,7 +59,7 @@ body {
 /*
  * SVG workflow 2D context
  */
-svg {
+svg.context {
   margin:10px 5px 5px;
   overflow:hidden;
   background-color:#ccc;

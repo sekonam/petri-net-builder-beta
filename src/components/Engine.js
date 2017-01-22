@@ -24,14 +24,17 @@ import ActionForm from './ActionForm.js';
 import ArcForm from './ArcForm.js';
 import VarForm from './VarForm.js';
 import LeftMenuBlock from './LeftMenuBlock.js';
+import Tree from './Tree.js';
+
 
 export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.store = new Store( this.setState.bind(this) );
+    this.query = new Query( this.store.state );
     this.state = this.store.state;
-    this.query = new Query( this.state );
 
     this.saveStateToStorage = this.saveStateToStorage.bind(this);
     this.keyDownHandler = this.keyDownHandler.bind(this);
@@ -57,6 +60,12 @@ export default class Engine extends React.Component {
     document.body.removeEventListener( 'keydown', this.keyDownHandler);
   }
 
+  componentDidUpdate() {
+    this.tree.setState({
+      tree: Query.instance.treebreadWorkspace()
+    });
+  }
+
   render() {
     const
       modal = this.state.modal,
@@ -78,9 +87,16 @@ export default class Engine extends React.Component {
     return (
       <div className="engine">
         <div className="left-menu">
+          <Tree data={query.treebreadWorkspace()} ref={ (tree) => { this.tree = tree; } } />
           {leftMenuBlocks}
         </div>
         <div className="buttons">
+          <span>Add:</span>
+          <Button onClick={ () => methods.net.add() } bsStyle="default">Net</Button>
+          <Button onClick={ () => methods.subnet.add() } bsStyle="default">SubNet</Button>
+          <Button onClick={ () => methods.place.add() } bsStyle="default">Place</Button>
+          <Button onClick={ () => methods.transition.add() } bsStyle="default">Transition</Button>
+          <Button onClick={ () => methods.group.add() } bsStyle="default">Group</Button>
           <span>Zoom:</span>
           <Button onClick={ () => methods.zoom.change(-0.1) } bsStyle="default">-</Button>
           <Button onClick={ () => methods.zoom.change(0.1) } bsStyle="default">+</Button>

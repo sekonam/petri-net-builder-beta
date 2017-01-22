@@ -4,7 +4,8 @@ export default class NetModel extends Model {
 
   defaults() {
     this.set({
-      name: 'Network name'
+      name: 'Network name',
+      subNetId: null
     });
   }
 }

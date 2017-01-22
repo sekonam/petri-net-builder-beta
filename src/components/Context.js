@@ -215,7 +215,7 @@ class Context extends React.Component {
     }
 
     return (
-      <svg width={ this.svgWidth() } height={ this.svgHeight() }
+      <svg width={ this.svgWidth() } height={ this.svgHeight() } className="context"
         onMouseMove={this.mouseMoveHandler} onClick={methods.arc.removeActive}
         onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler}
         onWheel={ (e) => methods.zoom.change( e.deltaY > 0 ? 0.25 : -0.25 ) }
