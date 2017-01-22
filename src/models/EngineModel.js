@@ -18,7 +18,7 @@ export default class EngineModel {
   }
 
   entities(name) {
-    return this[entityName + 's'];
+    return this[name + 's'];
   }
 
   get(entityName) {

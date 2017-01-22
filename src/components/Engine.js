@@ -29,7 +29,7 @@ export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
-    StorageEngine.saveToStorage( 'db', '');
+//    StorageEngine.saveToStorage( 'db', '');
     this.store = new Store( this.setState.bind(this) );
     this.state = this.store.state;
     this.query = new Query( this.state );
@@ -84,7 +84,7 @@ export default class Engine extends React.Component {
           <Button onClick={ methods.zoom.change(0.1) } bsStyle="default">+</Button>
           <Button onClick={ methods.zoom.set(1) } bsStyle="default">Default</Button>
         </div>
-        <Context store={store} viewport={this.state.viewport}
+        <Context viewport={this.state.viewport}
           methods={methods} active={active} />
         { modal.place ? <PlaceForm show={!_.isEmpty(modal.place)}
           data={modal.place}

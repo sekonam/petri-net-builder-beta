@@ -22,23 +22,8 @@ export default class TransitionForm extends React.Component {
           </FormGroup>
           <div className="columns">
             <div className="left-side">
-              <FormGroup controlId="ConditionStart">
-                <ControlLabel>Income Condition</ControlLabel>
-                <FormControl componentClass="textarea" placeholder="JavaScript Code Here..."
-                  value={data.start.condition} onChange={
-                    (e) => methods.saveToChild(['start'])('condition', e.target.value)
-                  } />
-              </FormGroup>
             </div>
             <div className="right-side">
-              <FormGroup controlId="ConditionFinish">
-                <ControlLabel>Outcome Condition</ControlLabel>
-                <FormControl componentClass="textarea" placeholder="JavaScript Code Here..."
-                  value={data.finish.condition} onChange={
-                    (e) => methods.saveToChild(['finish'])('condition', e.target.value)
-                  } />
-              </FormGroup>
-
             </div>
           </div>
         </Form>

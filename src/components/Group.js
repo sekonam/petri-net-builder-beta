@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
 
+import Query from '../core/Query.js';
 import Types from './Types.js';
 import GroupModel from './../models/GroupModel.js';
 import CircleButton from './CircleButton.js';
@@ -29,7 +30,7 @@ const groupSource = {
     this.start = {};
 
     data.placeIds.forEach( (pid) => {
-      const place = methods.place.valueById(pid);
+      const place = Query.instance.place.get(pid);
       this.start[pid] = {
         x: place.x,
         y: place.y
@@ -62,12 +63,13 @@ class Group extends React.Component {
   }
 
   render() {
-    const {data, methods , connectDragSource} = this.props;
+    const {data, methods , connectDragSource} = this.props,
+      query = Query.instance;
 
     if (data.placeIds.length) {
       const INDENT = 10,
         HEADER = 20,
-        {min, max} = GroupModel.findMinMax(data.placeIds);
+        {min, max} = GroupModel.findMinMax( query.places( data.placeIds ) );
 
       const x = min.x - INDENT,
         y = min.y - INDENT - HEADER,

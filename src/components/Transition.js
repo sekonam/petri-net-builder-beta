@@ -21,14 +21,14 @@ export default class Transition extends React.Component {
       {offset} = this.props,
       query = Query.instance,
       startPlace = query.nodeBySocketId(transition.startSocketId),
-      startSocket = query.socket(transition.startSocketId),
+      startSocket = query.socket.get(transition.startSocketId),
       startOffset = this.socketOffset( startPlace, startSocket );
 
     let finishOffset = offset;
 
-    if (transition.finish.socketId) {
+    if (transition.finishSocketId) {
       const finishPlace = query.nodeBySocketId(transition.finishSocketId),
-        finishSocket = query.socket(transition.finishSocketId);
+        finishSocket = query.socket.get(transition.finishSocketId);
       finishOffset = this.socketOffset( finishPlace, finishSocket );
     }
 

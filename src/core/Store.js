@@ -171,7 +171,7 @@ export default function Store(setState) {
       ss( (state) => {
         if (state.active.transition) {
           let activeTransition = EntityFactory['transition']( state.active.transition );
-          activeTransition.finishsocketId = socket.id;
+          activeTransition.finishSocketId = socket.id;
           state.db.transitions.push(activeTransition);
           state.active.transition = null;
         }

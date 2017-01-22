@@ -127,7 +127,6 @@ Place.propTypes = {
   zoomedDiff: PropTypes.func.isRequired,
   setMouseOffset: PropTypes.func.isRequired,
   contextSetState: PropTypes.func.isRequired,
-  store: PropTypes.object.isRequired,
   methods: PropTypes.object.isRequired
 };
 

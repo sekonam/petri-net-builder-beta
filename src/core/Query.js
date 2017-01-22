@@ -9,7 +9,7 @@ export default class Query {
 
     const queryFactory = {
 
-      get: (entityName) => (id) => state.db[ s(entityName) ].valueById(id),
+      get: (entityName) => state.db.get(entityName),
 
       options: (entityName, paramName = 'name') => () => state.db[ s(entityName) ].cmap((item) => ({
         'value': item.id,
@@ -25,7 +25,7 @@ export default class Query {
 
     for (let key in EntityNames) {
       const entityName = EntityNames[key];
-      this[ s(entityName) ] = state.db.getAll( s(entityName) );
+      this[ s(entityName) ] = state.db.getAll( entityName );
 
       this[entityName] = {};
 

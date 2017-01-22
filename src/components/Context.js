@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import { default as TouchBackend } from 'react-dnd-touch-backend';
 import { DragDropContext } from 'react-dnd';
 
+import Query from '../core/Query.js';
+
 import EngineModel from './../models/EngineModel.js';
 import ViewportModel from './../models/ViewportModel.js';
 import GroupModel from './../models/GroupModel.js';
@@ -156,8 +158,8 @@ class Context extends React.Component {
   }
 
   drawTactical() {
-    const { store, methods } = this.props,
-      { min, max } = GroupModel.findMinMax( store.places ),
+    const { methods } = this.props,
+      { min, max } = GroupModel.findMinMax( Query.instance.places() ),
       w = this.svgWidth(),
       h = this.svgHeight(),
       indents = {
@@ -173,14 +175,14 @@ class Context extends React.Component {
   }
 
   render() {
-    const { store, methods, active } = this.props,
+    const { methods, active } = this.props,
+      query = Query.instance,
 
-      places = store.places.cmap( (place, key) => (
+      places = query.places().cmap( (place, key) => (
         <Place data={place} id={place.id} key={key}
           zoomedDiff={this.zoomedDiff}
           setMouseOffset={this.setMouseOffset}
           contextSetState={this.setState.bind(this)}
-          store={store}
           methods={methods} />
       ) ),
 
@@ -189,7 +191,7 @@ class Context extends React.Component {
         socket: methods.socket.get
       },
 
-      transitions = store.transitions.cmap( (transition, key) => (
+      transitions = query.transitions().cmap( (transition, key) => (
         <Transition data={transition} key={key}
           editHandler={() => methods.transition.edit(transition.id)}
           getHandlers={getHandlers} />
@@ -201,7 +203,7 @@ class Context extends React.Component {
           getHandlers={getHandlers} />
       ) : '',
 
-      groups = store.groups.cmap( (group, key) => (
+      groups = query.groups().cmap( (group, key) => (
         <Group data={group} methods={methods} zoomedDiff={this.zoomedDiff} key={key} />
       ) ),
 
@@ -248,7 +250,6 @@ class Context extends React.Component {
 }
 
 Context.propTypes = {
-  store: PropTypes.instanceOf(EngineModel).isRequired,
   viewport: PropTypes.instanceOf(ViewportModel).isRequired,
   methods: PropTypes.object.isRequired,
   active: PropTypes.object.isRequired
