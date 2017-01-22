@@ -21,9 +21,9 @@ Model.prototype.defaults = function () {};
 
 Model.prototype.set = function (params) {
   if (!_.isEmpty(params)) {
-    for (let key in params) {
-      this[key] = _.cloneDeep(params[key]);
-    }
+    Object.getOwnPropertyNames(params).forEach( (name) => {
+      this[name] = _.cloneDeep(params[name]);
+    } );
   }
 };
 

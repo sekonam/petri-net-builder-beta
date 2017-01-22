@@ -11,7 +11,7 @@ export default function Store(setState) {
     db: new EngineModel(StorageEngine.loadFromStorage( 'db' )),
     modal: {},
     active: {
-      transition: null,
+      arc: null,
       place: null,
       group: null
     },
@@ -94,8 +94,8 @@ export default function Store(setState) {
 
   this.place.remove = handlerFactory.remove('place', (state, pid) => {
     state.db.places.valueById(pid).socketIds.forEach( (sid) => {
-      state.db.transitions.spliceRecurcive(
-        (transition) => (transition.startSocketId == sid || transition.finishSocketId == sid)
+      state.db.arcs.spliceRecurcive(
+        (arc) => (arc.startSocketId == sid || arc.finishSocketId == sid)
       );
     } );
 
@@ -117,10 +117,10 @@ export default function Store(setState) {
       }
     } );
 
-  /*      state.db.transitions.forEach( (transition) => {
+  /*      state.db.arcs.forEach( (arc) => {
 
       [ 'start', 'finish' ].forEach( (name) => {
-        const data = transition[name].events,
+        const data = arc[name].events,
           eventKey = data.indexOf(eid);
 
         if ( eventKey > -1 ) {
@@ -130,12 +130,6 @@ export default function Store(setState) {
 
     } );
     */
-  } );
-
-  this.transition.edit = (id) => ss( (state) => {
-    if (!state.active.transition) {
-      handlerFactory.edit('transition')(id);
-    }
   } );
 
   this.socket.addToPlace = handlerFactory.add( 'socket', (state, socket) => {
@@ -149,39 +143,41 @@ export default function Store(setState) {
       node = state.db[ s(socket.nodeType) ].valueById(socket.nodeId);
     node.socketIds.splice( node.socketIds.indexOf(sid), 1 );
 
-    state.db.transitions.spliceRecurcive(
-      (transition) => (transition.startSocketId == sid || transition.finishSocketId == sid)
+    state.db.arcs.spliceRecurcive(
+      (arc) => (arc.startSocketId == sid || arc.finishSocketId == sid)
     );
   } );
 
-  this.transition.addActive = (socket) => {
+  this.arc.addActive = (socket) => {
     if (socket.type) {
 
       ss( (state) => {
-        let activeTransition = EntityFactory['transition']();
-        activeTransition.startSocketId = socket.id;
-        state.active.transition = activeTransition;
+        let activeArc = EntityFactory['arc']();
+        activeArc.startSocketId = socket.id;
+        state.active.arc = activeArc;
       } );
 
     }
   };
 
-  this.transition.linkActive = (socket) => {
+  this.arc.linkActive = (socket) => {
     if ( !socket.type ) {
       ss( (state) => {
-        if (state.active.transition) {
-          let activeTransition = EntityFactory['transition']( state.active.transition );
-          activeTransition.finishSocketId = socket.id;
-          state.db.transitions.push(activeTransition);
-          state.active.transition = null;
+        if (state.active.arc) {
+          let activeArc = EntityFactory['arc']( state.active.arc );
+          activeArc.finishSocketId = socket.id;
+          state.db.arcs.push(activeArc);
+          state.active.arc = null;
         }
       } );
     }
   };
 
-  this.transition.removeActive = () => {
+  this.arc.removeActive = () => {
     ss( (state) => {
-      state.active.transition = null;
+      if (state.active.arc) {
+        state.active.arc = null;
+      }
     } );
   };
 

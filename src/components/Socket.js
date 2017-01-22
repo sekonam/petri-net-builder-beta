@@ -11,16 +11,16 @@ export default class Socket extends React.Component {
   }
 
   socketClick(e) {
-    const {data, transitionHandlers} = this.props;
+    const {data, arcHandlers} = this.props;
 
     if (data.type) {
-      transitionHandlers.addActive(data);
+      arcHandlers.addActive(data);
       this.props.setMouseOffset({
         x: e.pageX,
         y: e.pageY
       });
     } else {
-      transitionHandlers.linkActive(data);
+      arcHandlers.linkActive(data);
     }
 
     e.stopPropagation();
@@ -46,6 +46,6 @@ Socket.propTypes = {
   data: PropTypes.instanceOf(SocketModel).isRequired,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
-  transitionHandlers: PropTypes.object.isRequired,
+  arcHandlers: PropTypes.object.isRequired,
   setMouseOffset: PropTypes.func.isRequired
 };

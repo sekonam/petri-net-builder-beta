@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
 
 import Query from '../core/Query.js';
-import TransitionModel from '../models/TransitionModel.js';
+import ArcModel from '../models/ArcModel.js';
 
-export default class Transition extends React.Component {
+export default class Arc extends React.Component {
 
   socketOffset(place, socket) {
     const query = Query.instance,
@@ -17,18 +17,18 @@ export default class Transition extends React.Component {
   }
 
   render() {
-    const transition = this.props.data,
+    const arc = this.props.data,
       {offset} = this.props,
       query = Query.instance,
-      startPlace = query.nodeBySocketId(transition.startSocketId),
-      startSocket = query.socket.get(transition.startSocketId),
+      startPlace = query.nodeBySocketId(arc.startSocketId),
+      startSocket = query.socket.get(arc.startSocketId),
       startOffset = this.socketOffset( startPlace, startSocket );
 
     let finishOffset = offset;
 
-    if (transition.finishSocketId) {
-      const finishPlace = query.nodeBySocketId(transition.finishSocketId),
-        finishSocket = query.socket.get(transition.finishSocketId);
+    if (arc.finishSocketId) {
+      const finishPlace = query.nodeBySocketId(arc.finishSocketId),
+        finishSocket = query.socket.get(arc.finishSocketId);
       finishOffset = this.socketOffset( finishPlace, finishSocket );
     }
 
@@ -49,16 +49,15 @@ export default class Transition extends React.Component {
     pathStr += b.x + ',' + b.y;
 
     return (
-      <g className='transition' onClick={this.props.editHandler}>
-        <path d={pathStr} className='transition-line' />
-        <circle cx={c.x} cy={c.y} r='7' className='transition-circle' />
+      <g className='arc' onClick={this.props.editHandler}>
+        <path d={pathStr} className='arc-line' style={arc.color ? {stroke: arc.color} : {}} />
       </g>
     );
   }
 }
 
-Transition.propTypes = {
-  data: PropTypes.instanceOf(TransitionModel).isRequired,
+Arc.propTypes = {
+  data: PropTypes.instanceOf(ArcModel).isRequired,
   offset: PropTypes.object,
   editHandler: PropTypes.func.isRequired
 };

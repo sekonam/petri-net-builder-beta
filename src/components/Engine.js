@@ -11,7 +11,7 @@ import PlaceModel from '../models/PlaceModel.js';
 import GroupModel from '../models/GroupModel.js';
 import EventModel from '../models/EventModel.js';
 import ActionModel from '../models/ActionModel.js';
-import TransitionModel from '../models/TransitionModel.js';
+import ArcModel from '../models/ArcModel.js';
 import VarModel from '../models/VarModel.js';
 import SocketModel from '../models/SocketModel.js';
 import ViewportModel from '../models/ViewportModel.js';
@@ -21,7 +21,7 @@ import PlaceForm from './PlaceForm.js';
 import GroupForm from './GroupForm.js';
 import EventForm from './EventForm.js';
 import ActionForm from './ActionForm.js';
-import TransitionForm from './TransitionForm.js';
+import ArcForm from './ArcForm.js';
 import VarForm from './VarForm.js';
 import LeftMenuBlock from './LeftMenuBlock.js';
 
@@ -40,8 +40,8 @@ export default class Engine extends React.Component {
   }
 
   keyDownHandler(e) {
-    if (e.keyCode == 27 && this.state.active.transition) {
-      this.methods.transition.removeActive();
+    if (e.keyCode == 27 && this.state.active.arc) {
+      this.methods.arc.removeActive();
     }
   }
 
@@ -51,7 +51,7 @@ export default class Engine extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener( 'beforeunload', this.saveStateToStorage );
+//    window.removeEventListener( 'beforeunload', this.saveStateToStorage );
     document.body.removeEventListener( 'keydown', this.keyDownHandler);
   }
 
@@ -104,9 +104,9 @@ export default class Engine extends React.Component {
           saveHandler={methods.action.save}
           afterEditHandler={methods.action.afterEdit}
           removeHandler={methods.action.remove} /> : '' }
-        { modal.transition ? <TransitionForm show={!_.isEmpty(modal.transition)}
-          data={modal.transition}
-          methods={methods.transition} /> : '' }
+        { modal.arc ? <ArcForm show={!_.isEmpty(modal.arc)}
+          data={modal.arc}
+          methods={methods.arc} /> : '' }
         { modal.var ? <VarForm show={!_.isEmpty(modal.var)}
           data={modal.var}
           methods={methods.var} /> : '' }

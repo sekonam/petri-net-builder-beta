@@ -108,37 +108,48 @@ svg {
   stroke-width:1;
 }
 
-.transition-button {
+.circle-button {
   fill:#25a;
   stroke:#aaa;
   stroke-width:1;
   cursor: pointer;
 }
-.transition-circle.remove-button {
-  fill:#d9534f;
+.circle-button .circle {
+  stroke:#fff;
+  fill:#25a;
 }
-.transition-button:hover {
+.circle-button .circle.remove-button {
+  fill:#d9534f;
+
+}
+.circle-button:hover {
   stroke:#fff;
 }
-.transition-button .transition-text {
+.circle-button .circle-button-text {
   fill:#ddd;
   stroke-width:0;
 }
-.transition-button:hover .transition-text {
+.circle-button:hover .circle-button-text {
   fill:#fff;
 }
 
-.transition {
+.arc {
   stroke-width:1;
   fill:none;
   stroke:#fff;
   opacity:1;
 }
-.transition:hover {
+.arc:hover {
   cursor:pointer;
   stroke-width:2;
 }
-.transition-circle {
+.arc .arc-line {
+  stroke-width: 3;
+}
+.arc:hover .arc-line {
+  stroke-width: 3;
+}
+.arc-circle {
   stroke:#fff;
   fill:#25a;
 }
@@ -147,6 +158,6 @@ svg {
   fill:#000;
   opacity: 0.5;
 }
-.groups, .transitions, .states {
+.groups, .arcs, .states {
   z-index: 0;
 }

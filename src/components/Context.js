@@ -9,7 +9,7 @@ import ViewportModel from './../models/ViewportModel.js';
 import GroupModel from './../models/GroupModel.js';
 
 import Place from './Place.js';
-import Transition from './Transition.js';
+import Arc from './Arc.js';
 import Group from './Group.js';
 
 class Context extends React.Component {
@@ -21,7 +21,7 @@ class Context extends React.Component {
         height: 0
       },
 
-      // active transition build
+      // active Arc build
       mouseOffset: {
         x: 0,
         y: 0
@@ -118,7 +118,7 @@ class Context extends React.Component {
   mouseMoveHandler(e) {
     const {active, viewport} = this.props;
 
-    if (active.transition) {
+    if (active.arc) {
       this.setMouseOffset( {
         x: e.pageX,
         y: e.pageY
@@ -186,21 +186,13 @@ class Context extends React.Component {
           methods={methods} />
       ) ),
 
-      getHandlers = {
-        place: methods.place.get,
-        socket: methods.socket.get
-      },
-
-      transitions = query.transitions().cmap( (transition, key) => (
-        <Transition data={transition} key={key}
-          editHandler={() => methods.transition.edit(transition.id)}
-          getHandlers={getHandlers} />
+      arcs = query.arcs().cmap( (arc, key) => (
+        <Arc data={arc} key={key}
+          editHandler={() => methods.arc.edit(arc.id)} />
       ) ),
 
-      activeTransition = active.transition ? (
-        <Transition data={active.transition} offset={this.state.mouseOffset}
-          editHandler={() => methods.transition.edit(active.transition.id)}
-          getHandlers={getHandlers} />
+      activeArc = active.arc ? (
+        <Arc data={active.arc} offset={this.state.mouseOffset} editHandler={() => {}} />
       ) : '',
 
       groups = query.groups().cmap( (group, key) => (
@@ -224,7 +216,7 @@ class Context extends React.Component {
 
     return (
       <svg width={ this.svgWidth() } height={ this.svgHeight() }
-        onMouseMove={this.mouseMoveHandler} onClick={methods.transition.removeActive}
+        onMouseMove={this.mouseMoveHandler} onClick={methods.arc.removeActive}
         onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler}
         onWheel={ (e) => methods.zoom.change( e.deltaY > 0 ? 0.25 : -0.25 )() }
         ref={ (el) => { this.svg = el; } } >
@@ -233,9 +225,9 @@ class Context extends React.Component {
           <g className="groups">
             {groups}
           </g>
-          <g className="transitions">
-            {transitions}
-          {activeTransition}
+          <g className="arcs">
+            {arcs}
+          {activeArc}
           </g>
           <g className="states">
             {places}

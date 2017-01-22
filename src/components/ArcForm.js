@@ -4,21 +4,21 @@ import Select from 'react-select';
 
 import Modal from './Modal.js';
 
-import TransitionModel from '../models/TransitionModel.js';
+import ArcModel from '../models/ArcModel.js';
 
-export default class TransitionForm extends React.Component {
+export default class ArcForm extends React.Component {
 
   render() {
     const {data, methods} = this.props;
 
     return (
-      <Modal title={'Transition: ' + data.name} show={this.props.show}
+      <Modal title='Arc' show={this.props.show}
         hide={methods.afterEdit} remove={() => { methods.remove(this.props.data.id); }}>
         <Form>
           <FormGroup controlId="NameInput">
-            <ControlLabel>Transition Name</ControlLabel>
-            <FormControl type="text" value={data.name}
-              onChange={(e) => methods.save('name', e.target.value)} />
+            <ControlLabel>Arc Color</ControlLabel>
+            <FormControl type="text" value={data.color}
+              onChange={(e) => methods.save('color', e.target.value)} />
           </FormGroup>
           <div className="columns">
             <div className="left-side">
@@ -32,8 +32,8 @@ export default class TransitionForm extends React.Component {
   }
 }
 
-TransitionForm.propTypes = {
-  data: PropTypes.instanceOf(TransitionModel).isRequired,
+ArcForm.propTypes = {
+  data: PropTypes.instanceOf(ArcModel).isRequired,
   methods: PropTypes.object.isRequired,
   show: PropTypes.bool.isRequired
 };
