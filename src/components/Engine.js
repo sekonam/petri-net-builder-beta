@@ -29,10 +29,12 @@ export default class Engine extends React.Component {
 
   constructor(props) {
     super(props);
-//    StorageEngine.saveToStorage( 'db', '');
     this.store = new Store( this.setState.bind(this) );
     this.state = this.store.state;
     this.query = new Query( this.state );
+
+    this.saveStateToStorage = this.saveStateToStorage.bind(this);
+    this.keyDownHandler = this.keyDownHandler.bind(this);
   }
 
   saveStateToStorage() {
@@ -51,7 +53,7 @@ export default class Engine extends React.Component {
   }
 
   componentWillUnmount() {
-//    window.removeEventListener( 'beforeunload', this.saveStateToStorage );
+    window.removeEventListener( 'beforeunload', this.saveStateToStorage );
     document.body.removeEventListener( 'keydown', this.keyDownHandler);
   }
 

@@ -12,7 +12,9 @@ const StorageEngine = {
   },
 
   saveToStorage: function ( name, value ) {
+    console.log(name);
     if (typeof(Storage) !== "undefined") {
+      console.log(value);
       localStorage.setItem(name, JSON.stringify( value ));
     }
   }
