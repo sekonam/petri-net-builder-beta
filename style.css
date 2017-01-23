@@ -43,6 +43,10 @@ body {
 .center{
   text-align: center;
 }
+.col-xs-8.form-control {
+  width: 65%;
+  margin-right: 1%;
+}
 
 /*
  * Form State Sockets

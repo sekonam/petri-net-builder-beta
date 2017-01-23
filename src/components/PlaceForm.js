@@ -39,11 +39,13 @@ export default class PlaceForm extends React.Component {
     data.socketIds.forEach( (sid, key) => {
       const socket = query.socket.get(sid);
       sockets[ socket.typeName ].push(
-        <FormGroup key={key} className="row">
+        <FormGroup key={key} className="container-fluid">
+        <div className="row">
           <FormControl className="col-xs-8" type="text" value={socket.name}
             onChange={(e) => methods.socket.set(socket.id, { name: e.target.value } ) } />
           <Button onClick={ () => methods.socket.remove(socket.id) }
             bsStyle="danger" className="col-xs-4">Delete</Button>
+            </div>
         </FormGroup>
       );
     } );
