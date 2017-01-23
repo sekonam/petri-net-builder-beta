@@ -2,26 +2,27 @@ import React, {PropTypes} from 'react';
 import { default as TouchBackend } from 'react-dnd-touch-backend';
 import { DragDropContext } from 'react-dnd';
 
+import Store from '../core/Store.js';
+import Query from '../core/Query.js';
+
 import EngineModel from './../models/EngineModel.js';
 import ViewportModel from './../models/ViewportModel.js';
 import GroupModel from './../models/GroupModel.js';
 
-import State from './State.js';
-import Transition from './Transition.js';
+import Place from './Place.js';
+import Arc from './Arc.js';
 import Group from './Group.js';
-
-import StateModel from '../models/StateModel.js';
 
 class Context extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      documentSize: {
+      svgSize: {
         width: 0,
         height: 0
       },
 
-      // active transition build
+      // drawing Arc offset
       mouseOffset: {
         x: 0,
         y: 0
@@ -31,9 +32,6 @@ class Context extends React.Component {
       mouseDown: null,
       translateX: 0,
       translateY: 0,
-
-      // show selected state dim everyone else
-      clickedState: null
     };
 
     this.zoomedOffset = this.zoomedOffset.bind(this);
@@ -43,15 +41,37 @@ class Context extends React.Component {
     this.mouseUpHandler = this.mouseUpHandler.bind(this);
     this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
     this.hideDimLayer = this.hideDimLayer.bind(this);
+    this.setSvgSize = this.setSvgSize.bind(this);
+  }
+
+  svgSize() {
+    const scrollShift = document.documentElement.clientHeigh
+      && document.documentElement.clientHeigh != document.documentElement.scrollHeight ? 15 : 0;
+    return {
+      width: Math.max( 0, document.documentElement.clientWidth - 185 - 255 - scrollShift ),
+      height: Math.max( 0, document.documentElement.clientHeight - 55 )
+    };
+  }
+
+  setSvgSize() {
+    this.setState({ svgSize: this.svgSize() });
   }
 
   componentDidMount() {
-    this.setState( {
-      documentSize: {
-        width: document.documentElement.clientWidth,
-        height: document.documentElement.clientHeight
+    this.timerId = setInterval( () => {
+      const svgSize = this.svgSize();
+
+      if ( svgSize.width != this.state.svgSize.width ) {
+        this.setSvgSize();
       }
-    } );
+
+    }, 50);
+    window.addEventListener('resize', this.setSvgSize);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerId);
+    window.removeEventListener('resize', this.setSvgSize);
   }
 
   fullElementOffset(element) {
@@ -69,8 +89,7 @@ class Context extends React.Component {
       x = offset.x - svgOffset.x,
       y = offset.y - svgOffset.y,
       viewport = this.props.viewport,
-      w = this.svgWidth(),
-      h = this.svgHeight()
+      { width: w, height: h } = this.svgSize();
 
     return {
       x: w/2 + (x - w/2 - viewport.translateX) / viewport.zoom,
@@ -88,8 +107,8 @@ class Context extends React.Component {
   }
 
   canChangeTranslate() {
-    const {active} = this.props;
-    return !active.state && !active.group && !this.state.clickedState;
+    const {dragging} = this.props;
+    return !dragging.place && !dragging.group;
   }
 
   mouseDownHandler(e) {
@@ -116,15 +135,15 @@ class Context extends React.Component {
   }
 
   mouseMoveHandler(e) {
-    const {active, viewport} = this.props;
+    const {drawing, viewport} = this.props;
 
-    if (active.transition) {
+    if (drawing.arc) {
       this.setMouseOffset( {
         x: e.pageX,
         y: e.pageY
       } );
     } else if (this.canChangeTranslate() && this.state.mouseDown) {
-      this.props.methods.translate.set(
+      Store.instance.translate.set(
         this.state.translateX + e.pageX - this.state.mouseDown.x,
         this.state.translateY + e.pageY - this.state.mouseDown.y
       );
@@ -141,27 +160,13 @@ class Context extends React.Component {
     } );
   }
 
-  svgWidth() {
-    return Math.max( 0, this.state.documentSize.width - 190 );
-  }
-
-  svgHeight() {
-    return Math.max( 0, this.state.documentSize.height - 55 );
-  }
-
   hideDimLayer(e) {
-    this.setState({
-      clickedState: null
-    });
-
     e.stopPropagation();
   }
 
   drawTactical() {
-    const { store, methods } = this.props,
-      { min, max } = GroupModel.findMinMax( store.states ),
-      w = this.svgWidth(),
-      h = this.svgHeight(),
+    const { min, max } = GroupModel.findMinMax( Query.instance.places() ),
+      { width: w, height: h } = this.state.svgSize,
       indents = {
         x: Math.max( Math.abs( Math.min( 0, min.x ) ), Math.max( 0, max.x - w ) ),
         y: Math.max( Math.abs( Math.min( 0, min.y ) ), Math.max( 0, max.y - h ) )
@@ -175,36 +180,29 @@ class Context extends React.Component {
   }
 
   render() {
-    const { store, methods, active } = this.props,
+    const { drawing } = this.props,
+      methods = Store.instance,
+      query = Query.instance,
+      {width, height} = this.state.svgSize,
 
-      states = store.states.cmap( (state, key) => (
-        <State data={state} id={state.id} key={key}
+      places = query.places().cmap( (place, key) => (
+        <Place data={place} id={place.id} key={key}
           zoomedDiff={this.zoomedDiff}
           setMouseOffset={this.setMouseOffset}
-          contextSetState={this.setState.bind(this)}
-          store={store}
-          methods={methods} />
+          contextSetState={this.setState.bind(this)} />
       ) ),
 
-      getHandlers = {
-        state: methods.state.get,
-        socket: methods.socket.get
-      },
-
-      transitions = store.transitions.cmap( (transition, key) => (
-        <Transition data={transition} key={key}
-          editHandler={() => methods.transition.edit(transition.id)}
-          getHandlers={getHandlers} />
+      arcs = query.arcs().cmap( (arc, key) => (
+        <Arc data={arc} key={key}
+          editHandler={() => methods.arc.edit(arc.id)} />
       ) ),
 
-      activeTransition = active.transition ? (
-        <Transition data={active.transition} offset={this.state.mouseOffset}
-          editHandler={() => methods.transition.edit(active.transition.id)}
-          getHandlers={getHandlers} />
+      drawingArc = drawing.arc ? (
+        <Arc data={drawing.arc} offset={this.state.mouseOffset} editHandler={() => {}} />
       ) : '',
 
-      groups = store.groups.cmap( (group, key) => (
-        <Group data={group} methods={methods} zoomedDiff={this.zoomedDiff} key={key} />
+      groups = query.groups().cmap( (group, key) => (
+        <Group data={group} zoomedDiff={this.zoomedDiff} key={key} />
       ) ),
 
       viewport = this.props.viewport,
@@ -216,47 +214,42 @@ class Context extends React.Component {
 
     let dimLayerStyles = {
         display: 'none'
-      },
-      redrawState = '';
+      };
 
-    if (this.state.clickedState) {
+    if (false) {
       dimLayerStyles = {};
-      redrawState = <use href={'#' + this.state.clickedState} style={{transform}}/>;
     }
 
     return (
-      <svg width={ this.svgWidth() } height={ this.svgHeight() }
-        onMouseMove={this.mouseMoveHandler} onClick={methods.transition.removeActive}
+      <svg width={ width } height={ height }
+        onMouseMove={this.mouseMoveHandler} onClick={methods.arc.escapeDraw}
         onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler}
-        onWheel={ (e) => methods.zoom.change( e.deltaY > 0 ? 0.25 : -0.25 )() }
-        ref={ (el) => { this.svg = el; } } >
+        onWheel={ (e) => methods.zoom.change( e.deltaY > 0 ? 0.05 : -0.05 ) }
+        ref={ (el) => { this.svg = el; } } className="context" >
         <g className="diagram-objects" style={{transform}}>
           {this.drawTactical()}
           <g className="groups">
             {groups}
           </g>
-          <g className="transitions">
-            {transitions}
-          {activeTransition}
+          <g className="arcs">
+            {arcs}
+          {drawingArc}
           </g>
           <g className="states">
-            {states}
+            {places}
           </g>
         </g>
-        <rect x="0" y="0" width={ this.svgWidth() } height={ this.svgHeight() }
+        <rect x="0" y="0" width={width} height={height}
           className="dim-layer" style={dimLayerStyles}
           onClick={this.hideDimLayer} />
-        {redrawState}
       </svg>
     );
   }
 }
 
 Context.propTypes = {
-  store: PropTypes.instanceOf(EngineModel).isRequired,
   viewport: PropTypes.instanceOf(ViewportModel).isRequired,
-  methods: PropTypes.object.isRequired,
-  active: PropTypes.object.isRequired
+  drawing: PropTypes.object.isRequired
 };
 
 export default DragDropContext(TouchBackend({ enableMouseEvents: true }))(Context);

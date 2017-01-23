@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {} from './lib.js';
+import {} from './core/lib.js';
 import Engine from './components/Engine.js';
 
 const rootNode = document.getElementById('root');

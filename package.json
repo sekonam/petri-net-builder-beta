@@ -4,6 +4,8 @@
   "description": "Workflow manager",
   "main": "index.js",
   "dependencies": {
+    "classnames": "^2.2.5",
+    "lodash": "^4.17.4",
     "microevent": "^1.0.0",
     "react": "^15.4.1",
     "react-bootstrap": "^0.30.7",
@@ -11,7 +13,9 @@
     "react-dnd-html5-backend": "^2.1.2",
     "react-dnd-touch-backend": "^0.3.5",
     "react-dom": "^15.4.1",
-    "react-select": "^1.0.0-rc.2"
+    "react-select": "^1.0.0-rc.2",
+    "react-treebeard": "^1.1.4",
+    "react-ui-tree": "^2.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

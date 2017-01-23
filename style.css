@@ -6,11 +6,26 @@ body {
 /* orange: #f0ad4e */
 
 /*
+ * Top menu
+ */
+.buttons {
+   margin-left:185px;
+   margin-top:1px;
+}
+.buttons .btn {
+  margin-left:5px
+}
+.buttons span {
+  margin-left: 15px;
+}
+
+/*
  * Left menu
  */
 .engine .left-menu {
   float:left;
   width:180px;
+  padding-top: 5px;
 }
 .list-type-style-none {
   list-style-type:none;
@@ -20,16 +35,21 @@ body {
   margin-bottom:5px;
 }
 
-.buttons {
-  margin-left:185px;
-  margin-top:1px;
+.right-sidebar {
+  float:right;
+  width: 250px;
 }
-.buttons .btn {
-  margin-left:5px
+
+.center{
+  text-align: center;
+}
+.col-xs-8.form-control {
+  width: 65%;
+  margin-right: 1%;
 }
 
 /*
- * Modal State Sockets
+ * Form State Sockets
  */
 
  .columns {
@@ -52,7 +72,7 @@ body {
 /*
  * SVG workflow 2D context
  */
-svg {
+svg.context {
   margin:10px 5px 5px;
   overflow:hidden;
   background-color:#ccc;
@@ -108,37 +128,48 @@ svg {
   stroke-width:1;
 }
 
-.transition-button {
+.circle-button {
   fill:#25a;
   stroke:#aaa;
   stroke-width:1;
   cursor: pointer;
 }
-.transition-circle.remove-button {
-  fill:#d9534f;
+.circle-button .circle {
+  stroke:#fff;
+  fill:#25a;
 }
-.transition-button:hover {
+.circle-button .circle.remove-button {
+  fill:#d9534f;
+
+}
+.circle-button:hover {
   stroke:#fff;
 }
-.transition-button .transition-text {
+.circle-button .circle-button-text {
   fill:#ddd;
   stroke-width:0;
 }
-.transition-button:hover .transition-text {
+.circle-button:hover .circle-button-text {
   fill:#fff;
 }
 
-.transition {
+.arc {
   stroke-width:1;
   fill:none;
   stroke:#fff;
   opacity:1;
 }
-.transition:hover {
+.arc:hover {
   cursor:pointer;
   stroke-width:2;
 }
-.transition-circle {
+.arc .arc-line {
+  stroke-width: 3;
+}
+.arc:hover .arc-line {
+  stroke-width: 3;
+}
+.arc-circle {
   stroke:#fff;
   fill:#25a;
 }
@@ -147,6 +178,6 @@ svg {
   fill:#000;
   opacity: 0.5;
 }
-.groups, .transitions, .states {
+.groups, .arcs, .states {
   z-index: 0;
 }

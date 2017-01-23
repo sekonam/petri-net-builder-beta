@@ -1,5 +1,5 @@
 const Types = {
-  STATE: 'state',
+  PLACE: 'place',
   GROUP: 'group'
 };
 export default Types;

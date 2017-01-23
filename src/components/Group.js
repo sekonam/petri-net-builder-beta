@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
 
+import Store from '../core/Store.js';
+import Query from '../core/Query.js';
 import Types from './Types.js';
 import GroupModel from './../models/GroupModel.js';
 import CircleButton from './CircleButton.js';
@@ -8,7 +10,8 @@ import CircleButton from './CircleButton.js';
 const groupSource = {
 
   beginDrag(props, monitor, component) {
-    const {data, methods} = component.props;
+    const {data} = component.props,
+      methods = Store.instance;
 
     this.timerId = setInterval(
       () => {
@@ -16,9 +19,11 @@ const groupSource = {
           const diff = monitor.getDifferenceFromInitialOffset(),
             zDiff = component.props.zoomedDiff(diff);
 
-          data.states.forEach( (sid) => {
-            const state = methods.state.get(sid);
-            methods.state.drag( sid, this.start[sid].x + zDiff.x, this.start[sid].y + zDiff.y );
+          data.placeIds.forEach( (pid) => {
+            methods.place.set( pid, {
+              x: this.start[pid].x + zDiff.x,
+              y: this.start[pid].y + zDiff.y
+            } );
           } );
         }
       }, 10
@@ -26,15 +31,15 @@ const groupSource = {
 
     this.start = {};
 
-    data.states.forEach( (sid) => {
-      const state = methods.state.get(sid);
-      this.start[sid] = {
-        x: state.x,
-        y: state.y
+    data.placeIds.forEach( (pid) => {
+      const place = Query.instance.place.get(pid);
+      this.start[pid] = {
+        x: place.x,
+        y: place.y
       };
     } );
 
-    methods.group.active(props.data.id);
+    methods.group.dragging(props.data.id);
 
     return {
       id: props.data.id
@@ -43,7 +48,7 @@ const groupSource = {
 
   endDrag(props, monitor, component) {
     clearInterval(this.timerId);
-    component.props.methods.group.active(null);
+    Store.instance.group.dragging(null);
   }
 };
 
@@ -60,13 +65,13 @@ class Group extends React.Component {
   }
 
   render() {
-    const {data, methods , connectDragSource} = this.props;
+    const {data, connectDragSource} = this.props,
+      query = Query.instance;
 
-    if (data.states.length) {
+    if (data.placeIds.length) {
       const INDENT = 10,
         HEADER = 20,
-        states = data.states.cmap( (sid) => methods.state.get(sid) ),
-        {min, max} = GroupModel.findMinMax(states);
+        {min, max} = GroupModel.findMinMax( query.places( data.placeIds ) );
 
       const x = min.x - INDENT,
         y = min.y - INDENT - HEADER,
@@ -80,7 +85,7 @@ class Group extends React.Component {
           <g className="header">
             <text x={x+10} y={y+18} className="group-header">{data.name}</text>
             <CircleButton x = {x+w-18} y = {y+15} caption="E"
-              clickHandler={() => methods.group.edit(data.id)}/>
+              clickHandler={() => Store.instance.group.edit(data.id)}/>
           </g>
         </g>
       );
@@ -92,7 +97,6 @@ class Group extends React.Component {
 
 Group.propTypes = {
     data: PropTypes.instanceOf(GroupModel).isRequired,
-    methods: PropTypes.object.isRequired,
     zoomedDiff: PropTypes.func.isRequired
 };
 

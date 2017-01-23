@@ -32,7 +32,7 @@ export default class LeftMenuBlock extends React.Component {
         <h3>{itemName.ucfirst() + 's'}</h3>
         <ul className="list-type-style-none">
           {buttons}
-          <LeftMenuElement clickHandler={this.props.addHandler}
+          <LeftMenuElement clickHandler={(e) => this.props.addHandler()}
             text={'Add ' + itemName} style='primary' />
         </ul>
       </div>

@@ -1,39 +1,39 @@
 import React, {PropTypes} from 'react';
-import {Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
+import {Form, FormGroup, FormControl, ControlLabel, Button} from 'react-bootstrap';
 import Select from 'react-select';
 
-import Modal from './Modal.js';
-
+import Store from '../core/Store.js';
 import GroupModel from '../models/GroupModel.js';
 
 export default class GroupForm extends React.Component {
 
   render() {
-    const {data, methods, states, selectedStates} = this.props;
+    const {data, places, selectedPlaces} = this.props,
+      methods = Store.instance;
 
     return (
-      <Modal title={'Group: ' + data.name} show={this.props.show}
-        hide={methods.afterEdit} remove={() => { methods.remove(data.id); }}>
         <Form>
+          <h3>{'Group: ' + data.name}</h3>
           <FormGroup controlId="NameInput">
             <ControlLabel>Group Name</ControlLabel>
             <FormControl type="text" value={data.name}
               onChange={(e) => methods.save('name', e.target.value)} />
           </FormGroup>
-          <FormGroup controlId="StateSelectMultiple">
-            <ControlLabel>States</ControlLabel>
-            <Select multi={true} value={selectedStates} options={states}
-              onChange={(val) => methods.save('states',
+          <FormGroup>
+            <ControlLabel>Places</ControlLabel>
+            <Select multi={true} value={selectedPlaces} options={places}
+              onChange={(val) => methods.save('placeIds',
                 typeof val == 'undefined' ? [] : val.cmap( (el) => el.value ) )} />
           </FormGroup>
+          <FormGroup className="center">
+            <Button onClick={() => methods.group.remove(data.id)}
+              bsStyle="danger">Delete</Button>
+          </FormGroup>
         </Form>
-      </Modal>
     );
   }
 }
 
 GroupForm.propTypes = {
-  data: PropTypes.instanceOf(GroupModel).isRequired,
-  methods: PropTypes.object.isRequired,
-  show: PropTypes.bool.isRequired
+  data: PropTypes.instanceOf(GroupModel).isRequired
 };

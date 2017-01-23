@@ -1,16 +1,13 @@
-import Model from './Model.js';
+import Model from './../core/Model.js';
 
 export default class ActionModel extends Model {
 
-  constructor(params) {
-    super();
-    this.init(params, ActionModel.default);
+  defaults() {
+    this.set({
+      name: 'Action name',
+      events: [],
+      code: ''
+    });
   }
 
 }
-
-ActionModel.default = {
-  name: 'Action name',
-  events: [],
-  code: ''
-};

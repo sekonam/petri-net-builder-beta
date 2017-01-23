@@ -1,18 +1,17 @@
-import Model from './Model.js';
+import Model from './../core/Model.js';
 
 export default class SocketModel extends Model {
-  constructor(params = null) {
-    super();
-    this.init(params, SocketModel.default);
+
+  defaults() {
+    this.set({
+      name: 'Socket name',
+      type: 0, // 0 - input, 1 - output
+      nodeId: null,
+      nodeType: 'place'
+    });
   }
 
   get typeName() {
     return this.type ? 'outcome' : 'income';
   }
 }
-
-SocketModel.default = {
-  name: 'Socket name',
-  type: 0, // 0 - input, 1 - output
-  state: null
-};

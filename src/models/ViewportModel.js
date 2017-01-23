@@ -1,14 +1,13 @@
-import Model from './Model.js';
+import Model from './../core/Model.js';
 
 export default class ViewportModel extends Model {
-  constructor(params = null) {
-    super();
-    this.init(params, ViewportModel.default);
-  }
-}
 
-ViewportModel.default = {
-  translateX: 0,
-  translateY: 0,
-  zoom: 1
-};
+  defaults() {
+    this.set({
+      translateX: 0,
+      translateY: 0,
+      zoom: 1
+    });
+  }
+
+}
