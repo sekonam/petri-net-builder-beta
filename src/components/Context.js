@@ -89,8 +89,7 @@ class Context extends React.Component {
       x = offset.x - svgOffset.x,
       y = offset.y - svgOffset.y,
       viewport = this.props.viewport,
-      w = this.svgWidth(),
-      h = this.svgHeight()
+      { width: w, height: h } = this.svgSize();
 
     return {
       x: w/2 + (x - w/2 - viewport.translateX) / viewport.zoom,

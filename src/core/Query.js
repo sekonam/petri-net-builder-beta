@@ -50,6 +50,27 @@ export default class Query {
       };
     } );
 
+    this.arc.netId = (id) => {
+      const arc = this.arc.get(id),
+        socket = this.socket.get(arc.startSocketId),
+        node = this[socket.nodeType].get(socket.nodeId);
+      return node.netId;
+    };
+
+    this.arcs = (ids = null) => {
+      if (!state.active.net) return [];
+
+      let entities = state.db.arcs.filter(
+        (entity) => this.arc.netId(entity.id) == state.active.net.id
+      );
+
+      if (ids) {
+        entities = entities.filter( (entity) => ids.has(entity.id) );
+      }
+
+      return entities;
+    };
+
     this.nodeBySocketId = (socketId) => {
       const socket = state.db.sockets.valueById(socketId);
       return state.db[ s(socket.nodeType) ].valueById(socket.nodeId);

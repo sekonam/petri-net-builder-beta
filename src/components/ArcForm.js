@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
+import {Form, FormGroup, FormControl, ControlLabel, Button} from 'react-bootstrap';
 import Select from 'react-select';
 
 import Store from '../core/Store.js';
