@@ -35,8 +35,17 @@ body {
   margin-bottom:5px;
 }
 
+.right-sidebar {
+  float:right;
+  width: 250px;
+}
+
+.center{
+  text-align: center;
+}
+
 /*
- * Modal State Sockets
+ * Form State Sockets
  */
 
  .columns {

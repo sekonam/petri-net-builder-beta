@@ -6,26 +6,15 @@ import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import StorageEngine from '../core/StorageEngine.js';
 
-import EngineModel from '../models/EngineModel.js';
-import PlaceModel from '../models/PlaceModel.js';
-import GroupModel from '../models/GroupModel.js';
-import EventModel from '../models/EventModel.js';
-import ActionModel from '../models/ActionModel.js';
-import ArcModel from '../models/ArcModel.js';
-import VarModel from '../models/VarModel.js';
-import SocketModel from '../models/SocketModel.js';
-import ViewportModel from '../models/ViewportModel.js';
-
 import Context from './Context.js';
 import PlaceForm from './PlaceForm.js';
 import GroupForm from './GroupForm.js';
 import EventForm from './EventForm.js';
 import ActionForm from './ActionForm.js';
 import ArcForm from './ArcForm.js';
-import VarForm from './VarForm.js';
+import NetForm from './NetForm.js';
 import LeftMenuBlock from './LeftMenuBlock.js';
 import Tree from './Tree.js';
-
 
 export default class Engine extends React.Component {
 
@@ -60,21 +49,15 @@ export default class Engine extends React.Component {
     document.body.removeEventListener( 'keydown', this.keyDownHandler);
   }
 
-  componentDidUpdate() {
-    this.tree.setState({
-      tree: Query.instance.treebreadWorkspace()
-    });
-  }
-
   render() {
     const
-      modal = this.state.modal,
+      form = this.state.form,
       store = this.state.db,
       methods = this.store,
       query = this.query,
       active = this.state.active,
 
-      leftMenuBlocks = [ 'place', 'group', 'event', 'action', 'var', ].map( (itemType, key) => {
+      leftMenuBlocks = [ 'event', 'action', ].map( (itemType, key) => {
         return (
         <LeftMenuBlock key={key}
           itemName={itemType}
@@ -84,10 +67,36 @@ export default class Engine extends React.Component {
           addHandler={methods[itemType].add}/>
       )});
 
+    let formComp = '';
+
+    switch (form.type) {
+      case 'net':
+        formComp = <NetForm data={form.data} />;
+        break;
+      case 'place':
+        formComp = <PlaceForm data={form.data} />;
+        break;
+      case 'group':
+        formComp = <GroupForm data={form.data} places={query.place.options()}
+          selectedPlaces={query.place.selectedOptions(form.data.placeIds)} />;
+        break;
+      case 'arc':
+        formComp = <ArcForm data={form.data} />;
+        break;
+      case 'event':
+        formComp = <EventForm data={form.data} />;
+        break;
+      case 'action':
+        formComp = <ActionForm data={form.data} events={query.event.options()}
+          selectedEvents={query.event.selectedOptions(form.data.events)} />;
+        break;
+    }
+
     return (
       <div className="engine">
         <div className="left-menu">
-          <Tree data={query.treebreadWorkspace()} ref={ (tree) => { this.tree = tree; } } />
+          <h3>Data Structure</h3>
+          <Tree ref={(tree) => { this.tree = tree; }} />
           {leftMenuBlocks}
         </div>
         <div className="buttons">
@@ -102,37 +111,11 @@ export default class Engine extends React.Component {
           <Button onClick={ () => methods.zoom.change(0.1) } bsStyle="default">+</Button>
           <Button onClick={ () => methods.zoom.set(1) } bsStyle="default">Default</Button>
         </div>
+        <div className="right-sidebar">
+          {formComp}
+        </div>
         <Context viewport={this.state.viewport} active={active}
           drawing={this.state.drawing} dragging={this.state.dragging} />
-        { modal.place ? <PlaceForm show={!_.isEmpty(modal.place)}
-          data={modal.place}
-          saveHandler={methods.place.save}
-          afterEditHandler={methods.place.afterEdit}
-          removeHandler={methods.place.remove}
-          socketHandlers={methods.socket}/> : '' }
-        { modal.event ? <EventForm show={!_.isEmpty(modal.event)}
-          data={modal.event}
-          saveHandler={methods.event.save}
-          afterEditHandler={methods.event.afterEdit}
-          removeHandler={methods.event.remove} /> : '' }
-        { modal.action ? <ActionForm show={!_.isEmpty(modal.action)}
-          data={modal.action}
-          events={query.event.options()}
-          selectedEvents={query.event.selectedOptions(modal.action ? modal.action.events : [])}
-          saveHandler={methods.action.save}
-          afterEditHandler={methods.action.afterEdit}
-          removeHandler={methods.action.remove} /> : '' }
-        { modal.arc ? <ArcForm show={!_.isEmpty(modal.arc)}
-          data={modal.arc}
-          methods={methods.arc} /> : '' }
-        { modal.var ? <VarForm show={!_.isEmpty(modal.var)}
-          data={modal.var}
-          methods={methods.var} /> : '' }
-        { modal.group ? <GroupForm show={!_.isEmpty(modal.group)}
-          data={modal.group}
-          places={query.place.options()}
-          selectedPlaces={query.place.selectedOptions(modal.group ? modal.group.placeIds : [])}
-          methods={methods.group} /> : '' }
       </div>
     );
   }

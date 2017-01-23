@@ -1,47 +1,53 @@
 import React, {PropTypes} from 'react';
-import Modal from './Modal.js';
-import {Form, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
+import {Form, FormGroup, FormControl, ControlLabel, Button} from 'react-bootstrap';
 import Select from 'react-select';
 
+import Store from '../core/Store.js';
 import ActionModel from '../models/ActionModel.js';
 
 export default class ActionForm extends React.Component {
 
+  remove() {
+    const {data} = ths.props,
+      methods = Store.instance;
+    methods.action.edit(null);
+    methods.action.remove(data.id);
+  }
+
   render() {
-    const {data, saveHandler, events, selectedEvents} = this.props;
+    const {data, events, selectedEvents} = this.props,
+      methods = Store.instance;
 
     return (
-      <Modal title={'Action: ' + data.name} show={this.props.show}
-        hide={this.props.afterEditHandler} remove={() => { this.props.removeHandler(this.props.data.id); }}>
         <Form>
+          <h3>{'Action: ' + data.name}</h3>
           <FormGroup controlId="NameInput">
             <ControlLabel>Action Name</ControlLabel>
             <FormControl type="text" value={data.name}
-              onChange={(e) => saveHandler('name', e.target.value)} />
+              onChange={(e) => methods.save('name', e.target.value)} />
           </FormGroup>
           <FormGroup controlId="EventsSelectMultiple">
             <ControlLabel>Events To Activate Action</ControlLabel>
             <Select multi={true} value={selectedEvents} options={events}
-              onChange={(val) => saveHandler('events',
+              onChange={(val) => methods.save('events',
                 typeof val == 'undefined' ? [] : val.cmap( (el) => el.value ) )} />
           </FormGroup>
           <FormGroup controlId="CodeTextarea">
             <ControlLabel>Javascript Action Code</ControlLabel>
             <FormControl componentClass="textarea" placeholder="JavaScript Code Here..."
-              value={data.code} onChange={(e) => saveHandler('code', e.target.value)} />
+              value={data.code} onChange={(e) => methods.save('code', e.target.value)} />
+          </FormGroup>
+          <FormGroup className="center">
+            <Button onClick={() => methods.action.remove(data.id)}
+              bsStyle="danger">Delete</Button>
           </FormGroup>
         </Form>
-      </Modal>
     );
   }
 }
 
 ActionForm.propTypes = {
   data: PropTypes.instanceOf(ActionModel).isRequired,
-  saveHandler: PropTypes.func.isRequired,
-  afterEditHandler: PropTypes.func.isRequired,
-  removeHandler: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired,
   events: PropTypes.array.isRequired,
   selectedEvents: PropTypes.array.isRequired
 };

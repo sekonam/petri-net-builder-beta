@@ -17,7 +17,7 @@ class Context extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      documentSize: {
+      svgSize: {
         width: 0,
         height: 0
       },
@@ -41,15 +41,37 @@ class Context extends React.Component {
     this.mouseUpHandler = this.mouseUpHandler.bind(this);
     this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
     this.hideDimLayer = this.hideDimLayer.bind(this);
+    this.setSvgSize = this.setSvgSize.bind(this);
+  }
+
+  svgSize() {
+    const scrollShift = document.documentElement.clientHeigh
+      && document.documentElement.clientHeigh != document.documentElement.scrollHeight ? 15 : 0;
+    return {
+      width: Math.max( 0, document.documentElement.clientWidth - 185 - 255 - scrollShift ),
+      height: Math.max( 0, document.documentElement.clientHeight - 55 )
+    };
+  }
+
+  setSvgSize() {
+    this.setState({ svgSize: this.svgSize() });
   }
 
   componentDidMount() {
-    this.setState( {
-      documentSize: {
-        width: document.documentElement.clientWidth,
-        height: document.documentElement.clientHeight
+    this.timerId = setInterval( () => {
+      const svgSize = this.svgSize();
+
+      if ( svgSize.width != this.state.svgSize.width ) {
+        this.setSvgSize();
       }
-    } );
+
+    }, 50);
+    window.addEventListener('resize', this.setSvgSize);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerId);
+    window.removeEventListener('resize', this.setSvgSize);
   }
 
   fullElementOffset(element) {
@@ -139,22 +161,13 @@ class Context extends React.Component {
     } );
   }
 
-  svgWidth() {
-    return Math.max( 0, this.state.documentSize.width - 190 );
-  }
-
-  svgHeight() {
-    return Math.max( 0, this.state.documentSize.height - 55 );
-  }
-
   hideDimLayer(e) {
     e.stopPropagation();
   }
 
   drawTactical() {
     const { min, max } = GroupModel.findMinMax( Query.instance.places() ),
-      w = this.svgWidth(),
-      h = this.svgHeight(),
+      { width: w, height: h } = this.state.svgSize,
       indents = {
         x: Math.max( Math.abs( Math.min( 0, min.x ) ), Math.max( 0, max.x - w ) ),
         y: Math.max( Math.abs( Math.min( 0, min.y ) ), Math.max( 0, max.y - h ) )
@@ -171,6 +184,7 @@ class Context extends React.Component {
     const { drawing } = this.props,
       methods = Store.instance,
       query = Query.instance,
+      {width, height} = this.state.svgSize,
 
       places = query.places().cmap( (place, key) => (
         <Place data={place} id={place.id} key={key}
@@ -208,11 +222,11 @@ class Context extends React.Component {
     }
 
     return (
-      <svg width={ this.svgWidth() } height={ this.svgHeight() } className="context"
+      <svg width={ width } height={ height }
         onMouseMove={this.mouseMoveHandler} onClick={methods.arc.escapeDraw}
         onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler}
         onWheel={ (e) => methods.zoom.change( e.deltaY > 0 ? 0.05 : -0.05 ) }
-        ref={ (el) => { this.svg = el; } } >
+        ref={ (el) => { this.svg = el; } } className="context" >
         <g className="diagram-objects" style={{transform}}>
           {this.drawTactical()}
           <g className="groups">
@@ -226,7 +240,7 @@ class Context extends React.Component {
             {places}
           </g>
         </g>
-        <rect x="0" y="0" width={ this.svgWidth() } height={ this.svgHeight() }
+        <rect x="0" y="0" width={width} height={height}
           className="dim-layer" style={dimLayerStyles}
           onClick={this.hideDimLayer} />
       </svg>

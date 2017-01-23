@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import {EntityFactory, EntityNames} from './Entities.js';
 import StorageEngine from './StorageEngine.js';
 
@@ -9,12 +11,12 @@ export default function Store(setState) {
 
   this.state = {
     db: new EngineModel(StorageEngine.loadFromStorage( 'db' )),
-    viewport: new ViewportModel()
-    modal: {
+    viewport: new ViewportModel(),
+    active: {},
+    form: {
       data: null,
       type: null
     },
-    active: {},
     drawing: {
       arc: null
     },
@@ -27,7 +29,6 @@ export default function Store(setState) {
 
   EntityNames.forEach( (key) => {
     this.state.active[key] = null;
-    this.state.modal[key] = null;
   } );
 
   const s = (entityName) => entityName + 's';
@@ -56,17 +57,8 @@ export default function Store(setState) {
     },
 
     edit: (entityName) => (id) => (state) => {
-      state.modal[entityName] = state.db[ s(entityName) ].valueById(id);
-      return state;
-    },
-
-    save: (entityName) => (key, value) => (state) => {
-      state.modal[entityName].set({ [ key ]: value });
-      return state;
-    },
-
-    afterEdit: (entityName) => () => (state) => {
-      state.modal[entityName] = null;
+      state.form.data = id ? state.db[ s(entityName) ].valueById(id) : null;
+      state.form.type = id ? entityName : null;
       return state;
     },
 
@@ -75,11 +67,32 @@ export default function Store(setState) {
         key = data.indexById(id);
 
       if (key > -1) {
+
+        if (state.form.data && id == state.form.data.id) {
+          state.form.data = null;
+          state.form.type = null;
+        }
+
+        if (state.active[entityName] && id == state.active[entityName].id ) {
+          state.active[entityName] = null;
+        }
+
         if (callback) {
           callback.call(null, state, id);
         }
 
         data.splice(key, 1);
+      }
+
+      return state;
+    },
+
+    active: (entityName) => (id) => (state) => {
+      state.active[entityName] = id ? state.db[ s(entityName) ].valueById(id) : null;
+
+      if (id) {
+        state.form.data = state.db[ s(entityName) ].valueById(id);
+        state.form.type = entityName;
       }
 
       return state;
@@ -115,7 +128,7 @@ export default function Store(setState) {
 
   methods.socket.addToPlace = (params) => methods.socket.add( Object.assign({
     nodeType: 'place',
-    nodeId: this.state.modal.place.id
+    nodeId: this.state.form.data.id
   }, params));
 
   methods.net.add = handlerFactory.add( 'net', (state, net) => {
@@ -244,5 +257,17 @@ export default function Store(setState) {
     } );
 
   } );
+
+  this.save = (key, value) => setState( (state) => {
+    if (state.form.data) {
+      state.form.data.set({ [ key ]: value });
+    }
+    return state;
+  } );
+
+
+  if (!_.isEmpty( this.state.db.nets) ) {
+    methods.net.active(this.state.db.nets[0].id)(this.state);
+  }
 
 }

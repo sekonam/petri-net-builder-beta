@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Form, FormGroup, FormControl, ControlLabel, Checkbox} from 'react-bootstrap';
 
+import Store from '../core/Store.js';
 import SocketModel from '../models/SocketModel.js';
 
 export default class Socket extends React.Component {
@@ -11,16 +12,17 @@ export default class Socket extends React.Component {
   }
 
   socketClick(e) {
-    const {data, arcHandlers} = this.props;
+    const {data} = this.props,
+      methods = Store.instance;
 
     if (data.type) {
-      arcHandlers.startDraw(data);
+      methods.arc.startDraw(data);
       this.props.setMouseOffset({
         x: e.pageX,
         y: e.pageY
       });
     } else {
-      arcHandlers.finishDraw(data);
+      methods.arc.finishDraw(data);
     }
 
     e.stopPropagation();
@@ -46,6 +48,5 @@ Socket.propTypes = {
   data: PropTypes.instanceOf(SocketModel).isRequired,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
-  arcHandlers: PropTypes.object.isRequired,
   setMouseOffset: PropTypes.func.isRequired
 };

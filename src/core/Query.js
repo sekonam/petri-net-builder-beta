@@ -55,8 +55,10 @@ export default class Query {
       return state.db[ s(socket.nodeType) ].valueById(socket.nodeId);
     };
 
-    this.treebreadWorkspace = () => {
-      return {
+    this.treebreadWorkspace = (activeId = null, toggled = []) => {
+
+      let cursor = null;
+      const node = {
         name: 'Workspace',
         toggled: true,
         children: state.db.nets.filter( (net) => !net.subNetId ).map( (net) => {
@@ -64,17 +66,20 @@ export default class Query {
           let places = state.db.places.filter( (place) => place.netId == net.id ),
             groups = state.db.groups.filter( (group) => group.netId == net.id );
 
-          return {
+          const node = {
             id: net.id,
             type: 'net',
             name: net.name,
+            toggled: toggled.indexOf(net.id) > -1,
             children: groups.map( (group) => {
 
-              return {
+              const node = {
                 id: group.id,
                 type: 'group',
                 name: group.name,
+                toggled: toggled.indexOf(group.id) > -1,
                 children: group.placeIds.map( (pid) => {
+
                   const place = this.place.get(pid),
                     key = places.indexById(pid);
 
@@ -82,21 +87,53 @@ export default class Query {
                     places.splice(key, 1);
                   }
 
-                  return {
+                  const node = {
                     id: place.id,
                     type: 'place',
                     name: place.name
+                  };
+
+                  if (place.id == activeId) {
+                    cursor = node;
                   }
+
+                  return node;
+
                 } )
+              };
+
+              if (group.id == activeId) {
+                cursor = node;
               }
-            } ) . concat( places.map( (place) => ({
-              id: place.id,
-              type: 'place',
-              name: place.name
-            }) ) )
+
+              return node;
+
+            } ) . concat( places.map( (place) => {
+
+              const node = {
+                id: place.id,
+                type: 'place',
+                name: place.name
+              };
+
+              if (place.id == activeId) {
+                cursor = node;
+              }
+
+              return node;
+
+            } ) )
           };
+
+          if (net.id == activeId) {
+            cursor = node;
+          }
+
+          return node;
         } )
       };
+
+      return {tree: node, cursor};
     }
   }
 }
