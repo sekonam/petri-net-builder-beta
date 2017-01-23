@@ -76,13 +76,13 @@ export default class PlaceForm extends React.Component {
           <ControlLabel>Income Sockets</ControlLabel>
           {sockets['income']}
           <FormGroup controlId="AddIncomeSocket">
-            <Button onClick={ () => methods.socket.addToPlace({type: 0}) }
+            <Button onClick={ () => methods.socket.addForm({type: 0}) }
               bsStyle="primary">Add Income Socket</Button>
           </FormGroup>
           <ControlLabel>Outcome Sockets</ControlLabel>
           {sockets['outcome']}
           <FormGroup controlId="AddOutcomeSocket">
-            <Button onClick={ () => methods.socket.addToPlace({type: 1}) }
+            <Button onClick={ () => methods.socket.addForm({type: 1}) }
               bsStyle="primary">Add Outcome Socket</Button>
           </FormGroup>
           <FormGroup className="center">

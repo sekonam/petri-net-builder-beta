@@ -22,6 +22,7 @@ export default function Store(setState) {
     },
     dragging: {
       place: null,
+      subnet: null,
       transition: null,
       group: null
     }
@@ -110,47 +111,77 @@ export default function Store(setState) {
     }
   }
 
-  methods.place.add = handlerFactory.add( 'place', (state, place) => {
-    place.netId = state.active.net.id;
+  ['place', 'subnet'].forEach( (entityName) => {
+    methods[entityName].add = handlerFactory.add( entityName, (state, entity) => {
+      entity.netId = state.active.net.id;
 
-    for (let i=0; i<2; i++) {
-      methods.socket.add({
-        type: i,
-        nodeType: 'place',
-        nodeId: place.id
-      })(state);
-    }
+      for (let i=0; i<2; i++) {
+        methods.socket.add({
+          type: i,
+          nodeType: entityName,
+          nodeId: entity.id
+        })(state);
+      }
+
+      if (entityName == 'subnet') {
+        methods.net.add({
+          name: entity.name,
+          subnetId: entity.id
+        })(state);
+      }
+    } );
   } );
 
-  methods.socket.add = handlerFactory.add( 'socket', (state, socket) => {
-    state.db[ s(socket.nodeType) ].valueById(socket.nodeId).socketIds.push( socket.id );
-  } );
+  methods.socket.add = handlerFactory.add(
+    'socket',
+    (state, socket) => {
+      state.db[ s(socket.nodeType) ]
+        .valueById( socket.nodeId )
+        .socketIds
+        .push( socket.id );
+    });
 
-  methods.socket.addToPlace = (params) => methods.socket.add( Object.assign({
-    nodeType: 'place',
-    nodeId: this.state.form.data.id
-  }, params));
+  methods.socket.addForm = (params) => methods.socket.add(
+    Object.assign ({
+      nodeType: this.state.form.type,
+      nodeId: this.state.form.data.id
+    }, params)
+  );
 
   methods.net.add = handlerFactory.add( 'net', (state, net) => {
-    state.active.net = net;
+    if (!net.subnetId) {
+      state.active.net = net;
+    }
   } );
 
   methods.group.add = handlerFactory.add( 'group', (state, group) => {
     group.netId = state.active.net.id;
   } );
 
-  methods.place.remove = handlerFactory.remove('place', (state, pid) => {
-    state.db.places.valueById(pid).socketIds.forEach( (sid) => {
-      state.db.arcs.spliceRecurcive(
-        (arc) => (arc.startSocketId == sid || arc.finishSocketId == sid)
-      );
-    } );
+  ['place', 'subnet'].forEach( (entityName) => {
+    methods[entityName].remove = handlerFactory.remove(entityName, (state, id) => {
+      state.db[ s(entityName) ]
+        .valueById(id)
+        .socketIds
+        .forEach( (sid) => {
+          state.db.arcs.spliceRecurcive(
+            (arc) => (arc.startSocketId == sid || arc.finishSocketId == sid)
+          );
+        } );
 
-    state.db.groups.forEach( (group) => {
-      const key = group.placeIds.indexOf(pid);
+      state.db.groups.forEach( (group) => {
+        const key = group[entityName + 'Ids'].indexOf(id);
 
-      if (key > -1) {
-        group.placeIds.splice(key, 1);
+        if (key > -1) {
+          group[entityName + 'Ids'].splice(key, 1);
+        }
+      } );
+
+      if (entityName == 'subnet') {
+        state.db.nets.find( (net) => net.subnetId == id )
+          .forEach( (net) => {
+            methods.net.remove(net.id);
+          } );
       }
     } );
   } );
@@ -187,6 +218,16 @@ export default function Store(setState) {
     state.db.arcs.spliceRecurcive(
       (arc) => (arc.startSocketId == sid || arc.finishSocketId == sid)
     );
+  } );
+
+  methods.net.remove = handlerFactory.remove( 'net', (state, nid) => {
+    ['place', 'subnet', 'group'].forEach( (entityName) => {
+      state.db[ s(entityName) ]
+        .find( (entity) => entity.netId == nid )
+        .forEach( (entity) => {
+          methods[ entityName ].remove(entity.id);
+        } );
+    } );
   } );
 
   ['place', 'group', 'net'].forEach( (entityName) => {

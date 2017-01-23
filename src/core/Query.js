@@ -34,7 +34,7 @@ export default class Query {
       }
     }
 
-    ['place', 'group',].forEach( (entityName) => {
+    ['place', 'group', 'subnet',].forEach( (entityName) => {
       this[ s(entityName) ] = (ids = null) => {
         if (!state.active.net) return [];
 
@@ -49,6 +49,8 @@ export default class Query {
         return entities;
       };
     } );
+
+    this.subnet.net = (id) => this.nets.find( (net) => net.subnetId == id );
 
     this.arc.netId = (id) => {
       const arc = this.arc.get(id),
@@ -82,46 +84,53 @@ export default class Query {
       const node = {
         name: 'Workspace',
         toggled: true,
-        children: state.db.nets.filter( (net) => !net.subNetId ).map( (net) => {
+        children: state.db.nets.filter( (net) => !net.subnetId ).map( (net) => {
+          let entities = {};
 
-          let places = state.db.places.filter( (place) => place.netId == net.id ),
-            groups = state.db.groups.filter( (group) => group.netId == net.id );
+          ['place', 'subnet', 'group',].forEach( (entityName) => {
+            entities[entityName] = state.db[ s(entityName) ]
+              .filter( (entity) => entity.netId == net.id );
+          } );
 
           const node = {
             id: net.id,
             type: 'net',
             name: net.name,
             toggled: toggled.indexOf(net.id) > -1,
-            children: groups.map( (group) => {
+            children: entities.group.map( (group) => {
 
               const node = {
                 id: group.id,
                 type: 'group',
                 name: group.name,
                 toggled: toggled.indexOf(group.id) > -1,
-                children: group.placeIds.map( (pid) => {
-
-                  const place = this.place.get(pid),
-                    key = places.indexById(pid);
-
-                  if (key > -1) {
-                    places.splice(key, 1);
-                  }
-
-                  const node = {
-                    id: place.id,
-                    type: 'place',
-                    name: place.name
-                  };
-
-                  if (place.id == activeId) {
-                    cursor = node;
-                  }
-
-                  return node;
-
-                } )
+                children: []
               };
+
+              ['place', 'subnet',].forEach( (entityName) => {
+                node.children = node.children.concat(
+                  group[entityName + 'Ids'].map( (id) => {
+                    const entity = this[entityName].get(id),
+                      key = entities[entityName].indexById(id);
+
+                    if (key > -1) {
+                      entities[entityName].splice(key, 1);
+                    }
+
+                    const node = {
+                      id: entity.id,
+                      type: entityName,
+                      name: entity.name
+                    };
+
+                    if (entity.id == activeId) {
+                      cursor = node;
+                    }
+
+                    return node;
+                  } )
+                );
+              } );
 
               if (group.id == activeId) {
                 cursor = node;
@@ -129,22 +138,27 @@ export default class Query {
 
               return node;
 
-            } ) . concat( places.map( (place) => {
-
-              const node = {
-                id: place.id,
-                type: 'place',
-                name: place.name
-              };
-
-              if (place.id == activeId) {
-                cursor = node;
-              }
-
-              return node;
-
-            } ) )
+            } )
           };
+
+          ['place', 'subnet',].forEach( (entityName) => {
+            node.children = node.children.concat(
+              entities[entityName].map( (entity) => {
+
+                const node = {
+                  id: entity.id,
+                  type: entityName,
+                  name: entity.name
+                };
+
+                if (entity.id == activeId) {
+                  cursor = node;
+                }
+
+                return node;
+              } )
+            );
+          } );
 
           if (net.id == activeId) {
             cursor = node;

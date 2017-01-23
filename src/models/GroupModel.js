@@ -6,6 +6,7 @@ export default class GroupModel extends Model {
     this.set({
       name: 'Group name',
       placeIds: [],
+      subnetIds: [],
       netId: null
     });
   }
