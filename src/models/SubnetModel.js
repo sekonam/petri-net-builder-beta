@@ -8,7 +8,10 @@ export default class SubnetModel extends NodeModel {
 
     this.set({
       name: 'Subnet name',
-      r: 50
+      width: 100,
+      height: 52,
+      r: 0,
+      color: null
     });
 
     const init = {

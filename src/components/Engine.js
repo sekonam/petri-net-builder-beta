@@ -8,6 +8,7 @@ import StorageEngine from '../core/StorageEngine.js';
 
 import Context from './Context.js';
 import PlaceForm from './PlaceForm.js';
+import SubnetForm from './SubnetForm.js';
 import GroupForm from './GroupForm.js';
 import EventForm from './EventForm.js';
 import ActionForm from './ActionForm.js';
@@ -75,6 +76,9 @@ export default class Engine extends React.Component {
         break;
       case 'place':
         formComp = <PlaceForm data={form.data} />;
+        break;
+      case 'subnet':
+        formComp = <SubnetForm data={form.data} />;
         break;
       case 'group':
         formComp = <GroupForm data={form.data}
