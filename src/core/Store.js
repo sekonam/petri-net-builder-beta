@@ -111,7 +111,7 @@ export default function Store(setState) {
   }
 
   methods.place.add = handlerFactory.add( 'place', (state, place) => {
-    place.netId = state.active.net;
+    place.netId = state.active.net.id;
 
     for (let i=0; i<2; i++) {
       methods.socket.add({
@@ -132,11 +132,11 @@ export default function Store(setState) {
   }, params));
 
   methods.net.add = handlerFactory.add( 'net', (state, net) => {
-    state.active.net = net.id;
+    state.active.net = net;
   } );
 
   methods.group.add = handlerFactory.add( 'group', (state, group) => {
-    group.netId = state.active.net;
+    group.netId = state.active.net.id;
   } );
 
   methods.place.remove = handlerFactory.remove('place', (state, pid) => {

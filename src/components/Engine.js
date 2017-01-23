@@ -101,11 +101,11 @@ export default class Engine extends React.Component {
         </div>
         <div className="buttons">
           <span>Add:</span>
-          <Button onClick={ () => methods.net.add() } bsStyle="default">Net</Button>
-          <Button onClick={ () => methods.subnet.add() } bsStyle="default">SubNet</Button>
-          <Button onClick={ () => methods.place.add() } bsStyle="default">Place</Button>
-          <Button onClick={ () => methods.transition.add() } bsStyle="default">Transition</Button>
-          <Button onClick={ () => methods.group.add() } bsStyle="default">Group</Button>
+          <Button onClick={ () => methods.net.add() } bsStyle="primary">Net</Button>
+          <Button onClick={ () => methods.subnet.add() } bsStyle="primary">SubNet</Button>
+          <Button onClick={ () => methods.place.add() } bsStyle="primary">Place</Button>
+          <Button onClick={ () => methods.transition.add() } bsStyle="primary">Transition</Button>
+          <Button onClick={ () => methods.group.add() } bsStyle="primary">Group</Button>
           <span>Zoom:</span>
           <Button onClick={ () => methods.zoom.change(-0.1) } bsStyle="default">-</Button>
           <Button onClick={ () => methods.zoom.change(0.1) } bsStyle="default">+</Button>

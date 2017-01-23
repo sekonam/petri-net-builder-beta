@@ -35,7 +35,5 @@ export default class GroupForm extends React.Component {
 }
 
 GroupForm.propTypes = {
-  data: PropTypes.instanceOf(GroupModel).isRequired,
-  methods: PropTypes.object.isRequired,
-  show: PropTypes.bool.isRequired
+  data: PropTypes.instanceOf(GroupModel).isRequired
 };

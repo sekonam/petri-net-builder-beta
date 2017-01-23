@@ -11,7 +11,7 @@ export default class Query {
 
       get: (entityName) => state.db.get(entityName),
 
-      options: (entityName, paramName = 'name') => () => state.db[ s(entityName) ].cmap((item) => ({
+      options: (entityName, paramName = 'name') => () => this[ s(entityName) ]().cmap((item) => ({
         'value': item.id,
         'label': item[paramName]
       })),
@@ -35,12 +35,12 @@ export default class Query {
     }
 
     ['place', 'group',].forEach( (entityName) => {
-      this[ s(entityName) ] = (ids) => {
-        let entities = state.db[ s(entityName) ];
+      this[ s(entityName) ] = (ids = null) => {
+        if (!state.active.net) return [];
 
-        if (state.active.net) {
-          entities = entities.filter( (entity) => entity.netId == state.active.net );
-        }
+        let entities = state.db[ s(entityName) ].filter(
+          (entity) => entity.netId == state.active.net.id
+        );
 
         if (ids) {
           entities = entities.filter( (entity) => ids.has(entity.id) );
