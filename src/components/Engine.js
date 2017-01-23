@@ -77,8 +77,10 @@ export default class Engine extends React.Component {
         formComp = <PlaceForm data={form.data} />;
         break;
       case 'group':
-        formComp = <GroupForm data={form.data} places={query.place.options()}
-          selectedPlaces={query.place.selectedOptions(form.data.placeIds)} />;
+        formComp = <GroupForm data={form.data}
+          places={query.place.options()} subnets={query.subnet.options()}
+          selectedPlaces={query.place.selectedOptions(form.data.placeIds)}
+          selectedSubnets={query.subnet.selectedOptions(form.data.subnetIds)} />;
         break;
       case 'arc':
         formComp = <ArcForm data={form.data} />;
