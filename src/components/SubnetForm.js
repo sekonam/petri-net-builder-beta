@@ -43,8 +43,10 @@ export default class SubnetForm extends React.Component {
           </FormGroup>
           <SocketList data={data.socketIds} />
           <FormGroup className="center">
-            <Button onClick={() => methods.subnet.remove(data.id)}
-              bsStyle="danger">Delete</Button>
+          <Button onClick={() => methods.subnet.enter(data.id)}
+            bsStyle="primary">Enter</Button>
+          <Button onClick={() => methods.subnet.remove(data.id)}
+            bsStyle="danger">Delete</Button>
           </FormGroup>
         </Form>
     );

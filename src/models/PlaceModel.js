@@ -9,8 +9,8 @@ export default class PlaceModel extends NodeModel {
     this.set({
       name: 'Place name',
       width: 100,
-      height: 52,
-      r: 0,
+      height: 62,
+      r: 25,
       color: null
     });
 

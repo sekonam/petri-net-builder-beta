@@ -118,12 +118,10 @@ class Place extends React.Component {
         onMouseDown={this.onMouseDown}>
         <rect className="state-rect" x={x} y={y}
           width={width + 'px'} height={height + 'px'} rx={r} ry={r}></rect>
-        <text className="state-txt" x={x+7} y={y+18}>{this.props.data.short('name', 11)}</text>
+        <text className="state-txt" x={x+7} y={y+25}>{this.props.data.short('name', 11)}</text>
         {socketTags}
-        <CircleButton clickHandler={(e) => { methods.place.edit(id); e.stopPropagation(); }}
-          x={x + width/2 - 16} y={y + height - 17} caption="E"/>
         <CircleButton clickHandler={(e) => { methods.place.remove(id); e.stopPropagation(); }}
-          x={x + width/2 + 8} y={y + height - 17} caption="D"/>
+          x={x + width/2} y={y + height - 17} caption="D"/>
       </g>
     );
   }

@@ -91,7 +91,7 @@ export default function Store(setState) {
     active: (entityName) => (id) => (state) => {
       state.active[entityName] = id ? state.db[ s(entityName) ].valueById(id) : null;
 
-      if (id) {
+      if (id && !state.active[entityName].subnetId) {
         state.form.data = state.db[ s(entityName) ].valueById(id);
         state.form.type = entityName;
       }
@@ -178,10 +178,11 @@ export default function Store(setState) {
       } );
 
       if (entityName == 'subnet') {
-        state.db.nets.find( (net) => net.subnetId == id )
-          .forEach( (net) => {
-            methods.net.remove(net.id);
-          } );
+        methods.net.remove(
+          state.db.nets.find(
+            (net) => net.subnetId == id
+          ).id
+        );
       }
     } );
   } );
@@ -222,13 +223,22 @@ export default function Store(setState) {
 
   methods.net.remove = handlerFactory.remove( 'net', (state, nid) => {
     ['place', 'subnet', 'group'].forEach( (entityName) => {
-      state.db[ s(entityName) ]
-        .find( (entity) => entity.netId == nid )
-        .forEach( (entity) => {
+      const entities = state.db[ s(entityName) ]
+        .find( (entity) => entity.netId == nid );
+
+      if (entities) {
+        entities.forEach( (entity) => {
           methods[ entityName ].remove(entity.id);
         } );
+      }
     } );
   } );
+
+  methods.subnet.enter = (id) => (state) => {
+    return methods.net.active(
+      state.db.nets.find( (net) => net.subnetId == id ).id
+    )(state);
+  };
 
   ['place', 'subnet', 'group', ].forEach( (entityName) => {
     methods[entityName].dragging = (id) => (state) => {

@@ -120,7 +120,7 @@ class Subnet extends React.Component {
           width={width + 'px'} height={height + 'px'} rx={r} ry={r}></rect>
         <text className="state-txt" x={x+7} y={y+21}>{this.props.data.short('name', 11)}</text>
         {socketTags}
-        <CircleButton clickHandler={(e) => { methods.subnet.edit(data.id); e.stopPropagation(); }}
+        <CircleButton clickHandler={(e) => { methods.subnet.enter(data.id); e.stopPropagation(); }}
           x={x + width/2 - 16} y={y + height - 17} caption="E"/>
         <CircleButton clickHandler={(e) => { methods.subnet.remove(data.id); e.stopPropagation(); }}
           x={x + width/2 + 8} y={y + height - 17} caption="D"/>
