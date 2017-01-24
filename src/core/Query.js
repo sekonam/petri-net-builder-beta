@@ -84,6 +84,15 @@ export default class Query {
       return empty;
     }
 
+    this.zoom.offset(diff) {
+      const viewport = state.viewport;
+
+      return {
+        x: diff.x / viewport.zoom,
+        y: diff.y / viewport.zoom
+      };
+    }
+
     this.minmax = (gid = null) => {
       const BIG_INT = 1000000;
 
