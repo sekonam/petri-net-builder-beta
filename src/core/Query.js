@@ -1,4 +1,4 @@
-import {EntityNames} from './Entities.js';
+import {EntityNames, NodeNames} from './Entities.js';
 
 export default class Query {
 
@@ -73,6 +73,43 @@ export default class Query {
       return entities;
     };
 
+    this.group.empty = (id) => {
+      let empty = true,
+        group = this.group.get(id);
+
+      NodeNames.forEach( (entityName) => {
+        empty = empty && !group[entityName + 'Ids'].length;
+      } );
+
+      return empty;
+    }
+
+    this.minmax = (gid = null) => {
+      const BIG_INT = 1000000;
+
+      let max = {
+          x: -BIG_INT,
+          y: -BIG_INT
+        },
+        min = {
+          x: BIG_INT,
+          y: BIG_INT
+        };
+
+      NodeNames.forEach( (entityName) => {
+        let ids = gid ? this.group.get (gid) [entityName+'Ids'] : null;
+
+        this [s(entityName)] (ids) . forEach( (entity) => {
+          min.x = Math.min( min.x, entity.x );
+          min.y = Math.min( min.y, entity.y );
+          max.x = Math.max( max.x, entity.x + entity.width );
+          max.y = Math.max( max.y, entity.y + entity.height );
+        } );
+      } );
+
+      return {min, max};
+    };
+
     this.nodeBySocketId = (socketId) => {
       const socket = state.db.sockets.valueById(socketId);
       return state.db[ s(socket.nodeType) ].valueById(socket.nodeId);
@@ -107,7 +144,7 @@ export default class Query {
                 children: []
               };
 
-              ['place', 'subnet',].forEach( (entityName) => {
+              NodeNames.forEach( (entityName) => {
                 node.children = node.children.concat(
                   group[entityName + 'Ids'].map( (id) => {
                     const entity = this[entityName].get(id),
@@ -141,7 +178,7 @@ export default class Query {
             } )
           };
 
-          ['place', 'subnet',].forEach( (entityName) => {
+          NodeNames.forEach( (entityName) => {
             node.children = node.children.concat(
               entities[entityName].map( (entity) => {
 

@@ -13,7 +13,7 @@ export default class GroupModel extends Model {
 
 }
 
-GroupModel.findMinMax = function(items) {
+/*GroupModel.findMinMax = function(items) {
   const BIG_INT = 1000000;
 
   let max = {
@@ -33,4 +33,4 @@ GroupModel.findMinMax = function(items) {
   } );
 
   return {min, max};
-};
+};*/

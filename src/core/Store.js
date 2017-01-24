@@ -223,14 +223,11 @@ export default function Store(setState) {
 
   methods.net.remove = handlerFactory.remove( 'net', (state, nid) => {
     ['place', 'subnet', 'group'].forEach( (entityName) => {
-      const entities = state.db[ s(entityName) ]
-        .find( (entity) => entity.netId == nid );
-
-      if (entities) {
-        entities.forEach( (entity) => {
+      state.db[ s(entityName) ]
+        .filter( (entity) => entity.netId == nid )
+        .forEach( (entity) => {
           methods[ entityName ].remove(entity.id);
         } );
-      }
     } );
   } );
 

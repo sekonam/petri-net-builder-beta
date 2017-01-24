@@ -7,7 +7,6 @@ import Query from '../core/Query.js';
 
 import EngineModel from './../models/EngineModel.js';
 import ViewportModel from './../models/ViewportModel.js';
-import GroupModel from './../models/GroupModel.js';
 
 import Place from './Place.js';
 import Subnet from './Subnet.js';
@@ -171,7 +170,7 @@ class Context extends React.Component {
   }
 
   drawTactical() {
-    const { min, max } = GroupModel.findMinMax( Query.instance.places() ),
+    const { min, max } = Query.instance.minmax(),
       { width: w, height: h } = this.state.svgSize,
       indents = {
         x: Math.max( Math.abs( Math.min( 0, min.x ) ), Math.max( 0, max.x - w ) ),

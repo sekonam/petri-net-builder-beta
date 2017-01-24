@@ -17,6 +17,7 @@ const EntityFactory = {
     arc: (params) => new ArcModel(params),
     group: (params) => new GroupModel(params)
   },
-  EntityNames = ['place', 'socket', 'arc', 'net', 'subnet', 'group', 'action', 'event'];
+  EntityNames = ['place', 'socket', 'arc', 'net', 'subnet', 'group', 'action', 'event'],
+  NodeNames = ['place', 'subnet',];
 
-export { EntityNames, EntityFactory };
+export { EntityNames, NodeNames, EntityFactory };

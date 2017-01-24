@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
 
+import {NodeNames} from '../core/Store.js';
 import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import Types from './Types.js';
@@ -68,12 +69,11 @@ class Group extends React.Component {
     const {data, connectDragSource} = this.props,
       query = Query.instance;
 
-    if (data.placeIds.length) {
-      const INDENT = 10,
-        HEADER = 20,
-        {min, max} = GroupModel.findMinMax( query.places( data.placeIds ) );
+    if (!query.group.empty(data.id)) {
+      const {min, max} = query.minmax();
 
-      const x = min.x - INDENT,
+      const INDENT = 10, HEADER = 20,
+        x = min.x - INDENT,
         y = min.y - INDENT - HEADER,
         w = max.x - min.x + 2 * INDENT,
         h = max.y - min.y + 2 * INDENT + HEADER;
