@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import { DragSource } from 'react-dnd';
 
-import {NodeNames} from '../core/Store.js';
+import {NodeNames} from '../core/Entities.js';
 import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import Types from './Types.js';
@@ -20,10 +20,12 @@ const groupSource = {
           const diff = monitor.getDifferenceFromInitialOffset(),
             zDiff = component.props.zoomedDiff(diff);
 
-          data.placeIds.forEach( (pid) => {
-            methods.place.set( pid, {
-              x: this.start[pid].x + zDiff.x,
-              y: this.start[pid].y + zDiff.y
+          NodeNames.forEach( (entityName) => {
+            data[entityName + 'Ids'].forEach( (pid) => {
+              methods[entityName].set( pid, {
+                x: this.start[pid].x + zDiff.x,
+                y: this.start[pid].y + zDiff.y
+              } );
             } );
           } );
         }
@@ -32,12 +34,14 @@ const groupSource = {
 
     this.start = {};
 
-    data.placeIds.forEach( (pid) => {
-      const place = Query.instance.place.get(pid);
-      this.start[pid] = {
-        x: place.x,
-        y: place.y
-      };
+    NodeNames.forEach( (entityName) => {
+      data[entityName + 'Ids'].forEach( (pid) => {
+        const entity = Query.instance[entityName].get(pid);
+        this.start[pid] = {
+          x: entity.x,
+          y: entity.y
+        };
+      } );
     } );
 
     methods.group.dragging(props.data.id);
@@ -70,7 +74,7 @@ class Group extends React.Component {
       query = Query.instance;
 
     if (!query.group.empty(data.id)) {
-      const {min, max} = query.minmax();
+      const {min, max} = query.minmax(data.id);
 
       const INDENT = 10, HEADER = 20,
         x = min.x - INDENT,
