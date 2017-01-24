@@ -10,6 +10,7 @@ import ViewportModel from './../models/ViewportModel.js';
 import GroupModel from './../models/GroupModel.js';
 
 import Place from './Place.js';
+import Subnet from './Subnet.js';
 import Arc from './Arc.js';
 import Group from './Group.js';
 
@@ -108,7 +109,12 @@ class Context extends React.Component {
 
   canChangeTranslate() {
     const {dragging} = this.props;
-    return !dragging.place && !dragging.group;
+    let allow = true;
+
+    for (let name in dragging) {
+      allow = allow && !dragging[name]
+    }
+    return allow;
   }
 
   mouseDownHandler(e) {
@@ -188,8 +194,13 @@ class Context extends React.Component {
       places = query.places().cmap( (place, key) => (
         <Place data={place} id={place.id} key={key}
           zoomedDiff={this.zoomedDiff}
-          setMouseOffset={this.setMouseOffset}
-          contextSetState={this.setState.bind(this)} />
+          setMouseOffset={this.setMouseOffset} />
+      ) ),
+
+      subnets = query.subnets().cmap( (subnet, key) => (
+        <Subnet data={subnet} key={key}
+          zoomedDiff={this.zoomedDiff}
+          setMouseOffset={this.setMouseOffset} />
       ) ),
 
       arcs = query.arcs().cmap( (arc, key) => (
@@ -235,8 +246,11 @@ class Context extends React.Component {
             {arcs}
           {drawingArc}
           </g>
-          <g className="states">
+          <g className="places">
             {places}
+          </g>
+          <g className="subnets">
+            {subnets}
           </g>
         </g>
         <rect x="0" y="0" width={width} height={height}

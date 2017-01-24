@@ -95,6 +95,9 @@ svg.context {
   stroke:#fff;
   stroke-width:1;
 }
+.subnet .state-rect {
+  fill:#424;
+}
 .state-txt {
   fill:#ddd;
   font-size: 10pt;

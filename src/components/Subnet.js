@@ -4,12 +4,12 @@ import { DragSource } from 'react-dnd';
 import Query from '../core/Query.js';
 import Store from '../core/Store.js';
 import Types from './Types.js';
-import PlaceModel from '../models/PlaceModel.js';
+import SubnetModel from '../models/SubnetModel.js';
 
 import Socket from './Socket.js';
 import CircleButton from './CircleButton.js';
 
-const placeSource = {
+const subnetSource = {
 
   beginDrag(props, monitor, component) {
     const {data} = component.props,
@@ -21,7 +21,7 @@ const placeSource = {
           const diff = monitor.getDifferenceFromInitialOffset(),
             zDiff = component.props.zoomedDiff(diff);
 
-          methods.place.set( props.data.id, {
+          methods.subnet.set( props.data.id, {
             x: this.start.x + zDiff.x,
             y: this.start.y + zDiff.y
           } );
@@ -33,7 +33,7 @@ const placeSource = {
       x: data.x,
       y: data.y
     };
-    methods.place.dragging(props.data.id);
+    methods.subnet.dragging(props.data.id);
 
     return {
       id: props.data.id
@@ -42,7 +42,7 @@ const placeSource = {
 
   endDrag(props, monitor, component) {
     clearInterval(this.timerId);
-    Store.instance.place.dragging(null);
+    Store.instance.subnet.dragging(null);
     component.setState({
       wasDragged: true
     });
@@ -55,7 +55,7 @@ function collect(connect, monitor) {
   }
 }
 
-class Place extends React.Component {
+class Subnet extends React.Component {
 
   constructor(props) {
     super(props);
@@ -72,7 +72,7 @@ class Place extends React.Component {
         wasDragged: false
       });
     } else {
-      Store.instance.place.edit(this.props.data.id);
+      Store.instance.subnet.edit(this.props.data.id);
     }
   }
 
@@ -81,7 +81,7 @@ class Place extends React.Component {
   }
 
   render() {
-    const { connectDragSource, id, data} = this.props,
+    const { connectDragSource, data} = this.props,
       methods = Store.instance,
       { x, y, width, height, r } = data,
       typeNames = [ 'income', 'outcome' ],
@@ -114,26 +114,25 @@ class Place extends React.Component {
     } );
 
     return connectDragSource(
-      <g className="state" id={id} onClick={this.clickHandler}
+      <g className="state subnet" id={data.id} onClick={this.clickHandler}
         onMouseDown={this.onMouseDown}>
         <rect className="state-rect" x={x} y={y}
           width={width + 'px'} height={height + 'px'} rx={r} ry={r}></rect>
-        <text className="state-txt" x={x+7} y={y+18}>{this.props.data.short('name', 11)}</text>
+        <text className="state-txt" x={x+7} y={y+21}>{this.props.data.short('name', 11)}</text>
         {socketTags}
-        <CircleButton clickHandler={(e) => { methods.place.edit(id); e.stopPropagation(); }}
+        <CircleButton clickHandler={(e) => { methods.subnet.edit(data.id); e.stopPropagation(); }}
           x={x + width/2 - 16} y={y + height - 17} caption="E"/>
-        <CircleButton clickHandler={(e) => { methods.place.remove(id); e.stopPropagation(); }}
+        <CircleButton clickHandler={(e) => { methods.subnet.remove(data.id); e.stopPropagation(); }}
           x={x + width/2 + 8} y={y + height - 17} caption="D"/>
       </g>
     );
   }
 }
 
-Place.propTypes = {
-  data: PropTypes.instanceOf(PlaceModel).isRequired,
-  id: PropTypes.string.isRequired,
+Subnet.propTypes = {
+  data: PropTypes.instanceOf(SubnetModel).isRequired,
   zoomedDiff: PropTypes.func.isRequired,
   setMouseOffset: PropTypes.func.isRequired
 };
 
-export default DragSource(Types.PLACE, placeSource, collect)(Place);
+export default DragSource(Types.SUBNET, subnetSource, collect)(Subnet);

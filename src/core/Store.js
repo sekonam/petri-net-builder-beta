@@ -10,7 +10,7 @@ export default function Store(setState) {
   Store.instance = this;
 
   this.state = {
-    db: new EngineModel(StorageEngine.loadFromStorage( 'db' )),
+    db: new EngineModel( StorageEngine.loadFromStorage( 'db' )),
     viewport: new ViewportModel(),
     active: {},
     form: {
@@ -230,7 +230,7 @@ export default function Store(setState) {
     } );
   } );
 
-  ['place', 'group', 'net'].forEach( (entityName) => {
+  ['place', 'subnet', 'group', ].forEach( (entityName) => {
     methods[entityName].dragging = (id) => (state) => {
       state.dragging[entityName] = id;
       return state;
