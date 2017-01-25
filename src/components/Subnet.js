@@ -53,7 +53,7 @@ class Subnet extends React.Component {
     } );
 
     return (
-      <g className="state subnet" id={data.id} onMouseUp={this.onMouseUp}>
+      <g className="state subnet" id={data.id}>
         <rect className="state-rect" x={x} y={y}
           width={width + 'px'} height={height + 'px'} rx={r} ry={r}></rect>
         <text className="state-txt" x={x+7} y={y+21}>{this.props.data.short('name', 11)}</text>
