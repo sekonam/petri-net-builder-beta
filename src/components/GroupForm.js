@@ -8,7 +8,9 @@ import GroupModel from '../models/GroupModel.js';
 export default class GroupForm extends React.Component {
 
   render() {
-    const {data, places, selectedPlaces, subnets, selectedSubnets} = this.props,
+    const {data, places, selectedPlaces,
+        transitions, selectedTransitions,
+        subnets, selectedSubnets} = this.props,
       methods = Store.instance;
 
     return (
@@ -23,6 +25,12 @@ export default class GroupForm extends React.Component {
             <ControlLabel>Places</ControlLabel>
             <Select multi={true} value={selectedPlaces} options={places}
               onChange={(val) => methods.save('placeIds',
+                typeof val == 'undefined' ? [] : val.cmap( (el) => el.value ) )} />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Transitions</ControlLabel>
+            <Select multi={true} value={selectedTransitions} options={transitions}
+              onChange={(val) => methods.save('transitionIds',
                 typeof val == 'undefined' ? [] : val.cmap( (el) => el.value ) )} />
           </FormGroup>
           <FormGroup>

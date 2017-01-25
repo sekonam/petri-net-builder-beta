@@ -8,6 +8,7 @@ import StorageEngine from '../core/StorageEngine.js';
 
 import Context from './Context.js';
 import PlaceForm from './PlaceForm.js';
+import TransitionForm from './TransitionForm.js';
 import SubnetForm from './SubnetForm.js';
 import GroupForm from './GroupForm.js';
 import EventForm from './EventForm.js';
@@ -77,13 +78,19 @@ export default class Engine extends React.Component {
       case 'place':
         formComp = <PlaceForm data={form.data} />;
         break;
+      case 'transition':
+        formComp = <TransitionForm data={form.data} />;
+        break;
       case 'subnet':
         formComp = <SubnetForm data={form.data} />;
         break;
       case 'group':
         formComp = <GroupForm data={form.data}
-          places={query.place.options()} subnets={query.subnet.options()}
+          places={query.place.options()}
+          transitions={query.transition.options()}
+          subnets={query.subnet.options()}
           selectedPlaces={query.place.selectedOptions(form.data.placeIds)}
+          selectedTransitions={query.transition.selectedOptions(form.data.transitionIds)}
           selectedSubnets={query.subnet.selectedOptions(form.data.subnetIds)} />;
         break;
       case 'arc':

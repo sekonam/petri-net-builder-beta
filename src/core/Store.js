@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import {EntityFactory, EntityNames} from './Entities.js';
+import {EntityFactory, EntityNames, NodeGroupNames} from './Entities.js';
 import StorageEngine from './StorageEngine.js';
 
 import EngineModel from '../models/EngineModel.js';
@@ -20,16 +20,15 @@ export default function Store(setState) {
     drawing: {
       arc: null
     },
-    dragging: {
-      place: null,
-      subnet: null,
-      transition: null,
-      group: null
-    }
+    dragging: {}
   };
 
   EntityNames.forEach( (key) => {
     this.state.active[key] = null;
+  } );
+
+  NodeGroupNames.forEach( (key) => {
+    this.state.dragging[key] = null;
   } );
 
   const s = (entityName) => entityName + 's';
@@ -111,7 +110,7 @@ export default function Store(setState) {
     }
   }
 
-  ['place', 'subnet'].forEach( (entityName) => {
+  EntityNames.forEach( (entityName) => {
     methods[entityName].add = handlerFactory.add( entityName, (state, entity) => {
       entity.netId = state.active.net.id;
 
@@ -158,7 +157,7 @@ export default function Store(setState) {
     group.netId = state.active.net.id;
   } );
 
-  ['place', 'subnet'].forEach( (entityName) => {
+  EntityNames.forEach( (entityName) => {
     methods[entityName].remove = handlerFactory.remove(entityName, (state, id) => {
       state.db[ s(entityName) ]
         .valueById(id)
@@ -222,7 +221,7 @@ export default function Store(setState) {
   } );
 
   methods.net.remove = handlerFactory.remove( 'net', (state, nid) => {
-    ['place', 'subnet', 'group'].forEach( (entityName) => {
+    NodeGroupNames.forEach( (entityName) => {
       state.db[ s(entityName) ]
         .filter( (entity) => entity.netId == nid )
         .forEach( (entity) => {
@@ -237,7 +236,7 @@ export default function Store(setState) {
     )(state);
   };
 
-  ['place', 'subnet', 'group', ].forEach( (entityName) => {
+  NodeGroupNames.forEach( (entityName) => {
     methods[entityName].dragging = (id) => (state) => {
       state.dragging[entityName] = id;
       return state;

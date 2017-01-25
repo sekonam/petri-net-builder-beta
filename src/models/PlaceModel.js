@@ -11,7 +11,7 @@ export default class PlaceModel extends NodeModel {
       width: 100,
       height: 62,
       r: 25,
-      color: null
+      color: ''
     });
 
     const init = {

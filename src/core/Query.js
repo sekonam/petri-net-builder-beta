@@ -1,4 +1,4 @@
-import {EntityNames, NodeNames} from './Entities.js';
+import {EntityNames, NodeNames, NodeGroupNames} from './Entities.js';
 
 export default class Query {
 
@@ -34,7 +34,7 @@ export default class Query {
       }
     }
 
-    ['place', 'group', 'subnet',].forEach( (entityName) => {
+    NodeGroupNames.forEach( (entityName) => {
       this[ s(entityName) ] = (ids = null) => {
         if (!state.active.net) return [];
 
@@ -136,7 +136,7 @@ export default class Query {
         children: state.db.nets.filter( (net) => !net.subnetId ).map( (net) => {
           let entities = {};
 
-          ['place', 'subnet', 'group',].forEach( (entityName) => {
+          NodeGroupNames.forEach( (entityName) => {
             entities[entityName] = state.db[ s(entityName) ]
               .filter( (entity) => entity.netId == net.id );
           } );

@@ -9,6 +9,7 @@ import EngineModel from './../models/EngineModel.js';
 import ViewportModel from './../models/ViewportModel.js';
 
 import Place from './Place.js';
+import Transition from './Transition.js';
 import Subnet from './Subnet.js';
 import Arc from './Arc.js';
 import Group from './Group.js';
@@ -192,7 +193,11 @@ class Context extends React.Component {
 
       places = query.places().cmap( (place, key) => (
         <Place data={place} id={place.id} key={key}
-          zoomedDiff={this.zoomedDiff}
+          setMouseOffset={this.setMouseOffset} />
+      ) ),
+
+      transitions = query.transitions().cmap( (transition, key) => (
+        <Transition data={transition} id={transition.id} key={key}
           setMouseOffset={this.setMouseOffset} />
       ) ),
 
@@ -244,11 +249,14 @@ class Context extends React.Component {
             {arcs}
           {drawingArc}
           </g>
-          <g className="places">
-            {places}
-          </g>
           <g className="subnets">
             {subnets}
+          </g>
+          <g className="transitions">
+            {transitions}
+          </g>
+          <g className="places">
+            {places}
           </g>
         </g>
         <rect x="0" y="0" width={width} height={height}

@@ -44,7 +44,7 @@ class Place extends React.Component {
     } );
 
     return (
-      <g className="state" id={data.id}>
+      <g className="state place" id={data.id}>
         <rect className="state-rect" x={x} y={y}
           width={width + 'px'} height={height + 'px'} rx={r} ry={r}></rect>
         <text className="state-txt" x={x+7} y={y+25}>{this.props.data.short('name', 11)}</text>
