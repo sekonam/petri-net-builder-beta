@@ -3,15 +3,15 @@ import {Form, FormGroup, FormControl, ControlLabel, Button} from 'react-bootstra
 import Select from 'react-select';
 
 import Store from '../core/Store.js';
-import ActionModel from '../models/ActionModel.js';
+import HandlerModel from '../models/HandlerModel.js';
 
-export default class ActionForm extends React.Component {
+export default class HandlerForm extends React.Component {
 
   remove() {
     const {data} = ths.props,
       methods = Store.instance;
-    methods.action.edit(null);
-    methods.action.remove(data.id);
+    methods.handler.edit(null);
+    methods.handler.remove(data.id);
   }
 
   render() {
@@ -20,25 +20,25 @@ export default class ActionForm extends React.Component {
 
     return (
         <Form>
-          <h3>{'Action: ' + data.name}</h3>
+          <h3>{'Handler: ' + data.name}</h3>
           <FormGroup controlId="NameInput">
-            <ControlLabel>Action Name</ControlLabel>
+            <ControlLabel>Handler Name</ControlLabel>
             <FormControl type="text" value={data.name}
               onChange={(e) => methods.save('name', e.target.value)} />
           </FormGroup>
           <FormGroup controlId="EventsSelectMultiple">
-            <ControlLabel>Events To Activate Action</ControlLabel>
+            <ControlLabel>Events To Activate Handler</ControlLabel>
             <Select multi={true} value={selectedEvents} options={events}
               onChange={(val) => methods.save('events',
                 typeof val == 'undefined' ? [] : val.cmap( (el) => el.value ) )} />
           </FormGroup>
           <FormGroup controlId="CodeTextarea">
-            <ControlLabel>Javascript Action Code</ControlLabel>
+            <ControlLabel>Javascript Handler Code</ControlLabel>
             <FormControl componentClass="textarea" placeholder="JavaScript Code Here..."
               value={data.code} onChange={(e) => methods.save('code', e.target.value)} />
           </FormGroup>
           <FormGroup className="center">
-            <Button onClick={() => methods.action.remove(data.id)}
+            <Button onClick={() => methods.handler.remove(data.id)}
               bsStyle="danger">Delete</Button>
           </FormGroup>
         </Form>
@@ -46,8 +46,8 @@ export default class ActionForm extends React.Component {
   }
 }
 
-ActionForm.propTypes = {
-  data: PropTypes.instanceOf(ActionModel).isRequired,
+HandlerForm.propTypes = {
+  data: PropTypes.instanceOf(HandlerModel).isRequired,
   events: PropTypes.array.isRequired,
   selectedEvents: PropTypes.array.isRequired
 };

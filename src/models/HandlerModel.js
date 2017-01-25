@@ -1,10 +1,10 @@
 import Model from './../core/Model.js';
 
-export default class ActionModel extends Model {
+export default class HandlerModel extends Model {
 
   defaults() {
     this.set({
-      name: 'Action name',
+      name: 'Handler name',
       events: [],
       code: ''
     });

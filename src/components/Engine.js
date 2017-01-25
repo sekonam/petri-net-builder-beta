@@ -12,7 +12,7 @@ import TransitionForm from './TransitionForm.js';
 import SubnetForm from './SubnetForm.js';
 import GroupForm from './GroupForm.js';
 import EventForm from './EventForm.js';
-import ActionForm from './ActionForm.js';
+import HandlerForm from './HandlerForm.js';
 import ArcForm from './ArcForm.js';
 import NetForm from './NetForm.js';
 import LeftMenuBlock from './LeftMenuBlock.js';
@@ -59,7 +59,7 @@ export default class Engine extends React.Component {
       query = this.query,
       active = this.state.active,
 
-      leftMenuBlocks = [ 'event', 'action', ].map( (itemType, key) => {
+      leftMenuBlocks = [ 'event', 'handler', ].map( (itemType, key) => {
         return (
         <LeftMenuBlock key={key}
           itemName={itemType}
@@ -79,7 +79,10 @@ export default class Engine extends React.Component {
         formComp = <PlaceForm data={form.data} />;
         break;
       case 'transition':
-        formComp = <TransitionForm data={form.data} />;
+        formComp = <TransitionForm data={form.data}
+          handlers={query.handler.options()}
+          selectedHandlers={query.handler.selectedOptions(form.data.handlerIds)}
+          />;
         break;
       case 'subnet':
         formComp = <SubnetForm data={form.data} />;
@@ -99,8 +102,8 @@ export default class Engine extends React.Component {
       case 'event':
         formComp = <EventForm data={form.data} />;
         break;
-      case 'action':
-        formComp = <ActionForm data={form.data} events={query.event.options()}
+      case 'handler':
+        formComp = <HandlerForm data={form.data} events={query.event.options()}
           selectedEvents={query.event.selectedOptions(form.data.events)} />;
         break;
     }

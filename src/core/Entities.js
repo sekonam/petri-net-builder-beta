@@ -1,7 +1,7 @@
 import PlaceModel from './../models/PlaceModel.js';
 import TransitionModel from './../models/TransitionModel.js';
 import SocketModel from './../models/SocketModel.js';
-import ActionModel from './../models/ActionModel.js';
+import HandlerModel from './../models/HandlerModel.js';
 import EventModel from './../models/EventModel.js';
 import ArcModel from './../models/ArcModel.js';
 import GroupModel from './../models/GroupModel.js';
@@ -14,12 +14,12 @@ const EntityFactory = {
     socket: (params) => new SocketModel(params),
     net: (params) => new NetModel(params),
     subnet: (params) => new SubnetModel(params),
-    action: (params) => new ActionModel(params),
+    handler: (params) => new HandlerModel(params),
     event: (params) => new EventModel(params),
     arc: (params) => new ArcModel(params),
     group: (params) => new GroupModel(params)
   },
-  EntityNames = ['place', 'transition', 'socket', 'arc', 'net', 'subnet', 'group', 'action', 'event'],
+  EntityNames = ['place', 'transition', 'socket', 'arc', 'net', 'subnet', 'group', 'handler', 'event'],
   NodeNames = ['place', 'subnet', 'transition',],
   NodeGroupNames = ['place', 'subnet', 'transition', 'group',];
 

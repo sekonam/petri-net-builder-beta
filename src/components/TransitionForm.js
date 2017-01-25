@@ -20,7 +20,7 @@ export default class TransitionForm extends React.Component {
   }
 
   render() {
-    const {data} = this.props,
+    const {data, handlers, selectedHandlers} = this.props,
       methods = Store.instance;
 
     return (
@@ -30,6 +30,12 @@ export default class TransitionForm extends React.Component {
             <ControlLabel>Transition Name</ControlLabel>
             <FormControl type="text" value={data.name}
               onChange={(e) => methods.save('name', e.target.value)} />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Handlers List</ControlLabel>
+            <Select multi={true} value={selectedHandlers} options={handlers}
+              onChange={(val) => methods.save('handlerIds',
+                typeof val == 'undefined' ? [] : val.cmap( (el) => el.value ) )} />
           </FormGroup>
           <FormGroup>
             <ControlLabel>Transition Color</ControlLabel>

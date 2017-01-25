@@ -8,7 +8,7 @@ export default class TransitionModel extends NodeModel {
 
     this.set({
       name: 'Transition name',
-      
+      handlerIds: [],
       width: 80,
       height: 62,
       r: 0,

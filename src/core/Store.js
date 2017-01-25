@@ -187,11 +187,11 @@ export default function Store(setState) {
   } );
 
   methods.event.remove = handlerFactory.remove('event', (state, eid) => {
-    state.db.actions.forEach( (action) => {
-      const eventKey = action.events.indexOf(eid);
+    state.db.handlers.forEach( (handler) => {
+      const eventKey = handler.events.indexOf(eid);
 
       if ( eventKey > -1 ) {
-        action.events.splice(eventKey, 1);
+        handler.events.splice(eventKey, 1);
       }
     } );
 
