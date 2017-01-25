@@ -43,6 +43,9 @@ body {
 .center{
   text-align: center;
 }
+.center .btn {
+  margin-left:5px;
+}
 .col-xs-8.form-control {
   width: 65%;
   margin-right: 1%;
