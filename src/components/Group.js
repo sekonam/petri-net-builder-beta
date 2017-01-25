@@ -82,7 +82,7 @@ class Group extends React.Component {
         h = max.y - min.y + 2 * INDENT + HEADER;
 
       return connectDragSource(
-        <g className="group">
+        <g className={'group ' + data.typeName}>
           <rect x={x} y={y} width={w} height={h}
             rx={INDENT} ry={INDENT} className="group-rect"/>
           <g className="header">

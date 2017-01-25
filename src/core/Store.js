@@ -155,6 +155,7 @@ export default function Store(setState) {
 
   methods.group.add = handlerFactory.add( 'group', (state, group) => {
     group.netId = state.active.net.id;
+    group.name = (group.type ? 'Milestone' : 'Phase') + ' name';
   } );
 
   NodeNames.forEach( (entityName) => {

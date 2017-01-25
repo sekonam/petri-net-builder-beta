@@ -4,13 +4,16 @@ export default class GroupModel extends Model {
 
   defaults() {
     this.set({
-      name: 'Group name',
       placeIds: [],
       transitionIds: [],
       subnetIds: [],
-      netId: null
+      netId: null,
+      type: 0 // 0 - phase, 1 - milestone
     });
+
   }
+
+  get typeName() { return this.type ? 'milestone' : 'phase'; }
 
 }
 

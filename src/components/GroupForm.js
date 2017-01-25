@@ -15,7 +15,7 @@ export default class GroupForm extends React.Component {
 
     return (
         <Form>
-          <h3>{'Group: ' + data.name}</h3>
+          <h3>{ (data.type ? 'Milestone' : 'Phase') + ': ' + data.name}</h3>
           <FormGroup controlId="NameInput">
             <ControlLabel>Group Name</ControlLabel>
             <FormControl type="text" value={data.name}
