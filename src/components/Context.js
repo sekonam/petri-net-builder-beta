@@ -171,16 +171,18 @@ class Context extends React.Component {
   }
 
   drawTactical() {
-    const { min, max } = Query.instance.minmax(),
+    const query = Query.instance,
+      { min, max } = query.minmax(),
+      zoom = query.zoom,
       { width: w, height: h } = this.state.svgSize,
       indents = {
-        x: Math.max( Math.abs( Math.min( 0, min.x ) ), Math.max( 0, max.x - w ) ),
-        y: Math.max( Math.abs( Math.min( 0, min.y ) ), Math.max( 0, max.y - h ) )
+        x: Math.max( Math.abs( Math.min( 0, min.x ) ), Math.max( 0, max.x - w / zoom ) ),
+        y: Math.max( Math.abs( Math.min( 0, min.y ) ), Math.max( 0, max.y - h / zoom ) )
       }
     return (
       <g>
         <circle cx={ -indents.x + 1 } cy={ -indents.y + 1 } r="1" className="tactical"/>
-        <circle cx={ w + indents.x - 1 } cy={ h + indents.y - 1 } r="1" className="tactical"/>
+        <circle cx={ w / zoom + indents.x - 1 } cy={ h / zoom + indents.y - 1 } r="1" className="tactical"/>
       </g>
     );
   }
@@ -190,33 +192,35 @@ class Context extends React.Component {
       methods = Store.instance,
       query = Query.instance,
       {width, height} = this.state.svgSize,
+      {places, subnets, transitions} = query.freeNodes(),
 
-      places = query.places().cmap( (place, key) => (
-        <Place data={place} id={place.id} key={key}
+      placeTags = places.cmap( (place, key) => (
+        <Place data={place} key={place.id}
           setMouseOffset={this.setMouseOffset} />
       ) ),
 
-      transitions = query.transitions().cmap( (transition, key) => (
-        <Transition data={transition} id={transition.id} key={key}
+      transitionTags = transitions.cmap( (transition, key) => (
+        <Transition data={transition} key={transition.id}
           setMouseOffset={this.setMouseOffset} />
       ) ),
 
-      subnets = query.subnets().cmap( (subnet, key) => (
-        <Subnet data={subnet} key={key}
+      subnetTags = subnets.cmap( (subnet, key) => (
+        <Subnet data={subnet} key={subnet.id}
           setMouseOffset={this.setMouseOffset} />
       ) ),
 
-      arcs = query.arcs().cmap( (arc, key) => (
-        <Arc data={arc} key={key}
+      arcTags = query.arcs().cmap( (arc, key) => (
+        <Arc data={arc} key={arc.id}
           editHandler={() => methods.arc.edit(arc.id)} />
       ) ),
 
-      drawingArc = drawing.arc ? (
+      drawingArcTag = drawing.arc ? (
         <Arc data={drawing.arc} offset={this.state.mouseOffset} editHandler={() => {}} />
       ) : '',
 
-      groups = query.groups().cmap( (group, key) => (
-        <Group data={group} zoomedDiff={this.zoomedDiff} key={key} />
+      groupTags = query.groups().cmap( (group, key) => (
+        <Group data={group} zoomedDiff={this.zoomedDiff} key={group.id}
+          setMouseOffset={this.setMouseOffset} />
       ) ),
 
       viewport = this.props.viewport,
@@ -241,23 +245,22 @@ class Context extends React.Component {
         onWheel={ (e) => methods.zoom.change( e.deltaY > 0 ? 0.05 : -0.05 ) }
         ref={ (el) => { this.svg = el; } } className="context" >
         <g className="diagram-objects" style={{transform}}>
-          {this.drawTactical()}
-          <g className="groups">
-            {groups}
-          </g>
           <g className="arcs">
-            {arcs}
-          {drawingArc}
-          </g>
-          <g className="subnets">
-            {subnets}
+            {arcTags}
           </g>
           <g className="transitions">
-            {transitions}
+            {transitionTags}
+          </g>
+          <g className="subnets">
+            {subnetTags}
           </g>
           <g className="places">
-            {places}
+            {placeTags}
           </g>
+          <g className="groups">
+            {groupTags}
+          </g>
+          {drawingArcTag}
         </g>
         <rect x="0" y="0" width={width} height={height}
           className="dim-layer" style={dimLayerStyles}

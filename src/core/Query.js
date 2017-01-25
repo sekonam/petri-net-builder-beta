@@ -50,15 +50,6 @@ export default class Query {
       };
     } );
 
-    this.subnet.net = (id) => this.nets.find( (net) => net.subnetId == id );
-
-    this.arc.netId = (id) => {
-      const arc = this.arc.get(id),
-        socket = this.socket.get(arc.startSocketId),
-        node = this[socket.nodeType].get(socket.nodeId);
-      return node.netId;
-    };
-
     this.arcs = (ids = null) => {
       if (!state.active.net) return [];
 
@@ -73,6 +64,8 @@ export default class Query {
       return entities;
     };
 
+    this.subnet.net = (id) => this.nets.find( (net) => net.subnetId == id );
+
     this.group.empty = (id) => {
       let empty = true,
         group = this.group.get(id);
@@ -82,6 +75,40 @@ export default class Query {
       } );
 
       return empty;
+    };
+
+    this.freeNodes = () => {
+      const groups = this.groups(),
+        entities = {},
+        ids = {};
+
+      NodeNames.forEach( (entityName) => {
+        ids[entityName] = [];
+
+        groups.forEach( (group) => {
+          ids[entityName] = ids[entityName].concat( group[entityName + 'Ids'] );
+        } );
+      } );
+
+      NodeNames.forEach( (entityName) => {
+        entities[ s(entityName) ] = this[ s(entityName) ] () . filter(
+          (entity) => ! ids[entityName].has(entity.id)
+        );
+      } );
+
+      return entities;
+    };
+
+    this.arc.netId = (id) => {
+      const arc = this.arc.get(id),
+        socket = this.socket.get(arc.startSocketId),
+        node = this[socket.nodeType].get(socket.nodeId);
+      return node.netId;
+    };
+
+    this.socket.nodeId = (socketId) => {
+      const socket = state.db.sockets.valueById(socketId);
+      return state.db[ s(socket.nodeType) ].valueById(socket.nodeId);
     };
 
     this.zoom = {
@@ -120,11 +147,6 @@ export default class Query {
       } );
 
       return {min, max};
-    };
-
-    this.nodeBySocketId = (socketId) => {
-      const socket = state.db.sockets.valueById(socketId);
-      return state.db[ s(socket.nodeType) ].valueById(socket.nodeId);
     };
 
     this.treebreadWorkspace = (activeId = null, toggled = []) => {

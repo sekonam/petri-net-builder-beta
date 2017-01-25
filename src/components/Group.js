@@ -5,6 +5,10 @@ import {NodeNames} from '../core/Entities.js';
 import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import GroupModel from './../models/GroupModel.js';
+
+import Place from './Place.js';
+import Transition from './Transition.js';
+import Subnet from './Subnet.js';
 import CircleButton from './CircleButton.js';
 
 const groupSource = {
@@ -69,8 +73,17 @@ class Group extends React.Component {
   }
 
   render() {
-    const {data, connectDragSource} = this.props,
-      query = Query.instance;
+    const {data, connectDragSource, setMouseOffset} = this.props,
+      query = Query.instance,
+      placesTags = query.places(data.placeIds).map( (place) => (
+        <Place data={place} key={place.id} setMouseOffset={setMouseOffset} />
+      ) ),
+      subnetsTags = query.subnets(data.subnetIds).map( (subnet) => (
+        <Subnet data={subnet} key={subnet.id} setMouseOffset={setMouseOffset} />
+      ) ),
+      transitionTags = query.transitions(data.transitionIds).map( (transition) => (
+        <Transition data={transition} key={transition.id} setMouseOffset={setMouseOffset} />
+      ) );
 
     if (!query.group.empty(data.id)) {
       const {min, max} = query.minmax(data.id);
@@ -90,6 +103,10 @@ class Group extends React.Component {
             <CircleButton x = {x+w-18} y = {y+15} caption="E"
               clickHandler={() => Store.instance.group.edit(data.id)}/>
           </g>
+          {transitionTags}
+          {subnetsTags}
+          {placesTags}
+          {this.props.children}
         </g>
       );
     }

@@ -20,14 +20,14 @@ export default class Arc extends React.Component {
     const arc = this.props.data,
       {offset} = this.props,
       query = Query.instance,
-      startPlace = query.nodeBySocketId(arc.startSocketId),
+      startPlace = query.socket.nodeId(arc.startSocketId),
       startSocket = query.socket.get(arc.startSocketId),
       startOffset = this.socketOffset( startPlace, startSocket );
 
     let finishOffset = offset;
 
     if (arc.finishSocketId) {
-      const finishPlace = query.nodeBySocketId(arc.finishSocketId),
+      const finishPlace = query.socket.nodeId(arc.finishSocketId),
         finishSocket = query.socket.get(arc.finishSocketId);
       finishOffset = this.socketOffset( finishPlace, finishSocket );
     }
