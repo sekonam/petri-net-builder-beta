@@ -48,7 +48,7 @@ class Place extends React.Component {
         <rect className="state-rect" x={x} y={y}
           width={width + 'px'} height={height + 'px'} rx={r} ry={r}
           style={data.color ? {fill: data.color} : {}}></rect>
-        <text className="state-txt" x={x+7} y={y+25}>{this.props.data.short('name', 11)}</text>
+        <text className="state-txt" x={x+7} y={y+25}>{this.props.data.short('name', Math.round(data.width/10))}</text>
         {socketTags}
         <CircleButton clickHandler={(e) => { methods.place.remove(data.id); e.stopPropagation(); }}
           x={x + width/2} y={y + height - 17} caption="D"/>
