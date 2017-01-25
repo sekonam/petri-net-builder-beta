@@ -10,6 +10,7 @@ export default class Query {
     const queryFactory = {
 
       get: (entityName) => state.db.get(entityName),
+      active: (entityName) => state.active[entityName],
 
       options: (entityName, paramName = 'name') => () => this[ s(entityName) ]().cmap((item) => ({
         'value': item.id,
@@ -35,6 +36,7 @@ export default class Query {
     }
 
     NodeGroupNames.forEach( (entityName) => {
+
       this[ s(entityName) ] = (ids = null) => {
         if (!state.active.net) return [];
 
@@ -48,6 +50,16 @@ export default class Query {
 
         return entities;
       };
+
+      this[entityName].activeOrDragging = (id) => {
+        const active = state.active[entityName],
+          dragging = state.dragging[entityName];
+
+        if (active && active.id == id) return true;
+        if (dragging && dragging == id) return true;
+
+        return false;
+      }
     } );
 
     this.subnet.net = (id) => this.nets.find( (net) => net.subnetId == id );

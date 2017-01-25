@@ -66,7 +66,7 @@ class Context extends React.Component {
         this.setSvgSize();
       }
 
-    }, 15);
+    }, 5);
     window.addEventListener('resize', this.setSvgSize);
   }
 
@@ -190,34 +190,40 @@ class Context extends React.Component {
       methods = Store.instance,
       query = Query.instance,
       {width, height} = this.state.svgSize,
+      topEntities = [],
+      addOrSave = (entityName, id, cnt) => {
+        if (query[entityName].activeOrDragging(id)) {
+          topEntities.push(cnt);
+          return '';
+        }
 
-      places = query.places().cmap( (place, key) => (
-        <Place data={place} id={place.id} key={key}
-          setMouseOffset={this.setMouseOffset} />
-      ) ),
+        return cnt;
+      },
 
-      transitions = query.transitions().cmap( (transition, key) => (
-        <Transition data={transition} id={transition.id} key={key}
-          setMouseOffset={this.setMouseOffset} />
-      ) ),
+      groups = query.groups().cmap( (group, key) => addOrSave('group', group.id, (
+        <Group data={group} zoomedDiff={this.zoomedDiff} key={group.id} />
+      ) ) ),
 
-      subnets = query.subnets().cmap( (subnet, key) => (
-        <Subnet data={subnet} key={key}
-          setMouseOffset={this.setMouseOffset} />
-      ) ),
+      transitions = query.transitions()
+        .cmap( (transition, key) => addOrSave('transition', transition.id, (
+          <Transition data={transition} key={transition.id} setMouseOffset={this.setMouseOffset} />
+        ) ) ),
+
+      subnets = query.subnets().cmap( (subnet, key) => addOrSave('subnet', subnet.id, (
+        <Subnet data={subnet} key={subnet.id} setMouseOffset={this.setMouseOffset} />
+      ) ) ),
+
+      places = query.places().cmap( (place, key) => addOrSave('place', place.id, (
+        <Place data={place} key={place.id} setMouseOffset={this.setMouseOffset} />
+      ) ) ),
 
       arcs = query.arcs().cmap( (arc, key) => (
-        <Arc data={arc} key={key}
-          editHandler={() => methods.arc.edit(arc.id)} />
+        <Arc data={arc} key={arc.id} editHandler={() => methods.arc.edit(arc.id)} />
       ) ),
 
       drawingArc = drawing.arc ? (
         <Arc data={drawing.arc} offset={this.state.mouseOffset} editHandler={() => {}} />
       ) : '',
-
-      groups = query.groups().cmap( (group, key) => (
-        <Group data={group} zoomedDiff={this.zoomedDiff} key={key} />
-      ) ),
 
       viewport = this.props.viewport,
       transform = `translate(${viewport.translateX}px,${viewport.translateY}px) scale(${viewport.zoom})`,
@@ -242,22 +248,13 @@ class Context extends React.Component {
         ref={ (el) => { this.svg = el; } } className="context" >
         <g className="diagram-objects" style={{transform}}>
           {this.drawTactical()}
-          <g className="groups">
             {groups}
-          </g>
-          <g className="arcs">
+            {drawingArc}
             {arcs}
-          {drawingArc}
-          </g>
-          <g className="subnets">
             {subnets}
-          </g>
-          <g className="transitions">
             {transitions}
-          </g>
-          <g className="places">
             {places}
-          </g>
+            {topEntities}
         </g>
         <rect x="0" y="0" width={width} height={height}
           className="dim-layer" style={dimLayerStyles}
