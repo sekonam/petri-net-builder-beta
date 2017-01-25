@@ -1,91 +1,30 @@
 import React, {PropTypes} from 'react';
-import { DragSource } from 'react-dnd';
 
 import Query from '../core/Query.js';
 import Store from '../core/Store.js';
-import Types from './Types.js';
+import DragNode from '../hoc/DragNode.js';
 import SubnetModel from '../models/SubnetModel.js';
 
 import Socket from './Socket.js';
 import CircleButton from './CircleButton.js';
 
-const subnetSource = {
-
-  beginDrag(props, monitor, component) {
-    const {data} = component.props,
-      methods = Store.instance;
-
-    this.timerId = setInterval(
-      () => {
-        if (monitor.isDragging()) {
-          const diff = monitor.getDifferenceFromInitialOffset(),
-            zDiff = component.props.zoomedDiff(diff);
-
-          methods.subnet.set( props.data.id, {
-            x: this.start.x + zDiff.x,
-            y: this.start.y + zDiff.y
-          } );
-        }
-      }, 10
-    );
-
-    this.start = {
-      x: data.x,
-      y: data.y
-    };
-    methods.subnet.dragging(props.data.id);
-
-    return {
-      id: props.data.id
-    };
-  },
-
-  endDrag(props, monitor, component) {
-    clearInterval(this.timerId);
-    Store.instance.subnet.dragging(null);
-    component.setState({
-      wasDragged: true
-    });
-  }
-};
-
-function collect(connect, monitor) {
-  return {
-    connectDragSource: connect.dragSource(),
-  }
-}
-
 class Subnet extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      wasDragged: false
-    };
-    this.clickHandler = this.clickHandler.bind(this);
-    this.onMouseDown = this.onMouseDown.bind(this);
+    this.onMouseUp = this.onMouseUp.bind(this);
   }
 
-  clickHandler (e) {
-    if (this.state.wasDragged) {
-      this.setState({
-        wasDragged: false
-      });
-    } else {
-      Store.instance.subnet.edit(this.props.data.id);
-    }
-  }
-
-  onMouseDown(e) {
-    Store.instance.subnet.dragging(this.props.data.id);
+  onMouseUp(e) {
+    Store.instance.subnet.edit(this.props.data.id);
   }
 
   render() {
-    const { connectDragSource, data} = this.props,
-      methods = Store.instance,
+    const methods = Store.instance,
+      query = Query.instance,
+      {data} = this.props,
       { x, y, width, height, r } = data,
-      typeNames = [ 'income', 'outcome' ],
-      query = Query.instance;
+      typeNames = [ 'income', 'outcome' ];
 
     let sockets = {
         income: [],
@@ -113,9 +52,8 @@ class Subnet extends React.Component {
       );
     } );
 
-    return connectDragSource(
-      <g className="state subnet" id={data.id} onClick={this.clickHandler}
-        onMouseDown={this.onMouseDown}>
+    return (
+      <g className="state subnet" id={data.id} onMouseUp={this.onMouseUp}>
         <rect className="state-rect" x={x} y={y}
           width={width + 'px'} height={height + 'px'} rx={r} ry={r}></rect>
         <text className="state-txt" x={x+7} y={y+21}>{this.props.data.short('name', 11)}</text>
@@ -131,8 +69,7 @@ class Subnet extends React.Component {
 
 Subnet.propTypes = {
   data: PropTypes.instanceOf(SubnetModel).isRequired,
-  zoomedDiff: PropTypes.func.isRequired,
   setMouseOffset: PropTypes.func.isRequired
 };
 
-export default DragSource(Types.SUBNET, subnetSource, collect)(Subnet);
+export default DragNode('subnet')(Subnet);

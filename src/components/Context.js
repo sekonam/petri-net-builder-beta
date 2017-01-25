@@ -108,12 +108,12 @@ class Context extends React.Component {
 
   canChangeTranslate() {
     const {dragging} = this.props;
-    let allow = true;
 
     for (let name in dragging) {
-      allow = allow && !dragging[name]
+      if (dragging[name]) return false;
     }
-    return allow;
+
+    return true;
   }
 
   mouseDownHandler(e) {
@@ -130,7 +130,7 @@ class Context extends React.Component {
   }
 
   mouseUpHandler(e) {
-    if (this.canChangeTranslate() && this.state.mouseDown) {
+    if (this.state.mouseDown) {
       this.setState({
         mouseDown: null,
         translateX: 0,
@@ -198,7 +198,6 @@ class Context extends React.Component {
 
       subnets = query.subnets().cmap( (subnet, key) => (
         <Subnet data={subnet} key={key}
-          zoomedDiff={this.zoomedDiff}
           setMouseOffset={this.setMouseOffset} />
       ) ),
 

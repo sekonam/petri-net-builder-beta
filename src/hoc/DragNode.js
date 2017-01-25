@@ -2,11 +2,11 @@ import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import Drag from './Drag.js';
 
-export default function DragNode(entityType) {
-  const methods = Store.instance,
-    query = Query.instance;
+export default function DragNode(entityName) {
 
-  return Drag(entityType,
+  return Drag(
+    entityName,
+
     function (data) {
       this.start = {
         x: data.x,
@@ -15,15 +15,23 @@ export default function DragNode(entityType) {
     },
 
     function (data, shift) {
-      diff = query.zoom.offset(shift);
-      methods[entityType].set( data.id, {
+      const diff = Query.instance.zoom.offset(shift);
+      Store.instance[entityName].set( data.id, {
         x: this.start.x + diff.x,
         y: this.start.y + diff.y
       } );
     },
 
-    (data) => methods[entityType].dragging(data.id),
+    function (data) {
+      Store.instance[entityName].dragging(data.id);
+    },
 
-    (data) => methods[entityType].dragging(null)
+    function (data) {
+      Store.instance[entityName].dragging(null);
+    },
+
+    function (data) {
+      Store.instance[entityName].edit(data.id);
+    }
   );
 };
