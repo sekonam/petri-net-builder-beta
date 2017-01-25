@@ -4,7 +4,6 @@ import { DragSource } from 'react-dnd';
 import {NodeNames} from '../core/Entities.js';
 import Store from '../core/Store.js';
 import Query from '../core/Query.js';
-import Types from './Types.js';
 import GroupModel from './../models/GroupModel.js';
 import CircleButton from './CircleButton.js';
 
@@ -104,4 +103,4 @@ Group.propTypes = {
     zoomedDiff: PropTypes.func.isRequired
 };
 
-export default DragSource(Types.GROUP, groupSource, collect)(Group);
+export default DragSource('group', groupSource, collect)(Group);

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import {EntityFactory, EntityNames, NodeGroupNames} from './Entities.js';
+import {EntityFactory, EntityNames, NodeNames, NodeGroupNames} from './Entities.js';
 import StorageEngine from './StorageEngine.js';
 
 import EngineModel from '../models/EngineModel.js';
@@ -110,7 +110,7 @@ export default function Store(setState) {
     }
   }
 
-  EntityNames.forEach( (entityName) => {
+  NodeNames.forEach( (entityName) => {
     methods[entityName].add = handlerFactory.add( entityName, (state, entity) => {
       entity.netId = state.active.net.id;
 
@@ -157,7 +157,7 @@ export default function Store(setState) {
     group.netId = state.active.net.id;
   } );
 
-  EntityNames.forEach( (entityName) => {
+  NodeNames.forEach( (entityName) => {
     methods[entityName].remove = handlerFactory.remove(entityName, (state, id) => {
       state.db[ s(entityName) ]
         .valueById(id)
