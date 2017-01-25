@@ -38,10 +38,11 @@ export default class Query {
     NodeGroupNames.forEach( (entityName) => {
 
       this[ s(entityName) ] = (ids = null) => {
-        if (!state.active.net) return [];
+        if (!state.current.net) return [];
 
         let entities = state.db[ s(entityName) ].filter(
-          (entity) => entity.netId == state.active.net.id
+          (entity) => entity.netId == state.current.net.id
+            && (!state.active.data || state.active.data.id != entity.id)
         );
 
         if (ids) {
@@ -72,10 +73,10 @@ export default class Query {
     };
 
     this.arcs = (ids = null) => {
-      if (!state.active.net) return [];
+      if (!state.current.net) return [];
 
       let entities = state.db.arcs.filter(
-        (entity) => this.arc.netId(entity.id) == state.active.net.id
+        (entity) => this.arc.netId(entity.id) == state.current.net.id
       );
 
       if (ids) {
