@@ -42,16 +42,6 @@ export default class PlaceForm extends React.Component {
               onChange={(e) => methods.save('name', e.target.value)} />
           </FormGroup>
           <FormGroup>
-            <ControlLabel>Place Width</ControlLabel>
-            <FormControl type="text" value={data.width}
-              onChange={(e) => tmethods.save('width', this.intVal(e.target.value))} />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel>Place Height</ControlLabel>
-            <FormControl type="text" value={data.height}
-              onChange={(e) =>methods.save('height', this.intVal(e.target.value))} />
-          </FormGroup>
-          <FormGroup>
             <ControlLabel>Transition Color</ControlLabel>
             <FormControl type="text" value={data.color}
               onChange={(e) =>methods.save('color', e.target.value)} />

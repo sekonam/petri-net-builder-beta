@@ -10,7 +10,7 @@ export default class SubnetModel extends NodeModel {
       name: 'Subnet name',
       width: 85,
       height: 55,
-      r: 15,
+      r: 25,
       color: ''
     });
 

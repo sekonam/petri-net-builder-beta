@@ -66,7 +66,7 @@ class Context extends React.Component {
         this.setSvgSize();
       }
 
-    }, 50);
+    }, 15);
     window.addEventListener('resize', this.setSvgSize);
   }
 
