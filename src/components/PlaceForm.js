@@ -52,6 +52,11 @@ export default class PlaceForm extends React.Component {
               onChange={(e) =>methods.save('height', this.intVal(e.target.value))} />
           </FormGroup>
           <FormGroup>
+            <ControlLabel>Transition Color</ControlLabel>
+            <FormControl type="text" value={data.color}
+              onChange={(e) =>methods.save('color', e.target.value)} />
+          </FormGroup>
+          <FormGroup>
             <ControlLabel>Place Shape</ControlLabel><br/>
             <Select value={this.intVal(data.r)} options={placeShapes}
               onChange={(val) => methods.save('r', this.intVal(val.value))} />

@@ -41,6 +41,11 @@ export default class TransitionForm extends React.Component {
             <FormControl type="text" value={data.height}
               onChange={(e) =>methods.save('height', this.intVal(e.target.value))} />
           </FormGroup>
+          <FormGroup>
+            <ControlLabel>Transition Color</ControlLabel>
+            <FormControl type="text" value={data.color}
+              onChange={(e) =>methods.save('color', e.target.value)} />
+          </FormGroup>
           <SocketList data={data.socketIds} />
           <FormGroup className="center">
             <Button onClick={() => methods.transition.remove(data.id)}

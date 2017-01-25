@@ -34,7 +34,7 @@ export default class SubnetForm extends React.Component {
           <FormGroup>
             <ControlLabel>Subnet Radius</ControlLabel>
             <FormControl type="text" value={data.r}
-              onChange={(e) => tmethods.save('r', this.intVal(e.target.value))} />
+              onChange={(e) => methods.save('r', this.intVal(e.target.value))} />
           </FormGroup>
           <FormGroup>
             <ControlLabel>Subnet Color</ControlLabel>
