@@ -27,7 +27,7 @@ export default class HandlerForm extends React.Component {
               onChange={(e) => methods.save('name', e.target.value)} />
           </FormGroup>
           <FormGroup controlId="EventsSelectMultiple">
-            <ControlLabel>Events To Activate Handler</ControlLabel>
+            <ControlLabel>Autocall Events</ControlLabel>
             <Select multi={true} value={selectedEvents} options={events}
               onChange={(val) => methods.save('events',
                 typeof val == 'undefined' ? [] : val.cmap( (el) => el.value ) )} />
