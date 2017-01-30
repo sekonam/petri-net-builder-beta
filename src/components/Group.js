@@ -6,7 +6,7 @@ import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import GroupModel from './../models/GroupModel.js';
 
-import Node from './Node.js';
+import NodeByType from './NodeByType.js';
 import CircleButton from './CircleButton.js';
 
 const groupSource = {
@@ -89,7 +89,7 @@ class Group extends React.Component {
       NodeNames.forEach( (nodeName) => {
         data[nodeName + 'Ids'].forEach( (nodeId) => {
           const node = query[nodeName].get(nodeId);
-          entities.push( <Node type={nodeName} data={node}
+          entities.push( <NodeByType type={nodeName} data={node}
             key={node.id} setMouseOffset={setMouseOffset} /> );
         } );
       } );
@@ -100,8 +100,6 @@ class Group extends React.Component {
             rx={INDENT} ry={INDENT} className="group-rect"/>
           <g className="header">
             <text x={x+10} y={y+18} className="group-header">{data.name}</text>
-            <CircleButton x = {x+w-18} y = {y+15} caption="E"
-              clickHandler={() => methods.group.edit(data.id)}/>
           </g>
           {entities}
           {this.props.children}

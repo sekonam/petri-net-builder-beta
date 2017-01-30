@@ -89,29 +89,30 @@ svg.context {
   fill:#ccc;
 }
 
-.state {
+.node {
   cursor: move;
   opacity:1;
 }
-.state-rect {
+.node-rect {
   fill:#000;
   stroke:#fff;
   stroke-width:1;
 }
-.subnet .state-rect {
+.subnet .node-rect {
   fill:#003000;
 }
-.place .state-rect {
+.place .node-rect {
   fill:#000030;
 }
-.state-txt {
-  fill:#ddd;
+.node-txt {
+  fill:#fff;
   font-size: 10pt;
+  text-shadow: 1px 1px 0 black;
 }
-.state:hover .state-rect {
+.node:hover .node-rect {
   stroke-width:2px;
 }
-.state:hover .state-txt {
+.node:hover .node-txt {
   fill:#fff;
 }
 
@@ -194,7 +195,4 @@ svg.context {
 .dim-layer {
   fill:#000;
   opacity: 0.5;
-}
-.groups, .arcs, .states {
-  z-index: 0;
 }
