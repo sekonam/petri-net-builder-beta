@@ -59,14 +59,13 @@ export default class Engine extends React.Component {
       query = this.query,
       active = this.state.active,
 
-      leftMenuBlocks = [ 'event', 'handler', ].map( (itemType, key) => {
+      leftMenuBlocks = [ 'event', 'handler', ].map( (entityType, key) => {
         return (
         <LeftMenuBlock key={key}
-          itemName={itemType}
-          activeId={this.state.active[itemType]}
-          data={query[itemType].options()}
-          editHandler={methods[itemType].edit}
-          addHandler={methods[itemType].add}/>
+          itemName={entityType}
+          data={query[entityType].options()}
+          editHandler={methods[entityType].edit}
+          addHandler={methods[entityType].add}/>
       )});
 
     let formComp = '';

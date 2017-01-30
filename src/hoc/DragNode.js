@@ -31,7 +31,7 @@ export default function DragNode(entityName) {
     },
 
     function (data) {
-      Store.instance[entityName].edit(data.id);
+      Store.instance[entityName].active(data.id);
     }
   );
 };

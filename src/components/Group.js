@@ -5,6 +5,7 @@ import {NodeNames} from '../core/Entities.js';
 import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import GroupModel from './../models/GroupModel.js';
+import Node from './Node.js';
 import CircleButton from './CircleButton.js';
 
 const groupSource = {
@@ -69,7 +70,7 @@ class Group extends React.Component {
   }
 
   render() {
-    const {data, connectDragSource} = this.props,
+    const {data, connectDragSource, setMouseOffset} = this.props,
       query = Query.instance;
 
     if (!query.group.empty(data.id)) {
@@ -81,6 +82,16 @@ class Group extends React.Component {
         w = max.x - min.x + 2 * INDENT,
         h = max.y - min.y + 2 * INDENT + HEADER;
 
+      let entities = [];
+
+      NodeNames.forEach( (nodeName) => {
+        data[nodeName + 'Ids'].forEach( (nodeId) => {
+          const node = query[nodeName].get(nodeId);
+          entities.push( <Node type={nodeName} data={node}
+            key={node.id} setMouseOffset={setMouseOffset} /> );
+        } );
+      } );
+
       return connectDragSource(
         <g className={'group ' + data.typeName}>
           <rect x={x} y={y} width={w} height={h}
@@ -90,6 +101,7 @@ class Group extends React.Component {
             <CircleButton x = {x+w-18} y = {y+15} caption="E"
               clickHandler={() => Store.instance.group.edit(data.id)}/>
           </g>
+          {entities}
         </g>
       );
     }

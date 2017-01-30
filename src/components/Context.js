@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import { default as TouchBackend } from 'react-dnd-touch-backend';
 import { DragDropContext } from 'react-dnd';
 
+import {StatusNames, NodeNames} from '../core/Entities.js';
 import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 
@@ -185,37 +186,57 @@ class Context extends React.Component {
     );
   }
 
+  nodeTag(entityName, entity) {
+    switch (entityName) {
+      case 'place':
+        return (
+          <Place data={entity} key={entity.id} setMouseOffset={this.setMouseOffset} />
+        );
+        break;
+      case 'subnet':
+        return (
+          <Subnet data={entity} key={entity.id} setMouseOffset={this.setMouseOffset} />
+        );
+        break;
+      case 'transition':
+        return (
+          <Transition data={entity} key={entity.id} setMouseOffset={this.setMouseOffset} />
+        );
+        break;
+      case 'group':
+        return (
+          <Group data={entity} zoomedDiff={this.zoomedDiff} key={entity.id}
+             setMouseOffset={this.setMouseOffset}/>
+        );
+        break;
+    }
+  }
+
   render() {
     const { drawing } = this.props,
       methods = Store.instance,
       query = Query.instance,
       {width, height} = this.state.svgSize,
-      topEntities = [],
-      addOrSave = (entityName, id, cnt) => {
-        if (query[entityName].activeOrDragging(id)) {
-          topEntities.push(cnt);
-          return '';
-        }
+      groupEntityIds = query.groupEntityIds(),
 
-        return cnt;
-      },
+      groups = query.groupsNotActive()
+        .cmap( (group, key) => (
+          <Group data={group} zoomedDiff={this.zoomedDiff}
+            key={group.id} setMouseOffset={this.setMouseOffset} />
+        ) ),
 
-      groups = query.groups().cmap( (group, key) => addOrSave('group', group.id, (
-        <Group data={group} zoomedDiff={this.zoomedDiff} key={group.id} />
-      ) ) ),
-
-      transitions = query.transitions()
-        .cmap( (transition, key) => addOrSave('transition', transition.id, (
+      transitions = query.transitionsNotActive(null, groupEntityIds)
+        .cmap( (transition, key) => (
           <Transition data={transition} key={transition.id} setMouseOffset={this.setMouseOffset} />
-        ) ) ),
+        ) ),
 
-      subnets = query.subnets().cmap( (subnet, key) => addOrSave('subnet', subnet.id, (
+      subnets = query.subnetsNotActive(null, groupEntityIds).cmap( (subnet, key) => (
         <Subnet data={subnet} key={subnet.id} setMouseOffset={this.setMouseOffset} />
-      ) ) ),
+      ) ),
 
-      places = query.places().cmap( (place, key) => addOrSave('place', place.id, (
+      places = query.placesNotActive(null, groupEntityIds).cmap( (place, key) => (
         <Place data={place} key={place.id} setMouseOffset={this.setMouseOffset} />
-      ) ) ),
+      ) ),
 
       arcs = query.arcs().cmap( (arc, key) => (
         <Arc data={arc} key={arc.id} editHandler={() => methods.arc.edit(arc.id)} />
@@ -232,6 +253,12 @@ class Context extends React.Component {
         transformOrigin: '50% 50%'
       };
 
+    let topEntities = [];
+
+    if (query.active.isSet()) {
+      topEntities.push( this.nodeTag(query.active.type, query.active.data) );
+    }
+
     let dimLayerStyles = {
         display: 'none'
       };
@@ -247,7 +274,6 @@ class Context extends React.Component {
         onWheel={ (e) => methods.zoom.change( e.deltaY > 0 ? 0.05 : -0.05 ) }
         ref={ (el) => { this.svg = el; } } className="context" >
         <g className="diagram-objects" style={{transform}}>
-          {this.drawTactical()}
             {groups}
             {drawingArc}
             {arcs}
