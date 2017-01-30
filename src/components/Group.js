@@ -68,6 +68,12 @@ class Group extends React.Component {
 
   constructor(props) {
     super(props);
+    this.onMouseUp = this.onMouseUp.bind(this);
+  }
+
+  onMouseUp(e) {
+    const methods = Store.instance;
+    methods.group.active(this.props.data.id);
   }
 
   render() {
@@ -95,7 +101,7 @@ class Group extends React.Component {
       } );
 
       return connectDragSource(
-        <g className={'group ' + data.typeName} onClick={() => methods.group.active(data.id)}>
+        <g className={'group ' + data.typeName} onClick={this.onMouseUp}>
           <rect x={x} y={y} width={w} height={h}
             rx={INDENT} ry={INDENT} className="group-rect"/>
           <g className="header">

@@ -55,6 +55,7 @@ export default function Drag(
           };
           this.onMouseDown = this.onMouseDown.bind(this);
           this.onMouseUp = this.onMouseUp.bind(this);
+          this.onClick = this.onClick.bind(this);
         }
 
         onMouseDown(e) {
@@ -66,17 +67,22 @@ export default function Drag(
             this.setState({
               wasDragged: false
             });
-          } else {
-            clickCallback(this.props.data);
           }
           mouseUpCallback(this.props.data);
+        }
+
+        onClick(e) {
+          clickCallback(this.props.data);
+          e.stopPropagation();
         }
 
         render() {
           const { connectDragSource, data, setMouseOffset } = this.props;
 
           return connectDragSource(
-            <g onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp}>
+            <g onMouseDown={this.onMouseDown}
+              onMouseUp={this.onMouseUp}
+              onClick={this.onClick}>
               <WrappedComponent data={data} setMouseOffset={setMouseOffset} />
             </g>
           );
