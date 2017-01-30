@@ -6,9 +6,7 @@ import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import GroupModel from './../models/GroupModel.js';
 
-import Place from './Place.js';
-import Transition from './Transition.js';
-import Subnet from './Subnet.js';
+import Node from './Node.js';
 import CircleButton from './CircleButton.js';
 
 const groupSource = {
@@ -75,15 +73,7 @@ class Group extends React.Component {
   render() {
     const {data, connectDragSource, setMouseOffset} = this.props,
       query = Query.instance,
-      placesTags = query.places(data.placeIds).map( (place) => (
-        <Place data={place} key={place.id} setMouseOffset={setMouseOffset} />
-      ) ),
-      subnetsTags = query.subnets(data.subnetIds).map( (subnet) => (
-        <Subnet data={subnet} key={subnet.id} setMouseOffset={setMouseOffset} />
-      ) ),
-      transitionTags = query.transitions(data.transitionIds).map( (transition) => (
-        <Transition data={transition} key={transition.id} setMouseOffset={setMouseOffset} />
-      ) );
+      methods = Store.instance;
 
     if (!query.group.empty(data.id)) {
       const {min, max} = query.minmax(data.id);
@@ -94,18 +84,26 @@ class Group extends React.Component {
         w = max.x - min.x + 2 * INDENT,
         h = max.y - min.y + 2 * INDENT + HEADER;
 
+      let entities = [];
+
+      NodeNames.forEach( (nodeName) => {
+        data[nodeName + 'Ids'].forEach( (nodeId) => {
+          const node = query[nodeName].get(nodeId);
+          entities.push( <Node type={nodeName} data={node}
+            key={node.id} setMouseOffset={setMouseOffset} /> );
+        } );
+      } );
+
       return connectDragSource(
-        <g className={'group ' + data.typeName}>
+        <g className={'group ' + data.typeName} onClick={() => methods.group.active(data.id)}>
           <rect x={x} y={y} width={w} height={h}
             rx={INDENT} ry={INDENT} className="group-rect"/>
           <g className="header">
             <text x={x+10} y={y+18} className="group-header">{data.name}</text>
             <CircleButton x = {x+w-18} y = {y+15} caption="E"
-              clickHandler={() => Store.instance.group.edit(data.id)}/>
+              clickHandler={() => methods.group.edit(data.id)}/>
           </g>
-          {transitionTags}
-          {subnetsTags}
-          {placesTags}
+          {entities}
           {this.props.children}
         </g>
       );

@@ -22,10 +22,10 @@ LeftMenuElement.propTypes = {
 
 export default class LeftMenuBlock extends React.Component {
   render() {
-    const {data, itemName, activeId} = this.props,
+    const {data, itemName} = this.props,
       buttons = data.cmap( (el,key) =>
         <LeftMenuElement clickHandler={() => { this.props.editHandler(el.value) }}
-          text={el.label} key={key} style={activeId === el.value ? 'success' : 'default'} />
+          text={el.label} key={key} style='default' />
       );
     return (
       <div className="left-menu-block">
@@ -44,6 +44,5 @@ LeftMenuBlock.propTypes = {
   itemName: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   editHandler: PropTypes.func.isRequired,
-  addHandler: PropTypes.func.isRequired,
-  activeId: PropTypes.string
+  addHandler: PropTypes.func.isRequired
 };

@@ -1,4 +1,4 @@
-import {EntityNames, NodeNames, NodeGroupNames} from './Entities.js';
+import {EntityNames, NodeNames, NodeGroupNames, StatusNames} from './Entities.js';
 
 export default class Query {
 
@@ -6,6 +6,11 @@ export default class Query {
     Query.instance = this;
 
     const s = (name) => name + 's';
+
+    StatusNames.forEach( (statusName) => {
+      this[statusName] = state[statusName];
+      this[statusName].isSet = () => state[statusName].data ? true : false;
+    } );
 
     const queryFactory = {
 
@@ -23,8 +28,7 @@ export default class Query {
 
     };
 
-    for (let key in EntityNames) {
-      const entityName = EntityNames[key];
+    EntityNames.forEach( (entityName) => {
       this[ s(entityName) ] = state.db.getAll( entityName );
 
       this[entityName] = {};
@@ -32,29 +36,73 @@ export default class Query {
       for (let methodName in queryFactory) {
         this[entityName][methodName] = queryFactory[methodName](entityName);
       }
-    }
-
-    NodeGroupNames.forEach( (entityName) => {
-      this[ s(entityName) ] = (ids = null) => {
-        if (!state.active.net) return [];
-
-        let entities = state.db[ s(entityName) ].filter(
-          (entity) => entity.netId == state.active.net.id
-        );
-
-        if (ids) {
-          entities = entities.filter( (entity) => ids.has(entity.id) );
-        }
-
-        return entities;
-      };
     } );
 
+    NodeGroupNames.forEach( (entityName) => {
+
+      this[entityName].activeOrDragging = (id) => {
+        const dragging = state.dragging[entityName];
+
+        if (this.active.isSet() && this.active.data.id == id) return true;
+//        if (dragging && dragging == id) return true;
+
+        return false;
+      }
+    } );
+
+    const listFunc = (entityName, condition) => (ids = null, exceptIds = null) => {
+      if (!state.current.net) return [];
+
+      let entities = state.db[ s(entityName) ].filter(condition);
+
+      if (ids) {
+        entities = entities.filter( (entity) => ids.has(entity.id) );
+      }
+
+      if (exceptIds) {
+        entities = entities.filter( (entity) => !exceptIds.has(entity.id) );
+      }
+
+      return entities;
+    };
+
+    NodeGroupNames.forEach( (entityName) => {
+      this[ s(entityName) ] = listFunc( entityName,
+        (entity) => entity.netId == state.current.net.id
+      );
+
+      this[ s(entityName) + 'NotActive' ] = listFunc( entityName,
+        (entity) => entity.netId == state.current.net.id
+          && !this[entityName].activeOrDragging(entity.id)
+      );
+    } );
+
+    this.subnet.net = (id) => this.nets.find( (net) => net.subnetId == id );
+
+    this.groupEntityIds = () => {
+      let ids = [];
+
+      NodeNames.forEach( (nodeName) => {
+        this.groups().forEach( (group) => {
+          ids = ids.concat( group[ nodeName + 'Ids' ] );
+        } );
+      } );
+
+      return ids;
+    };
+
+    this.arc.netId = (id) => {
+      const arc = this.arc.get(id),
+        socket = this.socket.get(arc.startSocketId),
+        node = this[socket.nodeType].get(socket.nodeId);
+      return node.netId;
+    };
+
     this.arcs = (ids = null) => {
-      if (!state.active.net) return [];
+      if (!state.current.net) return [];
 
       let entities = state.db.arcs.filter(
-        (entity) => this.arc.netId(entity.id) == state.active.net.id
+        (entity) => this.arc.netId(entity.id) == state.current.net.id
       );
 
       if (ids) {

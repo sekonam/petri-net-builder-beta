@@ -9,28 +9,6 @@ import ViewportModel from '../models/ViewportModel.js';
 export default function Store(setState) {
   Store.instance = this;
 
-  this.state = {
-    db: new EngineModel( StorageEngine.loadFromStorage( 'db' )),
-    viewport: new ViewportModel(),
-    active: {},
-    form: {
-      data: null,
-      type: null
-    },
-    drawing: {
-      arc: null
-    },
-    dragging: {}
-  };
-
-  EntityNames.forEach( (key) => {
-    this.state.active[key] = null;
-  } );
-
-  NodeGroupNames.forEach( (key) => {
-    this.state.dragging[key] = null;
-  } );
-
   const s = (entityName) => entityName + 's';
 
   const handlerFactory = {
@@ -56,26 +34,18 @@ export default function Store(setState) {
       return state;
     },
 
-    edit: (entityName) => (id) => (state) => {
-      state.form.data = id ? state.db[ s(entityName) ].valueById(id) : null;
-      state.form.type = id ? entityName : null;
-      return state;
-    },
-
     remove: (entityName, callback = null) => (id) => (state) => {
       const data = state.db[ s(entityName) ],
         key = data.indexById(id);
 
       if (key > -1) {
 
-        if (state.form.data && id == state.form.data.id) {
-          state.form.data = null;
-          state.form.type = null;
-        }
-
-        if (state.active[entityName] && id == state.active[entityName].id ) {
-          state.active[entityName] = null;
-        }
+        ['form', 'active'].forEach( (satatusName) => {
+          if (state[satatusName].data && id == state[satatusName].data.id) {
+            state[satatusName].data = null;
+            state[satatusName].type = null;
+          }
+        } );
 
         if (callback) {
           callback.call(null, state, id);
@@ -87,16 +57,14 @@ export default function Store(setState) {
       return state;
     },
 
-    active: (entityName) => (id) => (state) => {
-      state.active[entityName] = id ? state.db[ s(entityName) ].valueById(id) : null;
-
-      if (id && !state.active[entityName].subnetId) {
-        state.form.data = state.db[ s(entityName) ].valueById(id);
-        state.form.type = entityName;
-      }
-
+    status: (entityName) => (satatusName, id) => (state) => {
+      state[satatusName].data = state.db[ s(entityName) ].valueById(id);
+      state[satatusName].type = entityName;
       return state;
-    }
+    },
+
+    edit: (entityName) => (id) => handlerFactory.status (entityName) ('form', id)
+
   };
 
   const methods = {};
@@ -112,7 +80,7 @@ export default function Store(setState) {
 
   NodeNames.forEach( (entityName) => {
     methods[entityName].add = handlerFactory.add( entityName, (state, entity) => {
-      entity.netId = state.active.net.id;
+      entity.netId = state.current.net.id;
 
       for (let i=0; i<2; i++) {
         methods.socket.add({
@@ -149,12 +117,12 @@ export default function Store(setState) {
 
   methods.net.add = handlerFactory.add( 'net', (state, net) => {
     if (!net.subnetId) {
-      state.active.net = net;
+      state.current.net = net;
     }
   } );
 
   methods.group.add = handlerFactory.add( 'group', (state, group) => {
-    group.netId = state.active.net.id;
+    group.netId = state.current.net.id;
     group.name = (group.type ? 'Milestone' : 'Phase') + ' name';
   } );
 
@@ -195,20 +163,6 @@ export default function Store(setState) {
         handler.events.splice(eventKey, 1);
       }
     } );
-
-  /*      state.db.arcs.forEach( (arc) => {
-
-      [ 'start', 'finish' ].forEach( (name) => {
-        const data = arc[name].events,
-          eventKey = data.indexOf(eid);
-
-        if ( eventKey > -1 ) {
-          data.splice(eventKey, 1);
-        }
-      } );
-
-    } );
-    */
   } );
 
   methods.socket.remove = handlerFactory.remove( 'socket', (state, sid) => {
@@ -231,18 +185,27 @@ export default function Store(setState) {
     } );
   } );
 
-  methods.subnet.enter = (id) => (state) => {
-    return methods.net.active(
-      state.db.nets.find( (net) => net.subnetId == id ).id
-    )(state);
-  };
+  methods.subnet.enter = (id) => (state) => methods.net.current(
+    state.db.nets.find( (net) => net.subnetId == id ).id
+  )(state);
 
   NodeGroupNames.forEach( (entityName) => {
+    methods[entityName].active = (id) => (state) => {
+      state = methods[entityName] .status('active', id) (state);
+      state = methods[entityName] .status('form', id) (state);
+      return state;
+    };
+
     methods[entityName].dragging = (id) => (state) => {
       state.dragging[entityName] = id;
       return state;
     };
   } );
+
+  methods.net.current = (id) => (state) => {
+    state.current.net = state.db.nets.valueById(id);
+    return state;
+  };
 
   methods.arc.startDraw = (socket) => (state) => {
     if (socket.type) {
@@ -313,9 +276,32 @@ export default function Store(setState) {
     return state;
   } );
 
+  this.state = {
+    db: new EngineModel( StorageEngine.loadFromStorage( 'db' )),
+    viewport: new ViewportModel(),
+    active: {
+      data: null,
+      type: null
+    },
+    form: {
+      data: null,
+      type: null
+    },
+    current: {
+      net: null
+    },
+    drawing: {
+      arc: null
+    },
+    dragging: {}
+  };
+
+  NodeGroupNames.forEach( (key) => {
+    this.state.dragging[key] = null;
+  } );
 
   if (!_.isEmpty( this.state.db.nets) ) {
-    methods.net.active(this.state.db.nets[0].id)(this.state);
+    methods.net.current(this.state.db.nets[0].id)(this.state);
   }
 
 }

@@ -25,7 +25,16 @@ export default class Tree extends React.Component {
   }
 
   onToggle(node, toggled){
-    if (node.id) Store.instance[node.type].active(node.id);
+    const methods = Store.instance;
+
+    if (node.id) {
+      if (node.type == 'net') {
+        methods.net.current(node.id);
+        methods.net.edit(node.id);
+      } else {
+        methods[node.type].active(node.id);
+      }
+    }
 
     if (node.children) {
       node.toggled = toggled;

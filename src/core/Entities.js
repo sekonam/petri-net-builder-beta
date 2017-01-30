@@ -20,7 +20,8 @@ const EntityFactory = {
     group: (params) => new GroupModel(params)
   },
   EntityNames = ['place', 'transition', 'socket', 'arc', 'net', 'subnet', 'group', 'handler', 'event'],
-  NodeNames = ['place', 'subnet', 'transition',],
-  NodeGroupNames = ['place', 'subnet', 'transition', 'group',];
+  NodeNames = ['subnet', 'place', 'transition',],
+  NodeGroupNames = ['place', 'subnet', 'transition', 'group',],
+  StatusNames = ['active', 'form', ];
 
-export { EntityNames, NodeNames, NodeGroupNames, EntityFactory };
+export { EntityNames, NodeNames, NodeGroupNames, EntityFactory, StatusNames };
