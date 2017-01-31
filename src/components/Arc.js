@@ -5,14 +5,23 @@ import ArcModel from '../models/ArcModel.js';
 
 export default class Arc extends React.Component {
 
-  socketOffset(place, socket) {
-    const query = Query.instance,
-      sockets = query.sockets( place.socketIds ).filter( (el) => el.type == socket.type ),
+  socketOffset(socket, node, group) {
+    const query = Query.instance;
+    let socketIds = node.socketIds,
+      size = node;
+
+    if (group) {
+      socketIds = query.group.externalSocketIds(group.id);
+      size = query.group.size(group.id);
+    }
+
+    const sockets = query.sockets( socketIds ).filter( (el) => el.type == socket.type ),
       pos = sockets.indexOf(socket),
-      step = place.height / (sockets.length + 1);
+      step = size.height / (sockets.length + 1);
+
     return {
-      x: place.x + (socket.type ? place.width : 0),
-      y: place.y + step * (pos + 1)
+      x: size.x + (socket.type ? size.width : 0),
+      y: size.y + step * (pos + 1)
     };
   }
 
@@ -20,16 +29,19 @@ export default class Arc extends React.Component {
     const data = this.props.data,
       {offset} = this.props,
       query = Query.instance,
-      startPlace = query.socket.nodeId(data.startSocketId),
+
+      startNode = query.socket.node(data.startSocketId),
       startSocket = query.socket.get(data.startSocketId),
-      startOffset = this.socketOffset( startPlace, startSocket );
+      startGroup = query[startSocket.nodeType].minimized(startNode.id),
+      startOffset = this.socketOffset( startSocket, startNode, startGroup );
 
     let finishOffset = offset;
 
     if (data.finishSocketId) {
-      const finishPlace = query.socket.nodeId(data.finishSocketId),
-        finishSocket = query.socket.get(data.finishSocketId);
-      finishOffset = this.socketOffset( finishPlace, finishSocket );
+      const finishNode = query.socket.node(data.finishSocketId),
+        finishSocket = query.socket.get(data.finishSocketId),
+        finishGroup = query[finishSocket.nodeType].minimized(finishNode.id);
+      finishOffset = this.socketOffset( finishSocket, finishNode, finishGroup );
     }
 
     const a = startOffset,

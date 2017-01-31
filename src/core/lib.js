@@ -51,6 +51,17 @@ Array.prototype.spliceRecurcive = function (findFunc) {
   return count;
 };
 
+Array.prototype.unique = function() {
+    var a = this.concat();
+    for(var i=0; i<a.length; ++i) {
+        for(var j=i+1; j<a.length; ++j) {
+            if(a[i] === a[j])
+                a.splice(j--, 1);
+        }
+    }
+    return a;
+};
+
 Object.equals = function( x, y ) {
   if ( x === y ) return true;
     // if both x and y are null or undefined and exactly the same

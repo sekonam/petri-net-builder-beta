@@ -300,7 +300,6 @@ export default function Store(setState) {
     this.state.dragging[key] = null;
   } );
 
-console.log(this.state.db.nets);
   if (!_.isEmpty( this.state.db.nets) ) {
     methods.net.current(this.state.db.nets[0].id)(this.state);
   }

@@ -132,7 +132,8 @@ svg.context {
 .group .group-header {
   fill : #fff;
 }
-.group-rect {
+.group-rect,
+.group > .node > .node-rect {
   fill:#666;
   stroke:#222;
   stroke-width:1;

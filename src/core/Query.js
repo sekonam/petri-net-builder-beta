@@ -74,6 +74,124 @@ export default class Query {
       );
     } );
 
+    this.arc.netId = (id) => {
+      const arc = this.arc.get(id),
+        socket = this.socket.get(arc.startSocketId),
+        node = this[socket.nodeType].get(socket.nodeId);
+      return node.netId;
+    };
+
+    this.arcs = (ids = null) => {
+      if (!state.current.net) return [];
+
+      const minimizedGroups = this.groups().filter( (group) => group.minimized );
+      let internalArcIds = [];
+      minimizedGroups.forEach( (group) => {
+        internalArcIds = internalArcIds.concat(
+          this.group.internalArcs(group.id).map( (arc) => arc.id )
+        );
+      } );
+
+      let entities = state.db.arcs.filter(
+        (entity) => this.arc.netId(entity.id) == state.current.net.id
+          && !internalArcIds.has(entity.id)
+      );
+
+      if (ids) {
+        entities = entities.filter( (entity) => ids.has(entity.id) );
+      }
+
+      return entities;
+    };
+
+    this.arc.netId = (id) => {
+      const arc = this.arc.get(id),
+        socket = this.socket.get(arc.startSocketId),
+        node = this[socket.nodeType].get(socket.nodeId);
+      return node.netId;
+    };
+
+    this.group.nodes = (id) => {
+      let nodes = [],
+        group = this.group.get(id);
+      NodeNames.forEach((nodeName) => {
+        group[nodeName + 'Ids'] . forEach( (nid) => {
+          nodes.push( this[nodeName] . get(nid) );
+        });
+      });
+      return nodes;
+    };
+
+    this.group.socketIds = (id) => {
+      let socketIds = [];
+      this.group.nodes(id).forEach( (node) => {
+        socketIds = socketIds.concat( node.socketIds );
+      } );
+      return socketIds.unique();
+    };
+
+    this.group.arcs = (id, condition) => (
+      state.db.arcs.filter( (arc) => (
+        condition(arc, this.group.socketIds(id))
+      ) )
+    );
+
+    this.group.externalArcs = (id) => this.group.arcs( id,
+      (arc, socketIds) => socketIds.has(arc.startSocketId) ^ socketIds.has(arc.finishSocketId)
+    );
+
+    this.group.internalArcs = (id) => this.group.arcs( id,
+      (arc, socketIds) => socketIds.has(arc.startSocketId) && socketIds.has(arc.finishSocketId)
+    );
+
+    this.group.externalSocketIds = (id) => {
+      const socketIds = this.group.socketIds(id),
+        externalArcs = this.group.externalArcs(id);
+
+      let externalSocketIds = [];
+      externalArcs.forEach( (arc) => {
+        if (socketIds.has( arc.startSocketId )) {
+          externalSocketIds.push(arc.startSocketId);
+        }
+        if (socketIds.has( arc.finishSocketId )) {
+          externalSocketIds.push(arc.finishSocketId);
+        }
+      } );
+
+      return externalSocketIds.unique();
+    };
+
+    this.group.empty = (id) => {
+      let empty = true,
+        group = this.group.get(id);
+
+      NodeNames.forEach( (entityName) => {
+        empty = empty && !group[entityName + 'Ids'].length;
+      } );
+
+      return empty;
+    };
+
+    this.group.size = (id) => {
+      const group = this.group.get(id),
+        {min, max} = this.minmax(id),
+        INDENT = 10, HEADER = 20;
+      return {
+        x: min.x - INDENT,
+        y: min.y - INDENT - HEADER,
+        width: group.minimized ? group.width : max.x - min.x + 2 * INDENT,
+        height: group.minimized ? group.height : max.y - min.y + 2 * INDENT + HEADER
+      };
+    };
+
+    NodeNames.forEach( (nodeName) => {
+      this[nodeName].minimized = (id) => (
+        this.groups().find(
+          (group) => group.minimized && group[nodeName + 'Ids'].has(id)
+        )
+      )
+    } );
+
     this.subnet.net = (id) => this.nets.find( (net) => net.subnetId == id );
 
     this.groupsEntityIds = () => {
@@ -86,40 +204,6 @@ export default class Query {
       } );
 
       return ids;
-    };
-
-    this.arc.netId = (id) => {
-      const arc = this.arc.get(id),
-        socket = this.socket.get(arc.startSocketId),
-        node = this[socket.nodeType].get(socket.nodeId);
-      return node.netId;
-    };
-
-    this.arcs = (ids = null) => {
-      if (!state.current.net) return [];
-
-      let entities = state.db.arcs.filter(
-        (entity) => this.arc.netId(entity.id) == state.current.net.id
-      );
-
-      if (ids) {
-        entities = entities.filter( (entity) => ids.has(entity.id) );
-      }
-
-      return entities;
-    };
-
-    this.subnet.net = (id) => this.nets.find( (net) => net.subnetId == id );
-
-    this.group.empty = (id) => {
-      let empty = true,
-        group = this.group.get(id);
-
-      NodeNames.forEach( (entityName) => {
-        empty = empty && !group[entityName + 'Ids'].length;
-      } );
-
-      return empty;
     };
 
     this.freeNodes = () => {
@@ -144,14 +228,7 @@ export default class Query {
       return entities;
     };
 
-    this.arc.netId = (id) => {
-      const arc = this.arc.get(id),
-        socket = this.socket.get(arc.startSocketId),
-        node = this[socket.nodeType].get(socket.nodeId);
-      return node.netId;
-    };
-
-    this.socket.nodeId = (socketId) => {
+    this.socket.node = (socketId) => {
       const socket = state.db.sockets.valueById(socketId);
       return state.db[ s(socket.nodeType) ].valueById(socket.nodeId);
     };

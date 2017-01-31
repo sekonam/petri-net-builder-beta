@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 
 import Store from '../core/Store.js';
 import Query from '../core/Query.js';
-import NodeModel from '../models/PlaceModel.js';
 import Sockets from './Sockets.js';
 
 export default class Node extends React.Component {
