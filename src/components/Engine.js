@@ -37,7 +37,7 @@ export default class Engine extends React.Component {
 
   keyDownHandler(e) {
     if (e.keyCode == 27 && this.state.drawing.arc) {
-      this.methods.arc.escapeDraw();
+      Store.instance.arc.escapeDraw();
     }
   }
 
