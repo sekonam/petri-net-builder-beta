@@ -180,7 +180,7 @@ export default function Store(setState) {
       state.db[ s(entityName) ]
         .filter( (entity) => entity.netId == nid )
         .forEach( (entity) => {
-          methods[ entityName ].remove(entity.id);
+          methods[ entityName ].remove(entity.id)(state);
         } );
     } );
   } );

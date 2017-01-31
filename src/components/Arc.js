@@ -105,7 +105,7 @@ export default class Arc extends React.Component {
       <g className='arc' onClick={this.props.editHandler}>
         <defs>
           <marker className='arc-marker' id={'arrow-' + data.id} viewBox="0 0 10 10"
-            refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            refX="1" refY="5" markerWidth="4" markerHeight="4" orient="auto">
             <path d="M 0 0 L 10 5 L 0 10 z" />
           </marker>
         </defs>
