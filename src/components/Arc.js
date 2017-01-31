@@ -58,7 +58,9 @@ export default class Arc extends React.Component {
         y: b.y - a.y - diff.y
       };
 
-    if (Math.abs(tangentLen.x) <= minDiff / 2 && Math.abs(tangentLen.y) <= minDiff / 2) {
+    if (tangentLen.x <= minDiff / 2 && tangentLen.y <= minDiff / 2
+      && tangentLen.x >= -minDiff && tangentLen.y >= -minDiff
+    ) {
       pathStr = `M${a.x} ${a.y} L ${b.x} ${b.y}`;
       diff = { x: 0, y:0 };
     } else {
