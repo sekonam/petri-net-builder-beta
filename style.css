@@ -187,9 +187,9 @@ svg.context {
 .arc:hover .arc-line {
   stroke-width: 3;
 }
-.arc-circle {
+.arc-marker {
   stroke:#fff;
-  fill:#25a;
+  fill:#fff;
 }
 
 .dim-layer {
