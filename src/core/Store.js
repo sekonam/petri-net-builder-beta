@@ -150,7 +150,7 @@ export default function Store(setState) {
           state.db.nets.find(
             (net) => net.subnetId == id
           ).id
-        );
+        )(state);
       }
     } );
   } );
