@@ -29,16 +29,19 @@ export default class Socket extends React.Component {
   }
 
   render() {
-    const {data, x, y, socketHandlers} = this.props;
-    let className = 'socket';
+    const {data, x, y, socketHandlers} = this.props, W = 5;
+    let className = 'socket',
+      figure = (<rect x={x-W} y={y-W} width={2*W} height={2*W}
+        onClick={this.socketClick} />);
 
     if ( data.type ) {
       className += ' socket-finish';
+      figure = <circle cx={x} cy={y} r="5" onClick={this.socketClick}/>;
     }
 
     return (
       <g className={className}>
-        <circle cx={x} cy={y} r="5" onClick={this.socketClick}/>
+        {figure}
       </g>
     );
   }
