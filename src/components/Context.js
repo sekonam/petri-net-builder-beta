@@ -219,7 +219,7 @@ class Context extends React.Component {
       methods = Store.instance,
       query = Query.instance,
       {width, height} = this.state.svgSize,
-      groupEntityIds = query.groupEntityIds(),
+      groupsEntityIds = query.groupsEntityIds(),
 
       groups = query.groupsNotActive()
         .cmap( (group, key) => (
@@ -227,16 +227,16 @@ class Context extends React.Component {
             key={group.id} setMouseOffset={this.setMouseOffset} />
         ) ),
 
-      transitions = query.transitionsNotActive(null, groupEntityIds)
+      transitions = query.transitionsNotActive(null, groupsEntityIds)
         .cmap( (transition, key) => (
           <Transition data={transition} key={transition.id} setMouseOffset={this.setMouseOffset} />
         ) ),
 
-      subnets = query.subnetsNotActive(null, groupEntityIds).cmap( (subnet, key) => (
+      subnets = query.subnetsNotActive(null, groupsEntityIds).cmap( (subnet, key) => (
         <Subnet data={subnet} key={subnet.id} setMouseOffset={this.setMouseOffset} />
       ) ),
 
-      places = query.placesNotActive(null, groupEntityIds).cmap( (place, key) => (
+      places = query.placesNotActive(null, groupsEntityIds).cmap( (place, key) => (
         <Place data={place} key={place.id} setMouseOffset={this.setMouseOffset} />
       ) ),
 

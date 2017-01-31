@@ -41,12 +41,8 @@ export default class Query {
 
     NodeGroupNames.forEach( (entityName) => {
 
-      this[entityName].activeOrDragging = (id) => {
-        const dragging = state.dragging[entityName];
-
+      this[entityName].isActive = (id) => {
         if (this.active.isSet() && this.active.data.id == id) return true;
-//        if (dragging && dragging == id) return true;
-
         return false;
       }
     } );
@@ -74,13 +70,13 @@ export default class Query {
 
       this[ s(entityName) + 'NotActive' ] = listFunc( entityName,
         (entity) => entity.netId == state.current.net.id
-          && !this[entityName].activeOrDragging(entity.id)
+          && !this[entityName].isActive(entity.id)
       );
     } );
 
     this.subnet.net = (id) => this.nets.find( (net) => net.subnetId == id );
 
-    this.groupEntityIds = () => {
+    this.groupsEntityIds = () => {
       let ids = [];
 
       NodeNames.forEach( (nodeName) => {
