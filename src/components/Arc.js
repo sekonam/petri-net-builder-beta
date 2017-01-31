@@ -17,40 +17,40 @@ export default class Arc extends React.Component {
   }
 
   render() {
-    const arc = this.props.data,
+    const data = this.props.data,
       {offset} = this.props,
       query = Query.instance,
-      startPlace = query.socket.nodeId(arc.startSocketId),
-      startSocket = query.socket.get(arc.startSocketId),
+      startPlace = query.socket.nodeId(data.startSocketId),
+      startSocket = query.socket.get(data.startSocketId),
       startOffset = this.socketOffset( startPlace, startSocket );
 
     let finishOffset = offset;
 
-    if (arc.finishSocketId) {
-      const finishPlace = query.socket.nodeId(arc.finishSocketId),
-        finishSocket = query.socket.get(arc.finishSocketId);
+    if (data.finishSocketId) {
+      const finishPlace = query.socket.nodeId(data.finishSocketId),
+        finishSocket = query.socket.get(data.finishSocketId);
       finishOffset = this.socketOffset( finishPlace, finishSocket );
     }
 
     const a = startOffset, b = finishOffset,
       diff = {
-        x: b.x - a.x,
-        y: b.y - a.y
+        x: 100,//Math.min( 200, Math.abs(b.x - a.x) ),
+        y: 0
       },
       c = {
-        x: (a.x + b.x) / 2,
-        y: (a.y + b.y) / 2
+        x: a.x + diff.x,
+        y: a.y + diff.y
+      },
+      d = {
+        x: b.x - diff.x,
+        y: b.y - diff.y
       };
 
-    let pathStr = 'M' + a.x + ',' + a.y + ' ';
-    pathStr += 'C';
-    pathStr += a.x + diff.x / 3 * 2 + ',' + a.y + ' ';
-    pathStr += a.x + diff.x / 3 + ',' + b.y + ' ';
-    pathStr += b.x + ',' + b.y;
+    const pathStr = `M${a.x} ${a.y} C ${c.x} ${c.y}, ${d.x} ${d.y}, ${b.x} ${b.y}`;
 
     return (
       <g className='arc' onClick={this.props.editHandler}>
-        <path d={pathStr} className='arc-line' style={arc.color ? {stroke: arc.color} : {}} />
+        <path d={pathStr} className='arc-line' style={data.color ? {stroke: data.color} : {}} />
       </g>
     );
   }
