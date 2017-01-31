@@ -9,7 +9,8 @@ export default class Query {
 
     StatusNames.forEach( (statusName) => {
       this[statusName] = state[statusName];
-      this[statusName].isSet = () => state[statusName].data ? true : false;
+      this[statusName].isSet = () => state[statusName].data
+        && state[statusName].data.netId == state.current.net.id ? true : false;
     } );
 
     const queryFactory = {
