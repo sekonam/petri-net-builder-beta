@@ -29,59 +29,57 @@ export default class Arc extends React.Component {
     const data = this.props.data,
       {offset} = this.props,
       query = Query.instance,
+      startOffset = query.socket.offset(data.startSocketId),
+      startSide = query.socket.side(data.startSocketId);
 
-      startNode = query.socket.node(data.startSocketId),
-      startSocket = query.socket.get(data.startSocketId),
-      startGroup = query[startSocket.nodeType].minimized(startNode.id),
-      startOffset = this.socketOffset( startSocket, startNode, startGroup );
-
-    let finishOffset = offset;
+    let finishOffset = offset,
+      finishSide = 'left';
 
     if (data.finishSocketId) {
-      const finishNode = query.socket.node(data.finishSocketId),
-        finishSocket = query.socket.get(data.finishSocketId),
-        finishGroup = query[finishSocket.nodeType].minimized(finishNode.id);
-      finishOffset = this.socketOffset( finishSocket, finishNode, finishGroup );
+      finishOffset = query.socket.offset(data.finishSocketId);
+      finishSide = query.socket.side(data.finishSocketId)
     }
 
     const a = startOffset,
       b = finishOffset,
       maxShift = 10,
-      minDiff = 100;
-    let diff = {
-        x: minDiff,//Math.min( 200, Math.abs(b.x - a.x) ),
-        y: 0
-      },
+      minDiff = 100,
+      genDiff = (side) => side == 'left' || side == 'right'
+        ? {x: minDiff, y: 0}
+        : {x: 0, y: minDiff},
+      avg = (v1, v2) => (v1 + v2) / 2;
+    let diffA = genDiff(startSide),
+      diffB = genDiff(finishSide),
       pathStr,
       tangentLen = {
-        x: b.x - a.x - diff.x,
-        y: b.y - a.y - diff.y
+        x: b.x - a.x - avg(diffA.x, diffB.x),
+        y: b.y - a.y - avg(diffA.y, diffB.y)
       };
 
     if (tangentLen.x <= minDiff / 2 && tangentLen.y <= minDiff / 2
       && tangentLen.x >= -minDiff && tangentLen.y >= -minDiff
     ) {
       pathStr = `M${a.x} ${a.y} L ${b.x} ${b.y}`;
-      diff = { x: 0, y:0 };
+      diffA = diffB = { x: 0, y:0 };
     } else {
       const c = {
-          x: a.x + diff.x,
-          y: a.y + diff.y
+          x: a.x + (startSide == 'left' ? -1 : 1 ) * diffA.x,
+          y: a.y + (startSide == 'top' ? -1 : 1 ) * diffA.y
         },
         d = {
-          x: b.x - diff.x,
-          y: b.y - diff.y
+          x: b.x - (finishSide == 'left' ? 1 : -1 ) * diffB.x,
+          y: b.y - (finishSide == 'top' ? 1 : -1 ) * diffB.y
         };
       pathStr = `M${a.x} ${a.y} C ${c.x} ${c.y}, ${d.x} ${d.y}, ${b.x} ${b.y}`;
     }
 
     tangentLen = {
-        x: b.x - a.x - diff.x,
-        y: b.y - a.y - diff.y
+        x: b.x - a.x - avg(diffA.x, diffB.x),
+        y: b.y - a.y - avg(diffA.y, diffB.y)
       };
     const lineStart = {
-        x: a.x + diff.x/2 + tangentLen.x/2,
-        y: a.y + diff.y/2 + tangentLen.y/2
+        x: a.x + diffA.x/2 + tangentLen.x/2,
+        y: a.y + diffA.y/2 + tangentLen.y/2
       };
 
     let lineEnd = {

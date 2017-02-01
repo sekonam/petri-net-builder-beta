@@ -238,6 +238,8 @@ export default class Query {
       return undefined;
     };
 
+    this.socket.side = (id) => this.socketsBySide[id];
+
     this.socket.location = (sid) => {
       const socket = this.socket.get(sid),
         node = this.socket.node(sid),
@@ -501,7 +503,6 @@ export default class Query {
     this.socketsBySide = null;
     this.updateSocketsBySide = () => {
       this.socketsBySide = this.socketsBySideStruct();
-      console.log(this.socketsBySide);
     };
 
   }
