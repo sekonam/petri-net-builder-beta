@@ -22,6 +22,7 @@ const EntityFactory = {
   EntityNames = ['place', 'transition', 'socket', 'arc', 'net', 'subnet', 'group', 'handler', 'event'],
   NodeNames = ['subnet', 'place', 'transition',],
   NodeGroupNames = ['place', 'subnet', 'transition', 'group',],
-  StatusNames = ['active', 'form', ];
+  StatusNames = ['active', 'form', ],
+  SocketSides = ['top', 'right', 'bottom', 'left', ];
 
-export { EntityNames, NodeNames, NodeGroupNames, EntityFactory, StatusNames };
+export { EntityNames, NodeNames, NodeGroupNames, EntityFactory, StatusNames, SocketSides };

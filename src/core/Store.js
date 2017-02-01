@@ -128,14 +128,18 @@ export default function Store(setState) {
 
   NodeNames.forEach( (entityName) => {
     methods[entityName].remove = handlerFactory.remove(entityName, (state, id) => {
-      state.db[ s(entityName) ]
+      const socketIds = state.db[ s(entityName) ]
         .valueById(id)
-        .socketIds
-        .forEach( (sid) => {
-          state.db.arcs.spliceRecurcive(
-            (arc) => (arc.startSocketId == sid || arc.finishSocketId == sid)
-          );
-        } );
+        .socketIds;
+
+      socketIds.forEach( (sid) => methods.socket.remove (sid) (state) );
+
+      socketIds.forEach( (sid) => {
+        state.db.arcs.spliceRecurcive(
+          (arc) => (arc.startSocketId == sid || arc.finishSocketId == sid)
+        );
+      } );
+
 
       state.db.groups.forEach( (group) => {
         const key = group[entityName + 'Ids'].indexOf(id);

@@ -1,4 +1,4 @@
-import {EntityNames, NodeNames, NodeGroupNames, StatusNames} from './Entities.js';
+import {EntityNames, NodeNames, NodeGroupNames, StatusNames, SocketSides} from './Entities.js';
 
 export default class Query {
 
@@ -64,12 +64,17 @@ export default class Query {
     };
 
     NodeGroupNames.forEach( (entityName) => {
+      const defaultCondition = (entity) => (
+        entity.netId == state.current.net.id &&
+        (entityName == 'group' || !this[entityName].minimized(entity.id))
+      );
+
       this[ s(entityName) ] = listFunc( entityName,
-        (entity) => entity.netId == state.current.net.id
+        (entity) => defaultCondition(entity)
       );
 
       this[ s(entityName) + 'NotActive' ] = listFunc( entityName,
-        (entity) => entity.netId == state.current.net.id
+        (entity) => defaultCondition(entity)
           && !this[entityName].isActive(entity.id)
       );
     } );
@@ -102,13 +107,6 @@ export default class Query {
       }
 
       return entities;
-    };
-
-    this.arc.netId = (id) => {
-      const arc = this.arc.get(id),
-        socket = this.socket.get(arc.startSocketId),
-        node = this[socket.nodeType].get(socket.nodeId);
-      return node.netId;
     };
 
     this.group.nodes = (id) => {
@@ -184,6 +182,8 @@ export default class Query {
       };
     };
 
+    this.group.minimizedList = () => this.groups().filter( (group) => group.minimized );
+
     NodeNames.forEach( (nodeName) => {
       this[nodeName].minimized = (id) => (
         this.groups().find(
@@ -228,21 +228,138 @@ export default class Query {
       return entities;
     };
 
-    this.socket.node = (socketId) => {
-      const socket = state.db.sockets.valueById(socketId);
-      return state.db[ s(socket.nodeType) ].valueById(socket.nodeId);
+    this.socket.node = (sid) => {
+      const socket = state.db.sockets.valueById(sid);
+
+      if (socket) {
+        return state.db[ s(socket.nodeType) ].valueById(socket.nodeId);
+      }
+
+      return undefined;
     };
 
-    this.zoom = {
-      get: () => state.viewport.zoom,
-      offset: (diff) => {
-        const viewport = state.viewport;
+    this.socket.location = (sid) => {
+      const socket = this.socket.get(sid),
+        node = this.socket.node(sid),
+        group = this[socket.nodeType].minimized(node.id);
 
+      if (group) {
         return {
-          x: diff.x / viewport.zoom,
-          y: diff.y / viewport.zoom
+          data: group,
+          type: 'group'
         };
       }
+
+      return {
+        data: node,
+        type: socket.nodeType
+      };
+    };
+
+    this.socket.locationOffset = (sid) => {
+      const {data, type} = this.socket.location(sid);
+
+      if (type == 'group') {
+        return this.group.size(data.id);
+      }
+
+      const {x, y, width, height} = data;
+      return {x, y, width, height};
+    };
+
+    this.socketsBySideStruct = () => {
+      const typeNames = {
+          income: 'left',
+          outcome: 'right'
+        },
+        socketSides = {},
+
+        addSocketSide = (sid) => {
+          const socket = this.socket.get(sid);
+          socketSides[socket.id] = typeNames[ socket.typeName ];
+        };
+
+      NodeNames.forEach((nodeName) => {
+        this[ s(nodeName) ]() . forEach(
+          (node) => node.socketIds.forEach(
+            (sid) => addSocketSide(sid)
+          )
+        );
+      });
+
+      this.group.minimizedList().forEach(
+        (group) => this.group.externalSocketIds(group.id).forEach(
+          (sid) => addSocketSide(sid)
+        )
+      );
+
+      const calcRectCenter = (r) => ({
+          x: r.x + r.width/2,
+          y: r.y + r.height/2
+        });
+
+      this.arcs().forEach( (arc) => {
+        let start = this.socket.locationOffset(arc.startSocketId),
+          finish = this.socket.locationOffset(arc.finishSocketId),
+          {x:x1, y:y1} = calcRectCenter(start),
+          {x:x2, y:y2} = calcRectCenter(finish),
+          avg = {};
+
+        ['width', 'height'].forEach( (dim) => {
+          avg[dim] = (start[dim] + finish[dim]) / 2;
+        } );
+
+        if ( Math.abs(y2 - y1 ) + avg.width/2 > Math.abs(x2 - x1) + avg.height/2 ) {
+          socketSides[ arc.startSocketId ] = y1 > y2 ? 'top' : 'bottom';
+          socketSides[ arc.finishSocketId ] = y1 > y2 ? 'bottom' : 'top';
+        } else {
+          socketSides[ arc.startSocketId ] = x1 > x2 ? 'left' : 'right';
+          socketSides[ arc.finishSocketId ] = x1 > x2 ? 'right' : 'left';
+        }
+      } );
+
+      return socketSides;
+    };
+
+    this.socket.offset = (id) => {
+      const side = this.socketsBySide[id],
+        location = this.socket.location(id),
+        socketIds = location.type == 'group'
+          ? this.group.externalSocketIds(location.data.id)
+          : this.socket.node(id).socketIds,
+        sideSockets = socketIds.filter( (sid) => this.socketsBySide[sid] == side ),
+        {x, y, width, height} = this.socket.locationOffset(id),
+        position = sideSockets.indexOf(id),
+        count = sideSockets.length;
+      let step = 0;
+
+      switch (side) {
+        case 'top':
+          step = width / (count + 1);
+          return {
+            x: x + step * (position + 1),
+            y
+          };
+        case 'right':
+          step = height / (count + 1);
+          return {
+            x: x + width,
+            y: y + step * (position + 1)
+          };
+        case 'bottom':
+          step = width / (count + 1);
+          return {
+            x: x + step * (position + 1),
+            y: y + height
+          };
+        case 'left':
+          step = height / (count + 1);
+          return {
+            x: x,
+            y: y + step * (position + 1)
+          };
+      }
+      return null;
     };
 
     this.minmax = (gid = null) => {
@@ -258,9 +375,14 @@ export default class Query {
         };
 
       NodeNames.forEach( (entityName) => {
-        let ids = gid ? this.group.get (gid) [entityName+'Ids'] : null;
+        let entities = state.db[s(entityName)];
 
-        this [s(entityName)] (ids) . forEach( (entity) => {
+        if (gid) {
+          const ids = this.group.get(gid)[entityName+'Ids'];
+          entities = entities.filter( (entity) => ids.has(entity.id) );
+        }
+
+        entities.forEach( (entity) => {
           min.x = Math.min( min.x, entity.x );
           min.y = Math.min( min.y, entity.y );
           max.x = Math.max( max.x, entity.x + entity.width );
@@ -269,6 +391,18 @@ export default class Query {
       } );
 
       return {min, max};
+    };
+
+    this.zoom = {
+      get: () => state.viewport.zoom,
+      offset: (diff) => {
+        const viewport = state.viewport;
+
+        return {
+          x: diff.x / viewport.zoom,
+          y: diff.y / viewport.zoom
+        };
+      }
     };
 
     this.treebreadWorkspace = (activeId = null, toggled = []) => {
@@ -362,6 +496,13 @@ export default class Query {
       };
 
       return {tree: node, cursor};
-    }
+    };
+
+    this.socketsBySide = null;
+    this.updateSocketsBySide = () => {
+      this.socketsBySide = this.socketsBySideStruct();
+      console.log(this.socketsBySide);
+    };
+
   }
 }

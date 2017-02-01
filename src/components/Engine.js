@@ -41,6 +41,14 @@ export default class Engine extends React.Component {
     }
   }
 
+  componentWillMount() {
+    Query.instance.updateSocketsBySide();
+  }
+
+  componentWillUpdate() {
+    Query.instance.updateSocketsBySide();
+  }
+
   componentDidMount() {
     window.addEventListener( 'beforeunload', this.saveStateToStorage );
     document.body.addEventListener( 'keydown', this.keyDownHandler);
@@ -130,7 +138,7 @@ export default class Engine extends React.Component {
         <div className="right-sidebar">
           {formComp}
         </div>
-        <Context viewport={this.state.viewport} active={active}
+        <Context viewport={this.state.viewport}
           drawing={this.state.drawing} dragging={this.state.dragging} />
       </div>
     );

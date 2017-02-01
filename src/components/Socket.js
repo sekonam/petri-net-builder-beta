@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {Form, FormGroup, FormControl, ControlLabel, Checkbox} from 'react-bootstrap';
 
 import Store from '../core/Store.js';
+import Query from '../core/Query.js';
 import SocketModel from '../models/SocketModel.js';
 
 export default class Socket extends React.Component {
@@ -29,7 +30,10 @@ export default class Socket extends React.Component {
   }
 
   render() {
-    const {data, x, y, socketHandlers} = this.props, W = 5;
+    const query = Query.instance,
+      {data, socketHandlers} = this.props, W = 5,
+      {x, y} = query.socket.offset(data.id);
+
     let className = 'socket',
       figure = (<rect x={x-W} y={y-W} width={2*W} height={2*W}
         onClick={this.socketClick} />);
@@ -49,7 +53,5 @@ export default class Socket extends React.Component {
 
 Socket.propTypes = {
   data: PropTypes.instanceOf(SocketModel).isRequired,
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
   setMouseOffset: PropTypes.func.isRequired
 };
