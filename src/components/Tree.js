@@ -1,13 +1,14 @@
 import React from 'react';
 import {Treebeard} from 'react-treebeard';
 
+import {NodeNames, NodeGroupNames} from '../core/Entities.js';
 import Query from '../core/Query.js';
 import Store from '../core/Store.js';
 
 export default class Tree extends React.Component {
   constructor(props) {
     super(props);
-    this.state = Query.instance.treebreadWorkspace();
+    this.state = this.treebreadWorkspace();
     this.toggled = [];
     this.toggleClicked = false;
     this.onToggle = this.onToggle.bind(this);
@@ -18,7 +19,7 @@ export default class Tree extends React.Component {
       this.toggleClicked =  false;
     } else {
       const activeId = this.state.cursor ? this.state.cursor.id : null,
-        {tree, cursor} = Query.instance.treebreadWorkspace(activeId, this.toggled);
+        {tree, cursor} = this.treebreadWorkspace(activeId, this.toggled);
       if (cursor) cursor.active = true;
       this.setState({ tree, cursor });
     }
@@ -66,5 +67,100 @@ export default class Tree extends React.Component {
     return (
       <Treebeard data={this.state.tree} onToggle={this.onToggle} />
     );
+  }
+
+  treebreadWorkspace(activeId = null, toggled = []) {
+    const query = Query.instance,
+      s = (name) => name + 's';
+
+    let cursor = null;
+    const node = {
+      name: 'Workspace',
+      toggled: true,
+      children: query.nets().filter( (net) => !net.subnetId ).map( (net) => {
+        let entities = {};
+
+        NodeGroupNames.forEach( (entityName) => {
+          entities[entityName] = query.state.db[ s(entityName) ]
+            .filter( (entity) => entity.netId == net.id );
+        } );
+
+        const node = {
+          id: net.id,
+          type: 'net',
+          name: net.name,
+          toggled: toggled.indexOf(net.id) > -1,
+          children: entities.group.map( (group) => {
+
+            const node = {
+              id: group.id,
+              type: 'group',
+              name: group.name,
+              toggled: toggled.indexOf(group.id) > -1,
+              children: []
+            };
+
+            NodeNames.forEach( (entityName) => {
+              node.children = node.children.concat(
+                group[entityName + 'Ids'].map( (id) => {
+                  const entity = query[entityName].get(id),
+                    key = entities[entityName].indexById(id);
+
+                  if (key > -1) {
+                    entities[entityName].splice(key, 1);
+                  }
+
+                  const node = {
+                    id: entity.id,
+                    type: entityName,
+                    name: entity.name
+                  };
+
+                  if (entity.id == activeId) {
+                    cursor = node;
+                  }
+
+                  return node;
+                } )
+              );
+            } );
+
+            if (group.id == activeId) {
+              cursor = node;
+            }
+
+            return node;
+
+          } )
+        };
+
+        NodeNames.forEach( (entityName) => {
+          node.children = node.children.concat(
+            entities[entityName].map( (entity) => {
+
+              const node = {
+                id: entity.id,
+                type: entityName,
+                name: entity.name
+              };
+
+              if (entity.id == activeId) {
+                cursor = node;
+              }
+
+              return node;
+            } )
+          );
+        } );
+
+        if (net.id == activeId) {
+          cursor = node;
+        }
+
+        return node;
+      } )
+    };
+
+    return {tree: node, cursor};
   }
 }

@@ -4,6 +4,7 @@ export default class Query {
 
   constructor(state) {
     Query.instance = this;
+    this.state = state;
 
     const s = (name) => name + 's';
 
@@ -426,99 +427,6 @@ export default class Query {
           y: diff.y / viewport.zoom
         };
       }
-    };
-
-    this.treebreadWorkspace = (activeId = null, toggled = []) => {
-
-      let cursor = null;
-      const node = {
-        name: 'Workspace',
-        toggled: true,
-        children: state.db.nets.filter( (net) => !net.subnetId ).map( (net) => {
-          let entities = {};
-
-          NodeGroupNames.forEach( (entityName) => {
-            entities[entityName] = state.db[ s(entityName) ]
-              .filter( (entity) => entity.netId == net.id );
-          } );
-
-          const node = {
-            id: net.id,
-            type: 'net',
-            name: net.name,
-            toggled: toggled.indexOf(net.id) > -1,
-            children: entities.group.map( (group) => {
-
-              const node = {
-                id: group.id,
-                type: 'group',
-                name: group.name,
-                toggled: toggled.indexOf(group.id) > -1,
-                children: []
-              };
-
-              NodeNames.forEach( (entityName) => {
-                node.children = node.children.concat(
-                  group[entityName + 'Ids'].map( (id) => {
-                    const entity = this[entityName].get(id),
-                      key = entities[entityName].indexById(id);
-
-                    if (key > -1) {
-                      entities[entityName].splice(key, 1);
-                    }
-
-                    const node = {
-                      id: entity.id,
-                      type: entityName,
-                      name: entity.name
-                    };
-
-                    if (entity.id == activeId) {
-                      cursor = node;
-                    }
-
-                    return node;
-                  } )
-                );
-              } );
-
-              if (group.id == activeId) {
-                cursor = node;
-              }
-
-              return node;
-
-            } )
-          };
-
-          NodeNames.forEach( (entityName) => {
-            node.children = node.children.concat(
-              entities[entityName].map( (entity) => {
-
-                const node = {
-                  id: entity.id,
-                  type: entityName,
-                  name: entity.name
-                };
-
-                if (entity.id == activeId) {
-                  cursor = node;
-                }
-
-                return node;
-              } )
-            );
-          } );
-
-          if (net.id == activeId) {
-            cursor = node;
-          }
-
-          return node;
-        } )
-      };
-
-      return {tree: node, cursor};
     };
 
     this.socketsBySide = null;
