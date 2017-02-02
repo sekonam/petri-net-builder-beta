@@ -94,8 +94,8 @@ class Context extends React.Component {
           x: e.pageX,
           y: e.pageY
         },
-        translateX: query.viewport.translateX,
-        translateY: query.viewport.translateY
+        translateX: query.viewport.translateX(),
+        translateY: query.viewport.translateY()
       });
     }
   }
@@ -187,7 +187,7 @@ class Context extends React.Component {
       ) : '',
 
       viewport = query.viewport,
-      transform = `translate(${viewport.translateX}px,${viewport.translateY}px) scale(${viewport.zoom})`,
+      transform = `translate(${viewport.translateX()}px,${viewport.translateY()}px) scale(${viewport.zoom.get()})`,
       transformStyle = {
         transform,
         transformOrigin: '50% 50%'

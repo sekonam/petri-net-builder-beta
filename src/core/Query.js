@@ -548,8 +548,8 @@ export default class Query {
         })
       },
 
-      transitionX: () => state.viewport.transitionX,
-      transitionY: () => state.viewport.transitionY,
+      translateX: () => state.viewport.translateX,
+      translateY: () => state.viewport.translateY
     };
 
     this.socketsBySide = null;
