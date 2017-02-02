@@ -275,10 +275,13 @@ export default class Query {
           outcome: 'right'
         },
         socketSides = {},
+        socketArcLength = {},
+        MAX_LENGTH = 10000000,
 
         addSocketSide = (sid) => {
           const socket = this.socket.get(sid);
           socketSides[socket.id] = typeNames[ socket.typeName ];
+          socketArcLength[socket.id] = MAX_LENGTH;
         };
 
       NodeNames.forEach((nodeName) => {
@@ -298,25 +301,43 @@ export default class Query {
       const calcRectCenter = (r) => ({
           x: r.x + r.width/2,
           y: r.y + r.height/2
-        });
+        }),
+        distance = (p1, p2) => Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
 
       this.arcs().forEach( (arc) => {
-        let start = this.socket.locationOffset(arc.startSocketId),
+        const
+          start = this.socket.locationOffset(arc.startSocketId),
           finish = this.socket.locationOffset(arc.finishSocketId),
           {x:x1, y:y1} = calcRectCenter(start),
-          {x:x2, y:y2} = calcRectCenter(finish),
-          avg = {};
+          {x:x2, y:y2} = calcRectCenter(finish);
 
+        let avg = {};
         ['width', 'height'].forEach( (dim) => {
           avg[dim] = (start[dim] + finish[dim]) / 2;
         } );
 
-        if ( Math.abs(y2 - y1 ) + avg.width/2 > Math.abs(x2 - x1) + avg.height/2 ) {
-          socketSides[ arc.startSocketId ] = y1 > y2 ? 'top' : 'bottom';
-          socketSides[ arc.finishSocketId ] = y1 > y2 ? 'bottom' : 'top';
-        } else {
-          socketSides[ arc.startSocketId ] = x1 > x2 ? 'left' : 'right';
-          socketSides[ arc.finishSocketId ] = x1 > x2 ? 'right' : 'left';
+        const
+          hOrV = Math.abs(y2 - y1 ) + avg.width/2 > Math.abs(x2 - x1) + avg.height/2,
+          dist = distance(start, finish);
+
+        if (dist < socketArcLength[ arc.startSocketId ]) {
+          socketArcLength[ arc.startSocketId ] = dist;
+
+          if ( hOrV ) {
+            socketSides[ arc.startSocketId ] = y1 > y2 ? 'top' : 'bottom';
+          } else {
+            socketSides[ arc.startSocketId ] = x1 > x2 ? 'left' : 'right';
+          }
+        }
+
+        if (dist < socketArcLength[ arc.finishSocketId ]) {
+          socketArcLength[ arc.finishSocketId ] = dist;
+
+          if ( hOrV ) {
+            socketSides[ arc.finishSocketId ] = y1 > y2 ? 'bottom' : 'top';
+          } else {
+            socketSides[ arc.finishSocketId ] = x1 > x2 ? 'right' : 'left';
+          }
         }
       } );
 
