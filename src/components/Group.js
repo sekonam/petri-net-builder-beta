@@ -1,78 +1,23 @@
 import React, {PropTypes} from 'react';
-import { DragSource } from 'react-dnd';
 
 import {NodeNames} from '../core/Entities.js';
 import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import GroupModel from './../models/GroupModel.js';
 import NodeModel from '../models/NodeModel.js'
+import DragGroup from '../hoc/DragGroup.js';
 import Node from './Node.js';
 import NodeByType from './NodeByType.js';
-
-const groupSource = {
-
-  beginDrag(props, monitor, component) {
-    const {data} = component.props,
-      methods = Store.instance;
-
-    this.timerId = setInterval(
-      () => {
-        if (monitor.isDragging()) {
-          const diff = monitor.getDifferenceFromInitialOffset(),
-            zDiff = component.props.zoomedDiff(diff);
-
-          NodeNames.forEach( (entityName) => {
-            data[entityName + 'Ids'].forEach( (pid) => {
-              methods[entityName].set( pid, {
-                x: this.start[pid].x + zDiff.x,
-                y: this.start[pid].y + zDiff.y
-              } );
-            } );
-          } );
-        }
-      }, 10
-    );
-
-    this.start = {};
-
-    NodeNames.forEach( (entityName) => {
-      data[entityName + 'Ids'].forEach( (pid) => {
-        const entity = Query.instance[entityName].get(pid);
-        this.start[pid] = {
-          x: entity.x,
-          y: entity.y
-        };
-      } );
-    } );
-
-    methods.group.dragging(props.data.id);
-
-    return {
-      id: props.data.id
-    };
-  },
-
-  endDrag(props, monitor, component) {
-    clearInterval(this.timerId);
-    Store.instance.group.dragging(null);
-  }
-};
-
-function collect(connect, monitor) {
-  return {
-    connectDragSource: connect.dragSource(),
-  }
-}
 
 class Group extends React.Component {
 
   constructor(props) {
     super(props);
-    this.onMouseUp = this.onMouseUp.bind(this);
+    this.onClick = this.onClick.bind(this);
     this.onDoubleClick = this.onDoubleClick.bind(this);
   }
 
-  onMouseUp(e) {
+  onClick(e) {
     const methods = Store.instance;
     methods.group.active(this.props.data.id);
   }
@@ -86,7 +31,7 @@ class Group extends React.Component {
   }
 
   render() {
-    const {data, connectDragSource, setMouseOffset} = this.props,
+    const {data, setMouseOffset} = this.props,
       query = Query.instance,
       methods = Store.instance;
 
@@ -103,9 +48,9 @@ class Group extends React.Component {
             socketIds: query.group.externalSocketIds(data.id)
           });
 
-        return connectDragSource(
+        return (
           <g className={'group ' + data.typeName}
-            onClick={this.onMouseUp}
+            onClick={this.onClick}
             onDoubleClick={this.onDoubleClick}>
             <Node data={node} setMouseOffset={setMouseOffset} />
           </g>
@@ -122,9 +67,9 @@ class Group extends React.Component {
           } );
         } );
 
-        return connectDragSource(
+        return (
           <g className={'group ' + data.typeName}
-            onClick={this.onMouseUp}
+            onClick={this.onClick}
             onDoubleClick={this.onDoubleClick}>
             <rect x={x} y={y} width={w} height={h}
               rx={data.r} ry={data.r} className="group-rect"/>
@@ -143,8 +88,7 @@ class Group extends React.Component {
 }
 
 Group.propTypes = {
-    data: PropTypes.instanceOf(GroupModel).isRequired,
-    zoomedDiff: PropTypes.func.isRequired
+    data: PropTypes.instanceOf(GroupModel).isRequired
 };
 
-export default DragSource('group', groupSource, collect)(Group);
+export default DragGroup()(Group);
