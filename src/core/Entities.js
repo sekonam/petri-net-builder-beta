@@ -20,7 +20,7 @@ const EntityFactory = {
     group: (params) => new GroupModel(params)
   },
   EntityNames = ['place', 'transition', 'socket', 'arc', 'net', 'subnet', 'group', 'handler', 'event'],
-  NodeNames = ['subnet', 'place', 'transition',],
+  NodeNames = ['place', 'subnet', 'transition',],
   NodeGroupNames = ['place', 'subnet', 'transition', 'group',],
   StatusNames = ['active', 'form', ],
   SocketSides = ['top', 'right', 'bottom', 'left', ];

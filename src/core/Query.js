@@ -1,4 +1,5 @@
 import {EntityNames, NodeNames, NodeGroupNames, StatusNames, SocketSides} from './Entities.js';
+import Store from './Store.js';
 
 export default class Query {
 
@@ -6,7 +7,8 @@ export default class Query {
     Query.instance = this;
     this.state = state;
 
-    const s = (name) => name + 's';
+    const query = this,
+      s = (name) => name + 's';
 
     StatusNames.forEach( (statusName) => {
       this[statusName] = state[statusName];
@@ -78,6 +80,14 @@ export default class Query {
         (entity) => defaultCondition(entity)
           && !this[entityName].isActive(entity.id)
       );
+    } );
+
+    NodeNames.forEach( (nodeName) => {
+      this[nodeName].sockets = (id, type = null) => {
+        let sockets = this.sockets( this[nodeName] .get(id) .socketIds );
+        if (type === null) return sockets;
+        return sockets.filter( (socket) => socket.type == type );
+      }
     } );
 
     this.arc.netId = (id) => {
@@ -415,6 +425,113 @@ export default class Query {
       } );
 
       return {min, max};
+    };
+
+    this.arrangement = {
+
+      startNode: function () {
+        let startNode = null,
+          minIncomeSockets = {
+            node: null,
+            count: 10000000
+          },
+          freeNodes = query.freeNodes();
+
+        NodeNames.forEach( (nodeName) => {
+          if (!startNode) {
+            freeNodes[s(nodeName)].forEach( (node) => {
+              if (!startNode) {
+                const incomeSockets = query[nodeName].sockets(node.id, 0);
+                if (incomeSockets.length == 0) {
+                  startNode = node;
+                } else if (incomeSockets.length < minIncomeSockets.count ) {
+                  minIncomeSockets.node = node;
+                  minIncomeSockets.count = incomeSockets.length;
+                }
+              }
+            } );
+          }
+        } );
+
+        if (startNode) return startNode;
+        if (minIncomeSockets.node) return minIncomeSockets.node;
+        return null;
+      },
+
+      algorithms: {
+        default: {
+          init: () => {
+            this.init = {
+              x: 50,
+              y: 50
+            };
+            this.current = {
+              x: 50,
+              y: 50
+            };
+            this.step = {
+              x: 150,
+              y: 120
+            };
+          },
+
+          position: (nodes) => {
+            const methods = Store.instance;
+            nodes.forEach( (node, key) => {
+              methods [node.entityName()] .set( node.id, {
+                x: this.current.x,
+                y: this.current.y
+              } );
+              this.current.y += this.step.y;
+            } );
+            this.current.x += this.step.x;
+            this.current.y = this.init.y;
+          }
+        }
+      },
+
+      set: function (state, algorithm = 'default') {
+        if (algorithm in this.algorithms) {
+          const startNode = this.startNode();
+
+          if (startNode) {
+            let nodes = [startNode],
+              allNodes = [];
+
+            NodeNames.forEach( (nodeName) => {
+              allNodes = allNodes.concat(query[ s(nodeName) ]());
+            } );
+
+            this.algorithms[algorithm].init();
+
+            while (nodes.length > 0) {
+              nodes.forEach( (node) => {
+                const key = allNodes.indexById(node.id);
+                if (key > -1) allNodes.splice(key, 1);
+              } );
+
+              this.algorithms[algorithm].position(nodes);
+
+              let newNodes = [];
+              nodes.forEach( (node) => {
+                newNodes = newNodes.concat(
+                  query.arcs().filter(
+                    (arc) => node.socketIds.has(arc.startSocketId)
+                  ).map(
+                    (arc) => query.socket.node(arc.finishSocketId)
+                  ).filter(
+                    (node) => allNodes.valueById(node.id)
+                  )
+                );
+              } );
+              nodes = newNodes.unique();
+            }
+
+            this.algorithms[algorithm].position(allNodes);
+          }
+        }
+      }
+
     };
 
     this.zoom = {

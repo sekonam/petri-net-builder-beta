@@ -34,7 +34,12 @@ Model.prototype.short = function (propName, maxLength = Model.maxShortLength) {
   }
 
   return '';
-}
+};
+
+Model.prototype.entityName = function () {
+  const constructorName = this.constructor.name;
+  return constructorName.substr(0, constructorName.length-5).toLowerCase();
+};
 
 Model.maxShortLength = 16;
 
