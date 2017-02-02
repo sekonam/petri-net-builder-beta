@@ -5,24 +5,26 @@ import ArcModel from '../models/ArcModel.js';
 
 export default class Arc extends React.Component {
 
-  socketOffset(socket, node, group) {
-    const query = Query.instance;
-    let socketIds = node.socketIds,
-      size = node;
-
-    if (group) {
-      socketIds = query.group.externalSocketIds(group.id);
-      size = query.group.size(group.id);
+  pivot(p, side, shift = Arc.pivotShift) {
+    switch (side) {
+      case 'top': return {
+        x: p.x,
+        y: p.y - shift
+      };
+      case 'right': return {
+        x: p.x + shift,
+        y: p.y
+      };
+      case 'bottom': return {
+        x: p.x,
+        y: p.y + shift
+      };
+      case 'left': return {
+        x: p.x - shift,
+        y: p.y
+      };
+      default: return p;
     }
-
-    const sockets = query.sockets( socketIds ).filter( (el) => el.type == socket.type ),
-      pos = sockets.indexOf(socket),
-      step = size.height / (sockets.length + 1);
-
-    return {
-      x: size.x + (socket.type ? size.width : 0),
-      y: size.y + step * (pos + 1)
-    };
   }
 
   render() {
@@ -40,63 +42,55 @@ export default class Arc extends React.Component {
       finishSide = query.socket.side(data.finishSocketId)
     }
 
-    const a = startOffset,
+    const
+      a = startOffset,
       b = finishOffset,
-      maxShift = 10,
-      minDiff = 100,
-      genDiff = (side) => side == 'left' || side == 'right'
-        ? {x: minDiff, y: 0}
-        : {x: 0, y: minDiff},
-      avg = (v1, v2) => (v1 + v2) / 2;
-    let diffA = genDiff(startSide),
-      diffB = genDiff(finishSide),
-      pathStr,
-      tangentLen = {
-        x: b.x - a.x - avg(diffA.x, diffB.x),
-        y: b.y - a.y - avg(diffA.y, diffB.y)
-      };
+      minDistance = Math.sqrt(2) * Arc.pivotShift,
+      distance = (p1, p2) => Math.sqrt(Math.pow(p1.x-p2.x, 2) + Math.pow(p1.y-p2.y, 2));
+    let
+      c = this.pivot(startOffset, startSide),
+      d = this.pivot(finishOffset, finishSide),
+      path = '';
 
-    if (tangentLen.x <= minDiff && tangentLen.y <= minDiff
-      && tangentLen.x >= -minDiff && tangentLen.y >= -minDiff
-    ) {
-      pathStr = `M${a.x} ${a.y} L ${b.x} ${b.y}`;
-      diffA = diffB = { x: 0, y:0 };
+    if (distance(a, b) < minDistance) {
+      path = `M${a.x} ${a.y} L ${b.x} ${b.y}`;
+      c = a;
+      d = b;
     } else {
-      const c = {
-          x: a.x + (startSide == 'left' ? -1 : 1 ) * diffA.x,
-          y: a.y + (startSide == 'top' ? -1 : 1 ) * diffA.y
-        },
-        d = {
-          x: b.x - (finishSide == 'left' ? 1 : -1 ) * diffB.x,
-          y: b.y - (finishSide == 'top' ? 1 : -1 ) * diffB.y
-        };
-      pathStr = `M${a.x} ${a.y} C ${c.x} ${c.y}, ${d.x} ${d.y}, ${b.x} ${b.y}`;
+      path = `M${a.x} ${a.y} C ${c.x}, ${c.y} ${d.x}, ${d.y} ${b.x}, ${b.y}`;
+
+      const vals = {
+        left:0,
+        right:1,
+        top:10,
+        bottom:11
+      },
+      k = Math.abs(vals[startSide] - vals[finishSide]) == 1 ? 1/2 : 3/4;
+
+      c = this.pivot(startOffset, startSide, k*Arc.pivotShift);
+      d = this.pivot(finishOffset, finishSide, k*Arc.pivotShift);
     }
 
-    tangentLen = {
-        x: b.x - a.x - avg(diffA.x, diffB.x),
-        y: b.y - a.y - avg(diffA.y, diffB.y)
-      };
-    const lineStart = {
-        x: a.x + diffA.x/2 + tangentLen.x/2,
-        y: a.y + diffA.y/2 + tangentLen.y/2
-      };
+    const
+      avg = (p1, p2) => ({
+        x: (p1.x + p2.x) / 2,
+        y: (p1.y + p2.y) / 2
+      }),
+      sign = (v) => v > 0 ? 1 : -1,
+      e = avg(c, d),
+      tangent = {
+        x: d.x - c.x,
+        y: d.y - c.y
+      },
+      markerLineShift = 10,
+      f = {x:e.x, y:e.y};
 
-    let lineEnd = {
-        x: lineStart.x,
-        y: lineStart.y
-      };
-
-    const sign = (v) => v >= 0 ? 1 : -1,
-      kx = sign(tangentLen.x),
-      ky = sign(tangentLen.y);
-
-    if (Math.abs(tangentLen.x) > Math.abs(tangentLen.y)) {
-      lineEnd.x += kx * maxShift;
-      lineEnd.y += ky * maxShift * Math.abs(tangentLen.y / tangentLen.x);
+    if (Math.abs(tangent.x) > Math.abs(tangent.y)) {
+      f.x += sign(tangent.x) * markerLineShift;
+      f.y += (f.x - e.x) * tangent.y / tangent.x;
     } else {
-      lineEnd.x += kx * maxShift * Math.abs(tangentLen.x / tangentLen.y);
-      lineEnd.y += ky * maxShift;
+      f.y += sign(tangent.y) * markerLineShift;
+      f.x += (f.y - e.y) * tangent.x / tangent.y;
     }
 
     return (
@@ -108,9 +102,8 @@ export default class Arc extends React.Component {
           </marker>
         </defs>
         <g className='arc-line' style={data.color ? {stroke: data.color} : {}}>
-          <path d={pathStr} />
-          <line markerStart={`url(#arrow-${data.id})`}
-            x1={lineStart.x} y1={lineStart.y} x2={lineEnd.x} y2={lineEnd.y} />
+          <path d={path} />
+          <line markerStart={`url(#arrow-${data.id})`} x1={e.x} y1={e.y} x2={f.x} y2={f.y} />
         </g>
       </g>
     );
@@ -122,3 +115,4 @@ Arc.propTypes = {
   offset: PropTypes.object,
   editHandler: PropTypes.func.isRequired
 };
+Arc.pivotShift = 100;
