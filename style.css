@@ -75,6 +75,11 @@ body {
 /*
  * SVG workflow 2D context
  */
+
+text {
+  text-shadow: 1px 1px 0 black;
+}
+
 svg.context {
   margin:10px 5px 5px;
   overflow:hidden;
@@ -107,7 +112,6 @@ svg.context {
 .node-txt {
   fill:#fff;
   font-size: 10pt;
-  text-shadow: 1px 1px 0 black;
 }
 .node:hover .node-rect {
   stroke-width:2px;
