@@ -211,30 +211,33 @@ export default function Store(setState) {
     return state;
   };
 
-  methods.arc.startDraw = (socket) => (state) => {
+  methods.arc.startDraw = (sid, offset) => (state) => {
+    const socket = state.db.sockets.valueById(sid);
     if (socket.type) {
       let tmpArc = EntityFactory['arc']();
       tmpArc.startSocketId = socket.id;
-      state.drawing.arc = tmpArc;
+      state.drawing.arc.data = tmpArc;
+      state.drawing.arc.startOffset = offset;
     }
 
     return state;
   };
 
-  methods.arc.finishDraw = (socket) => (state) => {
-    if ( !socket.type && state.drawing.arc) {
-      let tmpArc = EntityFactory['arc']( state.drawing.arc );
+  methods.arc.finishDraw = (sid) => (state) => {
+    const socket = state.db.sockets.valueById(sid);
+    if ( !socket.type && state.drawing.arc.data) {
+      let tmpArc = EntityFactory['arc']( state.drawing.arc.data );
       tmpArc.finishSocketId = socket.id;
       state.db.arcs.push(tmpArc);
-      state.drawing.arc = null;
+      state.drawing.arc.data = null;
     }
 
     return state;
   };
 
   methods.arc.escapeDraw = () => (state) => {
-    if (state.drawing.arc) {
-      state.drawing.arc = null;
+    if (state.drawing.arc.data) {
+      state.drawing.arc.data = null;
     }
 
     return state;
@@ -295,7 +298,10 @@ export default function Store(setState) {
       net: null
     },
     drawing: {
-      arc: null
+      arc: {
+        data: null,
+        startOffset: null
+      }
     },
     dragging: {}
   };

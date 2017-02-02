@@ -31,7 +31,7 @@ class Group extends React.Component {
   }
 
   render() {
-    const {data, setMouseOffset} = this.props,
+    const {data} = this.props,
       query = Query.instance,
       methods = Store.instance;
 
@@ -52,7 +52,7 @@ class Group extends React.Component {
           <g className={'group ' + data.typeName}
             onClick={this.onClick}
             onDoubleClick={this.onDoubleClick}>
-            <Node data={node} setMouseOffset={setMouseOffset} />
+            <Node data={node}/>
           </g>
         );
 
@@ -62,8 +62,7 @@ class Group extends React.Component {
         NodeNames.forEach( (nodeName) => {
           data[nodeName + 'Ids'].forEach( (nodeId) => {
             const node = query[nodeName].get(nodeId);
-            entities.push( <NodeByType type={nodeName} data={node}
-              key={node.id} setMouseOffset={setMouseOffset} /> );
+            entities.push( <NodeByType type={nodeName} data={node} key={node.id}/> );
           } );
         } );
 

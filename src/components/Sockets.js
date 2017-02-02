@@ -7,11 +7,11 @@ import Socket from './Socket.js';
 export default class Sockets extends React.Component {
 
   render() {
-    const {data, setMouseOffset} = this.props,
+    const {data} = this.props,
       query = Query.instance;
 
     const sockets = query.sockets(data.socketIds).map( (socket) => (
-      <Socket data={socket} key={socket.id} setMouseOffset={setMouseOffset} />
+      <Socket data={socket} key={socket.id}/>
     ) );;
 
     return (
@@ -23,6 +23,5 @@ export default class Sockets extends React.Component {
 }
 
 Sockets.propTypes = {
-  data: PropTypes.instanceOf(NodeModel).isRequired,
-  setMouseOffset: PropTypes.func.isRequired
+  data: PropTypes.instanceOf(NodeModel).isRequired
 };

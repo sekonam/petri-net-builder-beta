@@ -36,7 +36,7 @@ export default class Engine extends React.Component {
   }
 
   keyDownHandler(e) {
-    if (e.keyCode == 27 && this.state.drawing.arc) {
+    if (e.keyCode == 27 && this.state.drawing.arc.data) {
       Store.instance.arc.escapeDraw();
     }
   }
@@ -136,8 +136,7 @@ export default class Engine extends React.Component {
         <div className="right-sidebar">
           {formComp}
         </div>
-        <Context viewport={this.state.viewport}
-          drawing={this.state.drawing} dragging={this.state.dragging} />
+        <Context drawing={this.state.drawing} dragging={this.state.dragging} />
       </div>
     );
   }

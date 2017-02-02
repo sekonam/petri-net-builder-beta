@@ -17,13 +17,12 @@ export default class Socket extends React.Component {
       methods = Store.instance;
 
     if (data.type) {
-      methods.arc.startDraw(data);
-      this.props.setMouseOffset({
+      methods.arc.startDraw(data.id, {
         x: e.pageX,
         y: e.pageY
       });
     } else {
-      methods.arc.finishDraw(data);
+      methods.arc.finishDraw(data.id);
     }
 
     e.stopPropagation();
@@ -52,6 +51,5 @@ export default class Socket extends React.Component {
 }
 
 Socket.propTypes = {
-  data: PropTypes.instanceOf(SocketModel).isRequired,
-  setMouseOffset: PropTypes.func.isRequired
+  data: PropTypes.instanceOf(SocketModel).isRequired
 };

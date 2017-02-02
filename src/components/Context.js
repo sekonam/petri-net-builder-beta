@@ -36,27 +36,10 @@ class Context extends React.Component {
       translateY: 0,
     };
 
-    this.zoomedOffset = this.zoomedOffset.bind(this);
-    this.zoomedDiff = this.zoomedDiff.bind(this);
-    this.setMouseOffset = this.setMouseOffset.bind(this);
     this.mouseDownHandler = this.mouseDownHandler.bind(this);
     this.mouseUpHandler = this.mouseUpHandler.bind(this);
     this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
-    this.hideDimLayer = this.hideDimLayer.bind(this);
     this.setSvgSize = this.setSvgSize.bind(this);
-  }
-
-  svgSize() {
-    const scrollShift = document.documentElement.clientHeigh
-      && document.documentElement.clientHeigh != document.documentElement.scrollHeight ? 15 : 0;
-    return {
-      width: Math.max( 0, document.documentElement.clientWidth - 185 - 255 - scrollShift ),
-      height: Math.max( 0, document.documentElement.clientHeight - 55 )
-    };
-  }
-
-  setSvgSize() {
-    this.setState({ svgSize: this.svgSize() });
   }
 
   componentDidMount() {
@@ -76,36 +59,17 @@ class Context extends React.Component {
     window.removeEventListener('resize', this.setSvgSize);
   }
 
-  fullElementOffset(element) {
-    const rect = element.getBoundingClientRect(),
-      scrollX = window.pageXOffset || document.documentElement.scrollLeft,
-      scrollY = window.pageYOffset || document.documentElement.scrollTop;
+  svgSize() {
+    const scrollShift = document.documentElement.clientHeigh
+      && document.documentElement.clientHeigh != document.documentElement.scrollHeight ? 15 : 0;
     return {
-      x: scrollX + rect.left,
-      y: scrollY + rect.top
+      width: Math.max( 0, document.documentElement.clientWidth - 185 - 255 - scrollShift ),
+      height: Math.max( 0, document.documentElement.clientHeight - 55 )
     };
   }
 
-  zoomedOffset(offset) {
-    const svgOffset = this.fullElementOffset(this.svg),
-      x = offset.x - svgOffset.x,
-      y = offset.y - svgOffset.y,
-      viewport = this.props.viewport,
-      { width: w, height: h } = this.svgSize();
-
-    return {
-      x: w/2 + (x - w/2 - viewport.translateX) / viewport.zoom,
-      y: h/2 + (y - h/2 - viewport.translateY) / viewport.zoom
-    };
-  }
-
-  zoomedDiff(diff) {
-    const viewport = this.props.viewport;
-
-    return {
-      x: diff.x / viewport.zoom,
-      y: diff.y / viewport.zoom
-    };
+  setSvgSize() {
+    this.setState({ svgSize: this.svgSize() });
   }
 
   canChangeTranslate() {
@@ -120,13 +84,18 @@ class Context extends React.Component {
 
   mouseDownHandler(e) {
     if (this.canChangeTranslate()) {
+      const query = Query.instance;
       this.setState({
+        mouseOffset: {
+          x: e.pageX,
+          y: e.pageY
+        },
         mouseDown: {
           x: e.pageX,
           y: e.pageY
         },
-        translateX: this.props.viewport.translateX,
-        translateY: this.props.viewport.translateY
+        translateX: query.viewport.translateX,
+        translateY: query.viewport.translateY
       });
     }
   }
@@ -142,12 +111,14 @@ class Context extends React.Component {
   }
 
   mouseMoveHandler(e) {
-    const {drawing, viewport} = this.props;
+    const {drawing} = this.props;
 
-    if (drawing.arc) {
-      this.setMouseOffset( {
-        x: e.pageX,
-        y: e.pageY
+    if (drawing.arc.data) {
+      this.setState( {
+        mouseOffset: {
+          x: e.pageX,
+          y: e.pageY
+        }
       } );
     } else if (this.canChangeTranslate() && this.state.mouseDown) {
       Store.instance.translate.set(
@@ -157,58 +128,26 @@ class Context extends React.Component {
     }
   }
 
-  setMouseOffset( offset ) {
-    this.setState( (prevState, props) => {
-      prevState.mouseOffset = this.zoomedOffset( {
-        x: offset.x,
-        y: offset.y
-      } );
-      return prevState;
-    } );
-  }
-
-  hideDimLayer(e) {
-    e.stopPropagation();
-  }
-
-  drawTactical() {
-    const query = Query.instance,
-      { min, max } = query.minmax(),
-      zoom = query.zoom,
-      { width: w, height: h } = this.state.svgSize,
-      indents = {
-        x: Math.max( Math.abs( Math.min( 0, min.x ) ), Math.max( 0, max.x - w / zoom ) ),
-        y: Math.max( Math.abs( Math.min( 0, min.y ) ), Math.max( 0, max.y - h / zoom ) )
-      }
-    return (
-      <g>
-        <circle cx={ -indents.x + 1 } cy={ -indents.y + 1 } r="1" className="tactical"/>
-        <circle cx={ w / zoom + indents.x - 1 } cy={ h / zoom + indents.y - 1 } r="1" className="tactical"/>
-      </g>
-    );
-  }
-
   nodeTag(entityName, entity) {
     switch (entityName) {
       case 'place':
         return (
-          <Place data={entity} key={entity.id} setMouseOffset={this.setMouseOffset} />
+          <Place data={entity} key={entity.id} />
         );
         break;
       case 'subnet':
         return (
-          <Subnet data={entity} key={entity.id} setMouseOffset={this.setMouseOffset} />
+          <Subnet data={entity} key={entity.id} />
         );
         break;
       case 'transition':
         return (
-          <Transition data={entity} key={entity.id} setMouseOffset={this.setMouseOffset} />
+          <Transition data={entity} key={entity.id} />
         );
         break;
       case 'group':
         return (
-          <Group data={entity} zoomedDiff={this.zoomedDiff} key={entity.id}
-             setMouseOffset={this.setMouseOffset}/>
+          <Group data={entity} key={entity.id}/>
         );
         break;
     }
@@ -223,32 +162,31 @@ class Context extends React.Component {
 
       groups = query.groupsNotActive()
         .cmap( (group, key) => (
-          <Group data={group} zoomedDiff={this.zoomedDiff}
-            key={group.id} setMouseOffset={this.setMouseOffset} />
+          <Group data={group} key={group.id} />
         ) ),
 
       transitions = query.transitionsNotActive(null, groupsEntityIds)
         .cmap( (transition, key) => (
-          <Transition data={transition} key={transition.id} setMouseOffset={this.setMouseOffset} />
+          <Transition data={transition} key={transition.id} />
         ) ),
 
       subnets = query.subnetsNotActive(null, groupsEntityIds).cmap( (subnet, key) => (
-        <Subnet data={subnet} key={subnet.id} setMouseOffset={this.setMouseOffset} />
+        <Subnet data={subnet} key={subnet.id} />
       ) ),
 
       places = query.placesNotActive(null, groupsEntityIds).cmap( (place, key) => (
-        <Place data={place} key={place.id} setMouseOffset={this.setMouseOffset} />
+        <Place data={place} key={place.id} />
       ) ),
 
       arcs = query.arcs().cmap( (arc, key) => (
-        <Arc data={arc} key={arc.id} editHandler={() => methods.arc.edit(arc.id)} />
+        <Arc data={arc} key={arc.id} />
       ) ),
 
-      drawingArc = drawing.arc ? (
-        <Arc data={drawing.arc} offset={this.state.mouseOffset} editHandler={() => {}} />
+      drawingArc = drawing.arc.data ? (
+        <Arc data={drawing.arc.data} offset={query.arc.drawingOffset(this.state.mouseOffset)} />
       ) : '',
 
-      viewport = this.props.viewport,
+      viewport = query.viewport,
       transform = `translate(${viewport.translateX}px,${viewport.translateY}px) scale(${viewport.zoom})`,
       transformStyle = {
         transform,
@@ -259,14 +197,6 @@ class Context extends React.Component {
 
     if (query.active.isSet()) {
       topEntities.push( this.nodeTag(query.active.type, query.active.data) );
-    }
-
-    let dimLayerStyles = {
-        display: 'none'
-      };
-
-    if (false) {
-      dimLayerStyles = {};
     }
 
     return (
@@ -284,16 +214,12 @@ class Context extends React.Component {
             {groups}
             {topEntities}
         </g>
-        <rect x="0" y="0" width={width} height={height}
-          className="dim-layer" style={dimLayerStyles}
-          onClick={this.hideDimLayer} />
       </svg>
     );
   }
 }
 
 Context.propTypes = {
-  viewport: PropTypes.instanceOf(ViewportModel).isRequired,
   drawing: PropTypes.object.isRequired
 };
 

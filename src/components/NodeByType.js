@@ -6,21 +6,21 @@ import Subnet from './Subnet.js';
 
 export default class NodeByType extends React.Component {
   render() {
-    const {type, data, setMouseOffset} = this.props;
+    const {type, data} = this.props;
     switch (type) {
       case 'place':
         return (
-          <Place data={data} key={data.id} setMouseOffset={setMouseOffset} />
+          <Place data={data} key={data.id} />
         );
         break;
       case 'subnet':
         return (
-          <Subnet data={data} key={data.id} setMouseOffset={setMouseOffset} />
+          <Subnet data={data} key={data.id} />
         );
         break;
       case 'transition':
         return (
-          <Transition data={data} key={data.id} setMouseOffset={setMouseOffset} />
+          <Transition data={data} key={data.id} />
         );
         break;
     }
@@ -29,6 +29,5 @@ export default class NodeByType extends React.Component {
 }
 
 NodeByType.propTypes = {
-    data: PropTypes.object.isRequired,
-    setMouseOffset: PropTypes.func.isRequired
+    data: PropTypes.object.isRequired
 };

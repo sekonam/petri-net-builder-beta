@@ -7,19 +7,18 @@ import Node from './Node.js';
 class Place extends React.Component {
 
   render() {
-    const {data, setMouseOffset} = this.props;
+    const {data} = this.props;
 
     return (
       <g className="place">
-        <Node data={data} setMouseOffset={setMouseOffset} />
+        <Node data={data} />
       </g>
     );
   }
 }
 
 Place.propTypes = {
-  data: PropTypes.instanceOf(PlaceModel).isRequired,
-  setMouseOffset: PropTypes.func.isRequired
+  data: PropTypes.instanceOf(PlaceModel).isRequired
 };
 
 export default DragNode('place')(Place);

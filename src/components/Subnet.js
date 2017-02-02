@@ -8,20 +8,19 @@ import Node from './Node.js';
 class Subnet extends React.Component {
 
   render() {
-    const {data, setMouseOffset} = this.props,
+    const {data} = this.props,
       methods = Store.instance;
 
     return (
       <g className="subnet" onDoubleClick={() => methods.subnet.enter(data.id)}>
-        <Node data={data} setMouseOffset={setMouseOffset} />
+        <Node data={data} />
       </g>
     );
   }
 }
 
 Subnet.propTypes = {
-  data: PropTypes.instanceOf(SubnetModel).isRequired,
-  setMouseOffset: PropTypes.func.isRequired
+  data: PropTypes.instanceOf(SubnetModel).isRequired
 };
 
 export default DragNode('subnet')(Subnet);

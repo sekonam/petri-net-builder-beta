@@ -15,7 +15,7 @@ export default function DragNode(entityName) {
     },
 
     function (data, shift) {
-      const diff = Query.instance.zoom.offset(shift);
+      const diff = Query.instance.viewport.zoom.offset(shift);
       Store.instance[entityName].set( data.id, {
         x: this.start.x + diff.x,
         y: this.start.y + diff.y

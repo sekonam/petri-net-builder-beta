@@ -22,7 +22,7 @@ export default function DragGroup() {
     },
 
     function (data, shift) {
-      const diff = Query.instance.zoom.offset(shift);
+      const diff = Query.instance.viewport.zoom.offset(shift);
       NodeNames.forEach( (nodeName) => {
         data[nodeName + 'Ids'].forEach( (nid) => {
           Store.instance[nodeName].set( nid, {

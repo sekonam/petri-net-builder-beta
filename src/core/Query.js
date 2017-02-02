@@ -120,6 +120,11 @@ export default class Query {
       return entities;
     };
 
+    this.arc.drawingOffset = (mouseOffset) => this.viewport.zoom.offset({
+      x: mouseOffset.x - state.drawing.arc.startOffset.x,
+      y: mouseOffset.y - state.drawing.arc.startOffset.y
+    });
+
     this.group.nodes = (id) => {
       let nodes = [],
         group = this.group.get(id);
@@ -534,16 +539,17 @@ export default class Query {
 
     };
 
-    this.zoom = {
-      get: () => state.viewport.zoom,
-      offset: (diff) => {
-        const viewport = state.viewport;
+    this.viewport = {
+      zoom: {
+        get: () => state.viewport.zoom,
+        offset: (diff) => ({
+          x: diff.x / state.viewport.zoom,
+          y: diff.y / state.viewport.zoom
+        })
+      },
 
-        return {
-          x: diff.x / viewport.zoom,
-          y: diff.y / viewport.zoom
-        };
-      }
+      transitionX: () => state.viewport.transitionX,
+      transitionY: () => state.viewport.transitionY,
     };
 
     this.socketsBySide = null;

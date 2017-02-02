@@ -7,19 +7,18 @@ import Node from './Node.js';
 class Transition extends React.Component {
 
   render() {
-    const {data, setMouseOffset} = this.props;
+    const {data} = this.props;
 
     return (
       <g className="transition">
-        <Node data={data} setMouseOffset={setMouseOffset} />
+        <Node data={data} />
       </g>
     );
   }
 }
 
 Transition.propTypes = {
-  data: PropTypes.instanceOf(TransitionModel).isRequired,
-  setMouseOffset: PropTypes.func.isRequired
+  data: PropTypes.instanceOf(TransitionModel).isRequired
 };
 
 export default DragNode('transition')(Transition);
