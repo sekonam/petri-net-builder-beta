@@ -125,6 +125,8 @@ export default class Query {
       y: mouseOffset.y - state.drawing.arc.startOffset.y
     });
 
+    this.arc.drawing = () => state.drawing.arc.data;
+
     this.group.nodes = (id) => {
       let nodes = [],
         group = this.group.get(id);

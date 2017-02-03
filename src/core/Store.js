@@ -224,12 +224,28 @@ export default function Store(setState) {
   };
 
   methods.arc.finishDraw = (sid) => (state) => {
-    const socket = state.db.sockets.valueById(sid);
-    if ( !socket.type && state.drawing.arc.data) {
+    const socket = state.db.sockets.valueById(sid),
+      startNodeType = state.db.sockets.valueById(
+        state.drawing.arc.data.startSocketId
+      ).nodeType;
+    let acceptableFinishNodeTypes = [];
+
+    if (startNodeType == 'transition') {
+      acceptableFinishNodeTypes = ['place', 'subnet',];
+    } else if(startNodeType == 'place' || startNodeType == 'subnet') {
+      acceptableFinishNodeTypes = ['transition',];
+    }
+
+    if ( !socket.type
+      && acceptableFinishNodeTypes.has(socket.nodeType)
+      && state.drawing.arc.data
+    ) {
       let tmpArc = EntityFactory['arc']( state.drawing.arc.data );
       tmpArc.finishSocketId = socket.id;
       state.db.arcs.push(tmpArc);
       state.drawing.arc.data = null;
+    } else {
+      methods.arc.escapeDraw () (state);
     }
 
     return state;

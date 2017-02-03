@@ -14,18 +14,19 @@ export default class Socket extends React.Component {
 
   socketClick(e) {
     const {data} = this.props,
-      methods = Store.instance;
+      methods = Store.instance,
+      query = Query.instance;
 
     if (data.type) {
       methods.arc.startDraw(data.id, {
         x: e.pageX,
         y: e.pageY
       });
-    } else {
+      e.stopPropagation();
+    } else if (query.arc.drawing()) {
       methods.arc.finishDraw(data.id);
+      e.stopPropagation();
     }
-
-    e.stopPropagation();
   }
 
   render() {
