@@ -88,6 +88,22 @@ export default class Query {
         if (type === null) return sockets;
         return sockets.filter( (socket) => socket.type == type );
       }
+
+      this[nodeName].arcs = (nid, type = null) => {
+        const socketIds = this[nodeName].get(nid).socketIds;
+        let condition;
+
+        if (type == 1) {
+          condition = (arc) => socketIds.has(arc.startSocketId);
+        } else if(type == 0) {
+          condition = (arc) => socketIds.has(arc.finishSocketId);
+        } else {
+          condition = (arc) => socketIds.has(arc.startSocketId)
+            || socketIds.has(arc.startSocketId);
+        }
+
+        return this.arcs().filter(condition);
+      }
     } );
 
     this.arc.netId = (id) => {
@@ -438,7 +454,7 @@ export default class Query {
 
       startNode: function () {
         let startNode = null,
-          minIncomeSockets = {
+          minIncomeArcs = {
             node: null,
             count: 10000000
           },
@@ -448,12 +464,16 @@ export default class Query {
           if (!startNode) {
             freeNodes[s(nodeName)].forEach( (node) => {
               if (!startNode) {
-                const incomeSockets = query[nodeName].sockets(node.id, 0);
-                if (incomeSockets.length == 0) {
+                const
+                  incomeArcs = query[nodeName].arcs(node.id, 0),
+                  outcomeArcs = query[nodeName].arcs(node.id, 1);
+                if (incomeArcs.length == 0 && outcomeArcs.length > 0) {
                   startNode = node;
-                } else if (incomeSockets.length < minIncomeSockets.count ) {
-                  minIncomeSockets.node = node;
-                  minIncomeSockets.count = incomeSockets.length;
+                } else if (incomeArcs.length < minIncomeArcs.count
+                  && outcomeArcs.length > 0
+                ) {
+                  minIncomeArcs.node = node;
+                  minIncomeArcs.count = incomeArcs.length;
                 }
               }
             } );
@@ -461,7 +481,7 @@ export default class Query {
         } );
 
         if (startNode) return startNode;
-        if (minIncomeSockets.node) return minIncomeSockets.node;
+        if (minIncomeArcs.node) return minIncomeArcs.node;
         return null;
       },
 
