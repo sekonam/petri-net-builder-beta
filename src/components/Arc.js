@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 
+import {AnotherSide} from '../core/Entities.js';
 import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import ArcModel from '../models/ArcModel.js';
@@ -36,8 +37,7 @@ export default class Arc extends React.Component {
       startOffset = query.socket.offset(data.startSocketId),
       startSide = query.socket.side(data.startSocketId);
 
-    let finishOffset,
-      finishSide = 'right';
+    let finishOffset, finishSide;
 
     if (data.finishSocketId) {
       finishOffset = query.socket.offset(data.finishSocketId);
@@ -47,6 +47,7 @@ export default class Arc extends React.Component {
         x: startOffset.x + offset.x,
         y: startOffset.y + offset.y
       };
+      finishSide = AnotherSide[startSide];
     }
 
     const
