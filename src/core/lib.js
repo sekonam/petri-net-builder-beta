@@ -40,6 +40,11 @@ Array.prototype.valueById = function (id) {
   return this.find( (el) => el.id == id );
 };
 
+Array.prototype.removeById = function (id) {
+  const key = this.indexById(id);
+  if (key > -1) this.splice(key, 1);
+};
+
 Array.prototype.spliceRecurcive = function (findFunc) {
   let count = 0;
 

@@ -1,4 +1,4 @@
-import {EntityNames, NodeNames, NodeGroupNames, StatusNames, SocketSides} from './Entities.js';
+import {EntityNames, NodeNames, NodeGroupNames, StatusNames, SideNames} from './Entities.js';
 import Store from './Store.js';
 
 export default class Query {
@@ -484,46 +484,83 @@ export default class Query {
 
           position: (nodes) => {
             const methods = Store.instance;
+            let {x:dx, y:dy} = this.step;
             nodes.forEach( (node, key) => {
-              methods [node.entityName()] .set( node.id, {
-                x: this.current.x,
-                y: this.current.y
-              } );
-              this.current.y += this.step.y;
+              const group = query [node.entityName()] .minimized(node.id);
+
+              if (group) {
+                const {x, y, width: w, height: h} = query.group.size(group.id);
+                NodeNames.forEach( (nodeName) => {
+                  group [nodeName + 'Ids'] .forEach((nid) => {
+                    const node = query[nodeName].get(nid);
+                    methods[nodeName].set(nid, {
+                      x: node.x + this.current.x - x,
+                      y: node.y + this.current.y - y
+                    });
+                  });
+                } );
+
+              } else {
+                methods [node.entityName()] .set( node.id, {
+                  x: this.current.x,
+                  y: this.current.y
+                } );
+              }
+
+              this.current.y += dy;
             } );
-            this.current.x += this.step.x;
+            this.current.x += dx;
             this.current.y = this.init.y;
           }
         }
       },
 
-      set: function (state, algorithm = 'default') {
+      set: function (algorithm = 'default') {
         if (algorithm in this.algorithms) {
           const startNode = this.startNode();
 
           if (startNode) {
+            const minimizedGroups = state.db.groups.filter(
+              (group) => group.netId == state.current.net.id && group.minimized
+            );
             let nodes = [startNode],
               allNodes = [];
 
             NodeNames.forEach( (nodeName) => {
-              allNodes = allNodes.concat(query[ s(nodeName) ]());
+              allNodes = allNodes.concat(
+                state.db[ s(nodeName) ].filter(
+                  (node) => node.netId == state.current.net.id
+                )
+              );
             } );
 
             this.algorithms[algorithm].init();
 
             while (nodes.length > 0) {
               nodes.forEach( (node) => {
-                const key = allNodes.indexById(node.id);
-                if (key > -1) allNodes.splice(key, 1);
+                const group = query [node.entityName()] .minimized(node.id);
+
+                if (group) {
+                  NodeNames.forEach( (nodeName) => {
+                    group [nodeName + 'Ids'] .forEach((nid) => {
+                      allNodes.removeById(nid);
+                    });
+                  } );
+                } else {
+                  allNodes.removeById(node.id);
+                }
               } );
 
               this.algorithms[algorithm].position(nodes);
 
               let newNodes = [];
               nodes.forEach( (node) => {
+                const group = query [node.entityName()] .minimized(node.id),
+                  socketIds = group ? query.group.externalSocketIds(group.id) : node.socketIds;
+
                 newNodes = newNodes.concat(
                   query.arcs().filter(
-                    (arc) => node.socketIds.has(arc.startSocketId)
+                    (arc) => socketIds.has(arc.startSocketId)
                   ).map(
                     (arc) => query.socket.node(arc.finishSocketId)
                   ).filter(
