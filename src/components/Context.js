@@ -39,6 +39,7 @@ class Context extends React.Component {
     this.mouseDownHandler = this.mouseDownHandler.bind(this);
     this.mouseUpHandler = this.mouseUpHandler.bind(this);
     this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
+    this.wheelHandler = this.wheelHandler.bind(this);
     this.setSvgSize = this.setSvgSize.bind(this);
   }
 
@@ -70,6 +71,13 @@ class Context extends React.Component {
 
   setSvgSize() {
     this.setState({ svgSize: this.svgSize() });
+  }
+
+  svgOffset(windowOffset) {
+    const svgRect = this.svg.getBoundingClientRect();
+    return {
+      x: windowOffset.x - svgRect.left - window.pageXOffset,
+      y: windowOffset.y - svgRect.top - window.pageYOffset    };
   }
 
   canChangeTranslate() {
@@ -129,10 +137,14 @@ class Context extends React.Component {
           this.state.translateX + e.pageX - this.state.mouseDown.x,
           this.state.translateY + e.pageY - this.state.mouseDown.y
         );
-      } else {
-        console.log('selecting');
       }
     }
+  }
+
+  wheelHandler(e) {
+    const methods = Store.instance;
+    methods.zoom.change( e.deltaY > 0 ? 0.05 : -0.05 );
+    e.preventDefault();
   }
 
   nodeTag(entityName, entity) {
@@ -208,22 +220,23 @@ class Context extends React.Component {
 
     const selectNodeTypes = query.selectNodeTypes();
     let selection = null;
+
     if (this.canChangeTranslate()
       && this.state.mouseDown
       && selectNodeTypes.length > 0
     ) {
+
       const mouseDown = this.state.mouseDown,
         mouseOffset = this.state.mouseOffset,
-        svgRect = this.svg.getBoundingClientRect(),
-        offset = {
-          x: Math.min(mouseDown.x, mouseOffset.x) - svgRect.left,
-          y: Math.min(mouseDown.y, mouseOffset.y) - svgRect.top
-        },
+        offset = this.svgOffset({
+          x: Math.min(mouseDown.x, mouseOffset.x),
+          y: Math.min(mouseDown.y, mouseOffset.y)
+        }),
         size = {
           width: Math.abs(mouseDown.x - mouseOffset.x),
           height: Math.abs(mouseDown.y - mouseOffset.y)
         };
-        console.log(size,offset);
+
       selection = <rect className="selection"
         x={offset.x} y={offset.y}
         width={size.width} height={size.height} />
@@ -233,7 +246,7 @@ class Context extends React.Component {
       <svg width={ width } height={ height }
         onMouseMove={this.mouseMoveHandler} onClick={methods.arc.escapeDraw}
         onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler}
-        onWheel={ (e) => methods.zoom.change( e.deltaY > 0 ? 0.05 : -0.05 ) }
+        onWheel={this.wheelHandler}
         ref={ (el) => { this.svg = el; } } className="context">
         <g className="diagram-objects" style={{transform}}>
           {drawingArc}
