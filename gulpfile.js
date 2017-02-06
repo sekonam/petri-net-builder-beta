@@ -5,7 +5,7 @@ var source = require('vinyl-source-stream');
 var less = require('gulp-less');
 var concat = require('gulp-concat');
 
-gulp.task('build-js', function () {
+gulp.task('js', function () {
     return browserify({entries: './src/index.js', extensions: ['.js'], debug: true})
         .transform('babelify', {presets: ['es2015', 'react']})
         .bundle()
@@ -13,7 +13,7 @@ gulp.task('build-js', function () {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('build-css', function () {
+gulp.task('css', function () {
   gulp.src([
     './node_modules/bootstrap-less/index.less',
     './node_modules/react-bootstrap-switch/src/less/bootstrap3/react-bootstrap-switch.less',
@@ -24,4 +24,4 @@ gulp.task('build-css', function () {
     .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('default', ['build-js', 'build-css',]);
+gulp.task('default', ['js', 'css',]);

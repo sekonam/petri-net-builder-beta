@@ -7084,6 +7084,12 @@ button.close {
 body {
   background-color: #000;
   color: #aaa;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 /* orange: #f0ad4e */
 /*
@@ -7164,8 +7170,12 @@ svg.context {
 .diagram-objects {
   transform-origin: 50% 50%;
 }
-.tactical {
-  fill: #ccc;
+.selection {
+  fill: #aaa;
+  stroke: #000;
+  stroke-width: 1px;
+  stroke-dasharray: 2,2;
+  opacity: 0.5;
 }
 .node {
   cursor: move;
