@@ -9,14 +9,16 @@ body {
  * Top menu
  */
 .buttons {
-   margin-left:185px;
-   margin-top:1px;
+   margin:5px auto auto 185px;
 }
 .buttons .btn {
   margin-left:5px
 }
 .buttons span {
   margin-left: 15px;
+}
+.bootstrap-switch {
+  margin-left:5px;
 }
 
 /*

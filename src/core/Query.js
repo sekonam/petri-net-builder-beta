@@ -450,6 +450,14 @@ export default class Query {
       return {min, max};
     };
 
+    NodeNames.forEach( (nodeName) => {
+      this[nodeName].select = () => state.select.types[nodeName];
+    } );
+
+    this.selectNodeTypes = () => (
+      NodeNames.filter( (nodeName) => this[nodeName].select() )
+    );
+
     this.arrangement = {
 
       startNode: function () {

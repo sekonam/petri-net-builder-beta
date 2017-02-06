@@ -281,7 +281,14 @@ export default function Store(setState) {
     }
   };
 
-  EntityNames.concat(['zoom', 'translate']).forEach( (entityName) => {
+  NodeNames.forEach((nodeName) => {
+    methods[nodeName].select = (value) => (state) => {
+      state.select.types[nodeName] = value;
+      return state;
+    };
+  });
+
+  EntityNames.concat(['zoom', 'translate',]).forEach( (entityName) => {
     this[entityName] = {};
 
     Object.getOwnPropertyNames( methods[entityName] ).forEach( (methodName) => {
@@ -319,11 +326,19 @@ export default function Store(setState) {
         startOffset: null
       }
     },
-    dragging: {}
+    dragging: {},
+    select: {
+      types: {},
+      data: []
+    }
   };
 
   NodeGroupNames.forEach( (key) => {
     this.state.dragging[key] = null;
+  } );
+
+  NodeNames.forEach( (nodeName) => {
+    this.state.select.types[nodeName] = false;
   } );
 
   if (!_.isEmpty( this.state.db.nets) ) {

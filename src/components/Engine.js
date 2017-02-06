@@ -1,7 +1,9 @@
 import _ from 'lodash';
 import React from 'react';
 import {Button} from 'react-bootstrap';
+import Switch from 'react-bootstrap-switch';
 
+import {NodeNames} from '../core/Entities.js';
 import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import StorageEngine from '../core/StorageEngine.js';
@@ -65,7 +67,6 @@ export default class Engine extends React.Component {
       store = this.state.db,
       methods = this.store,
       query = this.query,
-      active = this.state.active,
 
       leftMenuBlocks = [ 'event', 'handler', ].map( (entityType, key) => {
         return (
@@ -115,6 +116,13 @@ export default class Engine extends React.Component {
         break;
     }
 
+    const switches = NodeNames.map( (nodeName) => (
+      <Switch key={nodeName}
+        labelText={nodeName.ucfirst()}
+        value={query[nodeName].select()}
+        onChange={(el, value) => methods[nodeName].select(value)}/>
+    ) );
+
     return (
       <div className="engine">
         <div className="left-menu">
@@ -130,6 +138,10 @@ export default class Engine extends React.Component {
           <Button onClick={ () => methods.transition.add() } bsStyle="primary">Transition</Button>
           <Button onClick={ () => methods.group.add({type: 0}) } bsStyle="primary">Phase</Button>
           <Button onClick={ () => methods.group.add({type: 1}) } bsStyle="primary">Milestone</Button>
+        </div>
+        <div className="buttons">
+          <span>Select:</span>
+          {switches}
           <span></span>
           <Button onClick={ () => query.arrangement.set('default') } bsStyle="default">Auto Arrangement</Button>
         </div>
