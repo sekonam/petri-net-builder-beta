@@ -8,9 +8,15 @@ class Place extends React.Component {
 
   render() {
     const {data} = this.props;
+    let className = 'place';
+
+    if (data.type > 0) {
+      const type = data.typeLabel();
+      className += ` ${type}-place`;
+    }
 
     return (
-      <g className="place">
+      <g className={className}>
         <Node data={data} />
       </g>
     );

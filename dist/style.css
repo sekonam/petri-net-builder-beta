@@ -7199,6 +7199,10 @@ svg.context {
 .place .node-rect {
   fill: #000030;
 }
+.place.start-place .node-rect,
+.place.finish-place .node-rect {
+  fill: #422;
+}
 .node-txt {
   fill: #fff;
   font-size: 10pt;
