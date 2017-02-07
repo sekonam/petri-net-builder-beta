@@ -494,6 +494,16 @@ export default class Query {
 
       this[nodeName].selected = () => state.select.data[nodeName];
 
+      this[nodeName].isSelected = (id) => {
+        const data = state.select.data[nodeName];
+
+        if (data) {
+          return data.has(id);
+        }
+
+        return false;
+      };
+
     } );
 
     this.selectNodeTypes = () => (
