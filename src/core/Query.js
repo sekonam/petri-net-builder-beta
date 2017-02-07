@@ -451,12 +451,62 @@ export default class Query {
     };
 
     NodeNames.forEach( (nodeName) => {
-      this[nodeName].select = () => state.select.types[nodeName];
+      this[nodeName].isSelecting = () => state.select.types[nodeName];
+
+      this[nodeName].inRectIds = (startOffset, finishOffset) => {
+        const selectionOffsets = {
+          min: {
+            x: Math.min(startOffset.x, finishOffset.x),
+            y: Math.min(startOffset.y, finishOffset.y)
+          },
+          max: {
+            x: Math.max(startOffset.x, finishOffset.x),
+            y: Math.max(startOffset.y, finishOffset.y)
+          }
+        };
+
+        return this[s(nodeName)]().filter(
+          (node) => {
+            const nodeOffsets = {
+              min: {
+                x: node.x,
+                y: node.y
+              },
+              max: {
+                x: node.x + node.width,
+                y: node.y + node.height
+              }
+            };
+
+            let inRange = true;
+            ['x', 'y'].forEach((dim) => {
+              inRange = inRange &&
+                selectionOffsets.max[dim] >= nodeOffsets.min[dim] &&
+                nodeOffsets.max[dim] >= selectionOffsets.min[dim]
+            } );
+
+            return inRange;
+          }
+        ).map(
+          (node) => node.id
+        );
+      };
+
+      this[nodeName].selected = () => state.select.data[nodeName];
+
     } );
 
     this.selectNodeTypes = () => (
-      NodeNames.filter( (nodeName) => this[nodeName].select() )
+      NodeNames.filter( (nodeName) => this[nodeName].isSelecting() )
     );
+
+    this.isDragging = () => {
+      for (let name in state.dragging) {
+        if (state.dragging[name]) return true;
+      }
+
+      return false;
+    }
 
     this.arrangement = {
 

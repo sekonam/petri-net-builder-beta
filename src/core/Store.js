@@ -157,6 +157,7 @@ export default function Store(setState) {
         )(state);
       }
     } );
+
   } );
 
   methods.event.remove = handlerFactory.remove('event', (state, eid) => {
@@ -282,8 +283,13 @@ export default function Store(setState) {
   };
 
   NodeNames.forEach((nodeName) => {
-    methods[nodeName].select = (value) => (state) => {
+    methods[nodeName].setSelect = (value) => (state) => {
       state.select.types[nodeName] = value;
+      return state;
+    };
+
+    methods[nodeName].select = (ids) => (state) => {
+      state.select.data[nodeName] = ids;
       return state;
     };
   });
@@ -329,7 +335,7 @@ export default function Store(setState) {
     dragging: {},
     select: {
       types: {},
-      data: []
+      data: {}
     }
   };
 
@@ -339,6 +345,7 @@ export default function Store(setState) {
 
   NodeNames.forEach( (nodeName) => {
     this.state.select.types[nodeName] = false;
+    this.state.select.data[nodeName] = [];
   } );
 
   if (!_.isEmpty( this.state.db.nets) ) {

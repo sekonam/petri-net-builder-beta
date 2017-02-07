@@ -43,23 +43,6 @@ class Context extends React.Component {
     this.setSvgSize = this.setSvgSize.bind(this);
   }
 
-  componentDidMount() {
-    this.timerId = setInterval( () => {
-      const svgSize = this.svgSize();
-
-      if ( svgSize.width != this.state.svgSize.width ) {
-        this.setSvgSize();
-      }
-
-    }, 5);
-    window.addEventListener('resize', this.setSvgSize);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerId);
-    window.removeEventListener('resize', this.setSvgSize);
-  }
-
   svgSize() {
     const scrollShift = document.documentElement.clientHeigh
       && document.documentElement.clientHeigh != document.documentElement.scrollHeight ? 15 : 0;
@@ -81,19 +64,40 @@ class Context extends React.Component {
     };
   }
 
-  canChangeTranslate() {
-    const {dragging} = this.props;
+  isSelecting() {
+    const query = Query.instance;
+    return !query.isDragging()
+      && this.state.mouseDown
+      && query.selectNodeTypes().length > 0;
+  }
 
-    for (let name in dragging) {
-      if (dragging[name]) return false;
-    }
+  isTranslating() {
+    const query = Query.instance;
+    return !query.isDragging()
+      && this.state.mouseDown
+      && query.selectNodeTypes().length == 0;
+  }
 
-    return true;
+  componentDidMount() {
+    this.timerId = setInterval( () => {
+      const svgSize = this.svgSize();
+
+      if ( svgSize.width != this.state.svgSize.width ) {
+        this.setSvgSize();
+      }
+
+    }, 5);
+    window.addEventListener('resize', this.setSvgSize);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerId);
+    window.removeEventListener('resize', this.setSvgSize);
   }
 
   mouseDownHandler(e) {
-    if (this.canChangeTranslate()) {
-      const query = Query.instance;
+    const query = Query.instance;
+    if (!query.isDragging()) {
       this.setState({
         mouseOffset: {
           x: e.pageX,
@@ -110,7 +114,23 @@ class Context extends React.Component {
   }
 
   mouseUpHandler(e) {
+    const
+      methods = Store.instance,
+      query = Query.instance;
+
     if (this.state.mouseDown) {
+
+      if (this.isSelecting()) {
+        const
+          startOffset = this.svgOffset(this.state.mouseDown),
+          finishOffset = this.svgOffset(this.state.mouseOffset);
+
+        query.selectNodeTypes().forEach((nodeName) => {
+          const selectedNodes = query[nodeName].inRectIds(startOffset, finishOffset);
+          methods[nodeName].select(selectedNodes);
+        });
+      }
+
       this.setState({
         mouseDown: null,
         translateX: 0,
@@ -120,8 +140,7 @@ class Context extends React.Component {
   }
 
   mouseMoveHandler(e) {
-    const {drawing} = this.props,
-      query = Query.instance;
+    const query = Query.instance;
 
     this.setState( {
       mouseOffset: {
@@ -130,16 +149,12 @@ class Context extends React.Component {
       }
     } );
 
-    if (this.canChangeTranslate() && this.state.mouseDown) {
-      const selectNodeTypes = query.selectNodeTypes();
-
-      if (selectNodeTypes.length == 0) {
-        const zoom = query.viewport.zoom.get();
-        Store.instance.translate.set(
-          this.state.translateX + (e.pageX - this.state.mouseDown.x) * zoom,
-          this.state.translateY + (e.pageY - this.state.mouseDown.y) * zoom
-        );
-      }
+    if (this.isTranslating()) {
+      const zoom = query.viewport.zoom.get();
+      Store.instance.translate.set(
+        this.state.translateX + (e.pageX - this.state.mouseDown.x) * zoom,
+        this.state.translateY + (e.pageY - this.state.mouseDown.y) * zoom
+      );
     }
   }
 
@@ -175,10 +190,10 @@ class Context extends React.Component {
   }
 
   render() {
-    const { drawing } = this.props,
-      methods = Store.instance,
+    const methods = Store.instance,
       query = Query.instance,
       {width, height} = this.state.svgSize,
+      drawingArc = query.arc.drawing(),
       groupsEntityIds = query.groupsEntityIds(),
 
       groups = query.groupsNotActive()
@@ -203,10 +218,6 @@ class Context extends React.Component {
         <Arc data={arc} key={arc.id} />
       ) ),
 
-      drawingArc = drawing.arc.data ? (
-        <Arc data={drawing.arc.data} offset={query.arc.drawingOffset(this.state.mouseOffset)} />
-      ) : '',
-
       viewport = query.viewport,
       transform = `translate(${viewport.translateX()}px,${viewport.translateY()}px) scale(${viewport.zoom.get()})`,
       transformStyle = {
@@ -223,10 +234,7 @@ class Context extends React.Component {
     const selectNodeTypes = query.selectNodeTypes();
     let selection = null;
 
-    if (this.canChangeTranslate()
-      && this.state.mouseDown
-      && selectNodeTypes.length > 0
-    ) {
+    if (this.isSelecting()) {
 
       const mouseDown = this.state.mouseDown,
         mouseOffset = this.state.mouseOffset,
@@ -251,7 +259,10 @@ class Context extends React.Component {
         onWheel={this.wheelHandler}
         ref={ (el) => { this.svg = el; } } className="context">
         <g className="diagram-objects" style={{transform}}>
-          {drawingArc}
+          {drawingArc ? <Arc
+            data={drawingArc}
+            offset={query.arc.drawingOffset(this.state.mouseOffset)}
+          /> : ''}
           {arcs}
           {subnets}
           {transitions}
@@ -265,8 +276,6 @@ class Context extends React.Component {
   }
 }
 
-Context.propTypes = {
-  drawing: PropTypes.object.isRequired
-};
+Context.propTypes = {};
 
 export default DragDropContext(TouchBackend({ enableMouseEvents: true }))(Context);

@@ -119,8 +119,8 @@ export default class Engine extends React.Component {
     const switches = NodeNames.map( (nodeName) => (
       <Switch key={nodeName}
         labelText={nodeName.ucfirst()}
-        value={query[nodeName].select()}
-        onChange={(el, value) => methods[nodeName].select(value)}/>
+        value={query[nodeName].isSelecting()}
+        onChange={(el, value) => methods[nodeName].setSelect(value)}/>
     ) );
 
     return (
@@ -148,7 +148,7 @@ export default class Engine extends React.Component {
         <div className="right-sidebar">
           {formComp}
         </div>
-        <Context drawing={this.state.drawing} dragging={this.state.dragging} />
+        <Context />
       </div>
     );
   }
