@@ -616,7 +616,12 @@ export default class Query {
       },
 
       translateX: () => state.viewport.translateX,
-      translateY: () => state.viewport.translateY
+      translateY: () => state.viewport.translateY,
+
+      offset: (pos) => ({
+        x: pos.x / state.viewport.zoom - state.viewport.translateX,
+        y: pos.y / state.viewport.zoom - state.viewport.translateY
+      })
     };
 
     this.socketsBySide = null;

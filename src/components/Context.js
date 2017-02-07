@@ -77,7 +77,8 @@ class Context extends React.Component {
     const svgRect = this.svg.getBoundingClientRect();
     return {
       x: windowOffset.x - svgRect.left - window.pageXOffset,
-      y: windowOffset.y - svgRect.top - window.pageYOffset    };
+      y: windowOffset.y - svgRect.top - window.pageYOffset
+    };
   }
 
   canChangeTranslate() {
@@ -133,9 +134,10 @@ class Context extends React.Component {
       const selectNodeTypes = query.selectNodeTypes();
 
       if (selectNodeTypes.length == 0) {
+        const zoom = query.viewport.zoom.get();
         Store.instance.translate.set(
-          this.state.translateX + e.pageX - this.state.mouseDown.x,
-          this.state.translateY + e.pageY - this.state.mouseDown.y
+          this.state.translateX + (e.pageX - this.state.mouseDown.x) * zoom,
+          this.state.translateY + (e.pageY - this.state.mouseDown.y) * zoom
         );
       }
     }
