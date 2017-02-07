@@ -7181,6 +7181,13 @@ svg.context {
   cursor: move;
   opacity: 1;
 }
+.node.active .node-rect {
+  stroke-width: 2px;
+}
+.node.selected .node-rect {
+  stroke-width: 2px;
+  stroke-dasharray: 2,2;
+}
 .node-rect {
   fill: #000;
   stroke: #fff;

@@ -12,6 +12,7 @@ import ViewportModel from './../models/ViewportModel.js';
 import Place from './Place.js';
 import Transition from './Transition.js';
 import Subnet from './Subnet.js';
+import NodeByType from './NodeByType.js';
 import Arc from './Arc.js';
 import Group from './Group.js';
 
@@ -164,28 +165,14 @@ class Context extends React.Component {
     e.preventDefault();
   }
 
-  nodeTag(entityName, entity) {
-    switch (entityName) {
+  nodeTag(nodeName, node) {
+    switch (nodeName) {
       case 'place':
-        return (
-          <Place data={entity} key={entity.id} />
-        );
-        break;
       case 'subnet':
-        return (
-          <Subnet data={entity} key={entity.id} />
-        );
-        break;
       case 'transition':
-        return (
-          <Transition data={entity} key={entity.id} />
-        );
-        break;
+        return <NodeByType type={nodeName} data={node} key={node.id}/>;
       case 'group':
-        return (
-          <Group data={entity} key={entity.id}/>
-        );
-        break;
+        return <Group data={node} key={node.id}/>;
     }
   }
 
@@ -201,16 +188,15 @@ class Context extends React.Component {
           <Group data={group} key={group.id} />
         ) ),
 
-      transitions = query.transitionsNotActive(null, groupsEntityIds)
-        .cmap( (transition, key) => (
-          <Transition data={transition} key={transition.id} />
-        ) ),
+      transitions = query.transitionsNotActive(null, groupsEntityIds).cmap( (transition) => (
+        <Transition data={transition} key={transition.id} />
+      ) ),
 
-      subnets = query.subnetsNotActive(null, groupsEntityIds).cmap( (subnet, key) => (
+      subnets = query.subnetsNotActive(null, groupsEntityIds).cmap( (subnet) => (
         <Subnet data={subnet} key={subnet.id} />
       ) ),
 
-      places = query.placesNotActive(null, groupsEntityIds).cmap( (place, key) => (
+      places = query.placesNotActive(null, groupsEntityIds).cmap( (place) => (
         <Place data={place} key={place.id} />
       ) ),
 

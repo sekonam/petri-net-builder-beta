@@ -17,12 +17,16 @@ export default class Node extends React.Component {
       style.fill = data.color;
     }
 
+    let className = 'node';
+
     if (query.active.isSet() && data.id == query.active.data.id) {
-      style.strokeWidth = '2px';
+      className += ' active';
+    } else if (query[data.entityName()].selected().has(data.id)) {
+      className += ' selected';
     }
 
     return (
-      <g className="node" id={data.id}>
+      <g className={className} id={data.id}>
         <rect className="node-rect" style={style} x={x} y={y}
           width={width + 'px'} height={height + 'px'} rx={r} ry={r} />
         <text className="node-txt" x={x} y={y+height+12}>{this.props.data.short('name', Math.round(width/6.5))}</text>
