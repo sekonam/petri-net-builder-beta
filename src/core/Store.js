@@ -231,10 +231,10 @@ export default function Store(setState) {
       ).nodeType;
     let acceptableFinishNodeTypes = [];
 
-    if (startNodeType == 'transition') {
-      acceptableFinishNodeTypes = ['place', 'subnet',];
-    } else if(startNodeType == 'place' || startNodeType == 'subnet') {
-      acceptableFinishNodeTypes = ['transition',];
+    if (startNodeType == 'transition' || startNodeType == 'subnet') {
+      acceptableFinishNodeTypes = ['place',];
+    } else if(startNodeType == 'place') {
+      acceptableFinishNodeTypes = ['transition', 'subnet',];
     }
 
     if ( !socket.type
