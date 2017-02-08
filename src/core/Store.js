@@ -15,12 +15,11 @@ export default function Store(setState) {
 
     add: (entityName, callback = null) => (params = null) => (state) => {
       const entity = EntityFactory[entityName]();
+      state.db[ s(entityName) ].push( entity );
 
       if (params) {
         entity.set(params);
       }
-
-      state.db[ s(entityName) ].push( entity );
 
       if (callback) {
         callback.call(null, state, entity);
@@ -95,6 +94,15 @@ export default function Store(setState) {
           name: entity.name,
           subnetId: entity.id
         })(state);
+
+        const subnetNet = state.db.nets.find( (net) => net.subnetId == entity.id );
+        if (subnetNet) {
+          methods.place.add( {type: 1} )(state);
+          state.db.places[state.db.places.length - 1].netId = subnetNet.id;
+
+          methods.place.add( {type: 2, x: 400} )(state);
+          state.db.places[state.db.places.length - 1].netId = subnetNet.id;
+        }
       }
     } );
   } );
