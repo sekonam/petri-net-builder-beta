@@ -54,7 +54,12 @@ class Context extends React.Component {
   }
 
   setSvgSize() {
-    this.setState({ svgSize: this.svgSize() });
+    const svgSize = this.svgSize();
+    this.setState({ svgSize });
+    Store.instance.zoom.setCenter({
+      x: svgSize.width/2,
+      y: svgSize.height/2
+    });
   }
 
   svgOffset(windowOffset) {
@@ -124,10 +129,12 @@ class Context extends React.Component {
       if (this.isSelecting()) {
         const
           startOffset = this.state.mouseDown,
-          finishOffset = this.state.mouseOffset;
+          finishOffset = this.state.mouseOffset,
+          {width, height} = this.state.svgSize,
+          center = {x: width/2, y: height/2};
 
         query.selectNodeTypes().forEach((nodeName) => {
-          const selectedNodes = query[nodeName].inRectIds(startOffset, finishOffset);
+          const selectedNodes = query[nodeName].inRectIds(startOffset, finishOffset, center);
           methods[nodeName].select(selectedNodes);
         });
       }

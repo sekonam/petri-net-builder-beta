@@ -459,14 +459,16 @@ export default class Query {
       this[nodeName].isSelecting = () => state.select.types[nodeName];
 
       this[nodeName].inRectIds = (startOffset, finishOffset) => {
+        const startOffset0 = this.viewport.offset(startOffset),
+          finishOffset0 = this.viewport.offset(finishOffset)
         const selectionOffsets = {
           min: {
-            x: Math.min(startOffset.x, finishOffset.x),
-            y: Math.min(startOffset.y, finishOffset.y)
+            x: Math.min(startOffset0.x, finishOffset0.x),
+            y: Math.min(startOffset0.y, finishOffset0.y)
           },
           max: {
-            x: Math.max(startOffset.x, finishOffset.x),
-            y: Math.max(startOffset.y, finishOffset.y)
+            x: Math.max(startOffset0.x, finishOffset0.x),
+            y: Math.max(startOffset0.y, finishOffset0.y)
           }
         };
 
@@ -691,7 +693,8 @@ export default class Query {
       translateX: () => state.viewport.translateX,
       translateY: () => state.viewport.translateY,
 
-      offset: (pos, center) => {
+      offset: (pos) => {
+        const center = state.viewport.center;
         return {
           x: (pos.x - center.x - state.viewport.translateX) / state.viewport.zoom + center.x,
           y: (pos.y - center.y - state.viewport.translateY) / state.viewport.zoom + center.y

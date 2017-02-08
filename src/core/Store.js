@@ -277,6 +277,12 @@ export default function Store(setState) {
     set: (zoom) => (state) => {
       state.viewport.zoom = zoom;
       return state;
+    },
+
+    setCenter: (offset) => (state) => {
+      state.viewport.center.x = offset.x;
+      state.viewport.center.y = offset.y;
+      return state;
     }
 
   };
