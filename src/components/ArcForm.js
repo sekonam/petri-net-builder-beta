@@ -9,7 +9,15 @@ export default class ArcForm extends React.Component {
 
   render() {
     const {data} = this.props,
-      methods = Store.instance;
+      methods = Store.instance,
+      dasharrayOptions = [];
+
+    for (let key in ArcModel.dasharrays) {
+      dasharrayOptions.push({
+        value: ArcModel.dasharrays[key],
+        label: key.ucfirst()
+      });
+    }
 
     return (
         <Form>
@@ -18,6 +26,12 @@ export default class ArcForm extends React.Component {
             <ControlLabel>Arc Color</ControlLabel>
             <FormControl type="text" value={data.color}
               onChange={(e) => methods.save('color', e.target.value)} />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Arc Line Type</ControlLabel>
+            <Select value={data.dasharray} options={dasharrayOptions}
+              onChange={(val) => methods.save('dasharray',
+                typeof val == 'undefined' ? 'none' : val.value )} />
           </FormGroup>
           <FormGroup className="center">
             <Button onClick={() => methods.arc.remove(data.id)}

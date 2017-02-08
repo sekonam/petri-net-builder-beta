@@ -110,7 +110,7 @@ export default class Arc extends React.Component {
             </marker>
           </defs>
           <g className='arc-line' style={data.color ? {stroke: data.color} : {}}>
-            <path d={path} />
+            <path d={path} style={{strokeDasharray: data.dasharray}} />
             <line markerStart={`url(#arrow-${data.id})`} x1={e.x} y1={e.y} x2={f.x} y2={f.y} />
           </g>
         </g>
