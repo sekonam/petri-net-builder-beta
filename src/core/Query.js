@@ -691,11 +691,10 @@ export default class Query {
       translateX: () => state.viewport.translateX,
       translateY: () => state.viewport.translateY,
 
-      offset: (pos) => {
-        const center = query.avg();
+      offset: (pos, center) => {
         return {
-          x: (pos.x - center.x) / state.viewport.zoom + center.x - state.viewport.translateX,
-          y: (pos.y - center.y) / state.viewport.zoom + center.y - state.viewport.translateY
+          x: (pos.x - center.x - state.viewport.translateX) / state.viewport.zoom + center.x,
+          y: (pos.y - center.y - state.viewport.translateY) / state.viewport.zoom + center.y
         };
       }
     };

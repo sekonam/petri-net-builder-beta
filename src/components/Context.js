@@ -174,6 +174,17 @@ class Context extends React.Component {
     }
   }
 
+  drawTactical() {
+    const {width, height} = this.state.svgSize,
+      INDENT = 10000;
+    return (
+      <g className="tacktical">
+        <circle cx={-INDENT} cy={-INDENT} r="1" />
+        <circle cx={width + INDENT} cy={height + INDENT} r="1" />
+      </g>
+    );
+  }
+
   render() {
     const methods = Store.instance,
       query = Query.instance,
@@ -236,9 +247,6 @@ class Context extends React.Component {
         width={size.width} height={size.height} />
     }
 
-    const avg = query.avg(), mm = query.minmax();
-    console.log(mm);
-
     return (
       <svg width={ width } height={ height }
         onMouseMove={this.mouseMoveHandler} onClick={methods.arc.escapeDraw}
@@ -246,9 +254,11 @@ class Context extends React.Component {
         onWheel={this.wheelHandler}
         ref={ (el) => { this.svg = el; } } className="context">
         <g className="diagram-objects" style={{transform}}>
+          {this.drawTactical()}
           {drawingArc ? <Arc
             data={drawingArc}
             offset={this.state.mouseOffset}
+            center={{x:width/2, y:height/2}}
           /> : ''}
           {arcs}
           {subnets}
@@ -258,9 +268,6 @@ class Context extends React.Component {
           {topEntities}
         </g>
         {selection}
-        <circle cx={avg.x} cy={avg.y} r='3' fill="red" />
-        <rect x={mm.min.x} width={mm.max.x-mm.min.x} y={mm.min.y} height={mm.max.y-mm.min.y}
-          stroke='red' strokeWidth="1" />
       </svg>
     );
   }
