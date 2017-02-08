@@ -43,10 +43,7 @@ export default class Arc extends React.Component {
       finishOffset = query.socket.offset(data.finishSocketId);
       finishSide = query.socket.side(data.finishSocketId)
     } else {
-      finishOffset = {
-        x: startOffset.x + offset.x,
-        y: startOffset.y + offset.y
-      };
+      finishOffset = query.viewport.offset(offset);
       finishSide = AnotherSide[startSide];
     }
 

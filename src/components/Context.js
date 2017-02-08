@@ -141,23 +141,18 @@ class Context extends React.Component {
   }
 
   mouseMoveHandler(e) {
-    const query = Query.instance;
-
-    this.setState( {
-      mouseOffset: this.svgOffset({
-        x: e.pageX,
-        y: e.pageY
-      })
-    } );
-
-    if (this.isTranslating()) {
-      const offset = this.svgOffset({
+    const query = Query.instance,
+      mouseOffset = this.svgOffset({
         x: e.pageX,
         y: e.pageY
       });
+
+    this.setState({ mouseOffset });
+
+    if (this.isTranslating()) {
       Store.instance.translate.set(
-        this.state.translateX + offset.x - this.state.mouseDown.x,
-        this.state.translateY + offset.y - this.state.mouseDown.y
+        this.state.translateX + mouseOffset.x - this.state.mouseDown.x,
+        this.state.translateY + mouseOffset.y - this.state.mouseDown.y
       );
     }
   }
@@ -241,18 +236,21 @@ class Context extends React.Component {
         width={size.width} height={size.height} />
     }
 
+    const avg = query.avg(), mm = query.minmax();
+    console.log(mm);
+
     return (
       <svg width={ width } height={ height }
         onMouseMove={this.mouseMoveHandler} onClick={methods.arc.escapeDraw}
         onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler}
         onWheel={this.wheelHandler}
         ref={ (el) => { this.svg = el; } } className="context">
+        {drawingArc ? <Arc
+          data={drawingArc}
+          offset={this.state.mouseOffset}
+        /> : ''}
+        {arcs}
         <g className="diagram-objects" style={{transform}}>
-          {drawingArc ? <Arc
-            data={drawingArc}
-            offset={query.viewport.offset(this.state.mouseOffset)}
-          /> : ''}
-          {arcs}
           {subnets}
           {transitions}
           {places}
@@ -260,6 +258,9 @@ class Context extends React.Component {
           {topEntities}
         </g>
         {selection}
+        <circle cx={avg.x} cy={avg.y} r='3' fill="red" />
+        <rect x={mm.min.x} width={mm.max.x-mm.min.x} y={mm.min.y} height={mm.max.y-mm.min.y}
+          stroke='red' strokeWidth="1" />
       </svg>
     );
   }

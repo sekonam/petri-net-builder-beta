@@ -427,11 +427,13 @@ export default class Query {
         };
 
       NodeNames.forEach( (entityName) => {
-        let entities = state.db[s(entityName)];
+        let entities = this[s(entityName)]();
 
         if (gid) {
           const ids = this.group.get(gid)[entityName+'Ids'];
-          entities = entities.filter( (entity) => ids.has(entity.id) );
+          entities = state.db[s(entityName)].filter(
+            (node) => node.netId == state.current.net.id && ids.has(node.id)
+          );
         }
 
         entities.forEach( (entity) => {
@@ -443,6 +445,14 @@ export default class Query {
       } );
 
       return {min, max};
+    };
+
+    this.avg = (gid = null) => {
+      const {min, max} = this.minmax(gid);
+      return {
+        x: (min.x + max.x) / 2,
+        y: (min.y + max.y) / 2
+      };
     };
 
     NodeNames.forEach( (nodeName) => {
@@ -681,10 +691,13 @@ export default class Query {
       translateX: () => state.viewport.translateX,
       translateY: () => state.viewport.translateY,
 
-      offset: (pos) => ({
-        x: pos.x / state.viewport.zoom - state.viewport.translateX,
-        y: pos.y / state.viewport.zoom - state.viewport.translateY
-      })
+      offset: (pos) => {
+        const center = query.avg();
+        return {
+          x: (pos.x - center.x) / state.viewport.zoom + center.x - state.viewport.translateX,
+          y: (pos.y - center.y) / state.viewport.zoom + center.y - state.viewport.translateY
+        };
+      }
     };
 
     this.socketsBySide = null;
