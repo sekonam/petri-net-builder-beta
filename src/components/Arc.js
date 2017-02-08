@@ -124,4 +124,4 @@ Arc.propTypes = {
   data: PropTypes.instanceOf(ArcModel).isRequired,
   offset: PropTypes.object
 };
-Arc.pivotShift = 100;
+Arc.pivotShift = 40;

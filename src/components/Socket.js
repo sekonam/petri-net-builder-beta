@@ -40,6 +40,10 @@ export default class Socket extends React.Component {
       figure = <circle cx={x} cy={y} r="5" onClick={this.socketClick}/>;
     }
 
+    if (!data.type && query.arc.drawing()) {
+      className += ' socket-in-drawing-mode';
+    }
+
     return (
       <g className={className}>
         {figure}

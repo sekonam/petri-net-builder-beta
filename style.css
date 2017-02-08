@@ -155,6 +155,11 @@ svg.context {
   stroke:#fff;
   stroke-width:2px;
 }
+.socket-in-drawing-mode {
+  transform: scale(1.5);
+  transform-origin: 50% 50%;
+  transition: transform 0.5s ease-in-out;
+}
 
 .group .group-header {
   fill : #fff;
