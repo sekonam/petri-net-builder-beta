@@ -136,11 +136,6 @@ export default class Query {
       return entities;
     };
 
-    this.arc.drawingOffset = (mouseOffset) => this.viewport.zoom.offset({
-      x: mouseOffset.x - state.drawing.arc.startOffset.x,
-      y: mouseOffset.y - state.drawing.arc.startOffset.y
-    });
-
     this.arc.drawing = () => state.drawing.arc.data;
 
     this.group.nodes = (id) => {
@@ -432,11 +427,13 @@ export default class Query {
         };
 
       NodeNames.forEach( (entityName) => {
-        let entities = state.db[s(entityName)];
+        let entities = this[s(entityName)]();
 
         if (gid) {
           const ids = this.group.get(gid)[entityName+'Ids'];
-          entities = entities.filter( (entity) => ids.has(entity.id) );
+          entities = state.db[s(entityName)].filter(
+            (node) => node.netId == state.current.net.id && ids.has(node.id)
+          );
         }
 
         entities.forEach( (entity) => {
@@ -450,18 +447,28 @@ export default class Query {
       return {min, max};
     };
 
+    this.avg = (gid = null) => {
+      const {min, max} = this.minmax(gid);
+      return {
+        x: (min.x + max.x) / 2,
+        y: (min.y + max.y) / 2
+      };
+    };
+
     NodeNames.forEach( (nodeName) => {
       this[nodeName].isSelecting = () => state.select.types[nodeName];
 
       this[nodeName].inRectIds = (startOffset, finishOffset) => {
+        const startOffset0 = this.viewport.offset(startOffset),
+          finishOffset0 = this.viewport.offset(finishOffset)
         const selectionOffsets = {
           min: {
-            x: Math.min(startOffset.x, finishOffset.x),
-            y: Math.min(startOffset.y, finishOffset.y)
+            x: Math.min(startOffset0.x, finishOffset0.x),
+            y: Math.min(startOffset0.y, finishOffset0.y)
           },
           max: {
-            x: Math.max(startOffset.x, finishOffset.x),
-            y: Math.max(startOffset.y, finishOffset.y)
+            x: Math.max(startOffset0.x, finishOffset0.x),
+            y: Math.max(startOffset0.y, finishOffset0.y)
           }
         };
 
@@ -686,10 +693,13 @@ export default class Query {
       translateX: () => state.viewport.translateX,
       translateY: () => state.viewport.translateY,
 
-      offset: (pos) => ({
-        x: pos.x / state.viewport.zoom - state.viewport.translateX,
-        y: pos.y / state.viewport.zoom - state.viewport.translateY
-      })
+      offset: (pos) => {
+        const center = state.viewport.center;
+        return {
+          x: (pos.x - center.x - state.viewport.translateX) / state.viewport.zoom + center.x,
+          y: (pos.y - center.y - state.viewport.translateY) / state.viewport.zoom + center.y
+        };
+      }
     };
 
     this.socketsBySide = null;

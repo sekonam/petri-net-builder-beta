@@ -18,10 +18,7 @@ export default class Socket extends React.Component {
       query = Query.instance;
 
     if (data.type) {
-      methods.arc.startDraw(data.id, {
-        x: e.pageX,
-        y: e.pageY
-      });
+      methods.arc.startDraw(data.id);
       e.stopPropagation();
     } else if (query.arc.drawing()) {
       methods.arc.finishDraw(data.id);

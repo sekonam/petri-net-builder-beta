@@ -54,7 +54,12 @@ class Context extends React.Component {
   }
 
   setSvgSize() {
-    this.setState({ svgSize: this.svgSize() });
+    const svgSize = this.svgSize();
+    this.setState({ svgSize });
+    Store.instance.zoom.setCenter({
+      x: svgSize.width/2,
+      y: svgSize.height/2
+    });
   }
 
   svgOffset(windowOffset) {
@@ -100,14 +105,14 @@ class Context extends React.Component {
     const query = Query.instance;
     if (!query.isDragging()) {
       this.setState({
-        mouseOffset: {
+        mouseOffset: this.svgOffset({
           x: e.pageX,
           y: e.pageY
-        },
-        mouseDown: {
+        }),
+        mouseDown: this.svgOffset({
           x: e.pageX,
           y: e.pageY
-        },
+        }),
         translateX: query.viewport.translateX(),
         translateY: query.viewport.translateY()
       });
@@ -123,11 +128,13 @@ class Context extends React.Component {
 
       if (this.isSelecting()) {
         const
-          startOffset = this.svgOffset(this.state.mouseDown),
-          finishOffset = this.svgOffset(this.state.mouseOffset);
+          startOffset = this.state.mouseDown,
+          finishOffset = this.state.mouseOffset,
+          {width, height} = this.state.svgSize,
+          center = {x: width/2, y: height/2};
 
         query.selectNodeTypes().forEach((nodeName) => {
-          const selectedNodes = query[nodeName].inRectIds(startOffset, finishOffset);
+          const selectedNodes = query[nodeName].inRectIds(startOffset, finishOffset, center);
           methods[nodeName].select(selectedNodes);
         });
       }
@@ -141,19 +148,18 @@ class Context extends React.Component {
   }
 
   mouseMoveHandler(e) {
-    const query = Query.instance;
-
-    this.setState( {
-      mouseOffset: {
+    const query = Query.instance,
+      mouseOffset = this.svgOffset({
         x: e.pageX,
         y: e.pageY
-      }
-    } );
+      });
+
+    this.setState({ mouseOffset });
 
     if (this.isTranslating()) {
       Store.instance.translate.set(
-        this.state.translateX + e.pageX - this.state.mouseDown.x,
-        this.state.translateY + e.pageY - this.state.mouseDown.y
+        this.state.translateX + mouseOffset.x - this.state.mouseDown.x,
+        this.state.translateY + mouseOffset.y - this.state.mouseDown.y
       );
     }
   }
@@ -173,6 +179,17 @@ class Context extends React.Component {
       case 'group':
         return <Group data={node} key={node.id}/>;
     }
+  }
+
+  drawTactical() {
+    const {width, height} = this.state.svgSize,
+      INDENT = 10000;
+    return (
+      <g className="tacktical">
+        <circle cx={-INDENT} cy={-INDENT} r="1" />
+        <circle cx={width + INDENT} cy={height + INDENT} r="1" />
+      </g>
+    );
   }
 
   render() {
@@ -223,10 +240,10 @@ class Context extends React.Component {
 
       const mouseDown = this.state.mouseDown,
         mouseOffset = this.state.mouseOffset,
-        offset = this.svgOffset({
+        offset = {
           x: Math.min(mouseDown.x, mouseOffset.x),
           y: Math.min(mouseDown.y, mouseOffset.y)
-        }),
+        },
         size = {
           width: Math.abs(mouseDown.x - mouseOffset.x),
           height: Math.abs(mouseDown.y - mouseOffset.y)
@@ -244,9 +261,11 @@ class Context extends React.Component {
         onWheel={this.wheelHandler}
         ref={ (el) => { this.svg = el; } } className="context">
         <g className="diagram-objects" style={{transform}}>
+          {this.drawTactical()}
           {drawingArc ? <Arc
             data={drawingArc}
-            offset={query.arc.drawingOffset(this.state.mouseOffset)}
+            offset={this.state.mouseOffset}
+            center={{x:width/2, y:height/2}}
           /> : ''}
           {arcs}
           {subnets}

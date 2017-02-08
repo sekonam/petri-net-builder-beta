@@ -32,8 +32,7 @@ export default class Arc extends React.Component {
   render() {
     const query = Query.instance,
       methods = Store.instance,
-      data = this.props.data,
-      {offset} = this.props,
+      {data, offset, center} = this.props,
       startOffset = query.socket.offset(data.startSocketId),
       startSide = query.socket.side(data.startSocketId);
 
@@ -43,10 +42,7 @@ export default class Arc extends React.Component {
       finishOffset = query.socket.offset(data.finishSocketId);
       finishSide = query.socket.side(data.finishSocketId)
     } else {
-      finishOffset = {
-        x: startOffset.x + offset.x,
-        y: startOffset.y + offset.y
-      };
+      finishOffset = query.viewport.offset(offset, center);
       finishSide = AnotherSide[startSide];
     }
 
