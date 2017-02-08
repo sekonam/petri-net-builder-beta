@@ -151,10 +151,9 @@ class Context extends React.Component {
     } );
 
     if (this.isTranslating()) {
-      const zoom = query.viewport.zoom.get();
       Store.instance.translate.set(
-        this.state.translateX + (e.pageX - this.state.mouseDown.x) * zoom,
-        this.state.translateY + (e.pageY - this.state.mouseDown.y) * zoom
+        this.state.translateX + e.pageX - this.state.mouseDown.x,
+        this.state.translateY + e.pageY - this.state.mouseDown.y
       );
     }
   }
