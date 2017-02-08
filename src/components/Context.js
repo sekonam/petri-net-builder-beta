@@ -245,12 +245,12 @@ class Context extends React.Component {
         onMouseDown={this.mouseDownHandler} onMouseUp={this.mouseUpHandler}
         onWheel={this.wheelHandler}
         ref={ (el) => { this.svg = el; } } className="context">
-        {drawingArc ? <Arc
-          data={drawingArc}
-          offset={this.state.mouseOffset}
-        /> : ''}
-        {arcs}
         <g className="diagram-objects" style={{transform}}>
+          {drawingArc ? <Arc
+            data={drawingArc}
+            offset={this.state.mouseOffset}
+          /> : ''}
+          {arcs}
           {subnets}
           {transitions}
           {places}
