@@ -64,7 +64,6 @@ export default class Engine extends React.Component {
   render() {
     const
       form = this.state.form,
-      store = this.state.db,
       methods = this.store,
       query = this.query,
 
@@ -79,41 +78,43 @@ export default class Engine extends React.Component {
 
     let formComp = '';
 
-    switch (form.type) {
-      case 'net':
-        formComp = <NetForm data={form.data} />;
-        break;
-      case 'place':
-        formComp = <PlaceForm data={form.data} />;
-        break;
-      case 'transition':
-        formComp = <TransitionForm data={form.data}
-          handlers={query.handler.options()}
-          selectedHandlers={query.handler.selectedOptions(form.data.handlerIds)}
-          />;
-        break;
-      case 'subnet':
-        formComp = <SubnetForm data={form.data} />;
-        break;
-      case 'group':
-        formComp = <GroupForm data={form.data}
-          places={query.place.options()}
-          transitions={query.transition.options()}
-          subnets={query.subnet.options()}
-          selectedPlaces={query.place.selectedOptions(form.data.placeIds)}
-          selectedTransitions={query.transition.selectedOptions(form.data.transitionIds)}
-          selectedSubnets={query.subnet.selectedOptions(form.data.subnetIds)} />;
-        break;
-      case 'arc':
-        formComp = <ArcForm data={form.data} />;
-        break;
-      case 'event':
-        formComp = <EventForm data={form.data} />;
-        break;
-      case 'handler':
-        formComp = <HandlerForm data={form.data} events={query.event.options()}
-          selectedEvents={query.event.selectedOptions(form.data.events)} />;
-        break;
+    if (form.data) {
+      switch (form.type) {
+        case 'net':
+          formComp = <NetForm data={form.data} />;
+          break;
+        case 'place':
+          formComp = <PlaceForm data={form.data} />;
+          break;
+        case 'transition':
+          formComp = <TransitionForm data={form.data}
+            handlers={query.handler.options()}
+            selectedHandlers={query.handler.selectedOptions(form.data.handlerIds)}
+            />;
+          break;
+        case 'subnet':
+          formComp = <SubnetForm data={form.data} />;
+          break;
+        case 'group':
+          formComp = <GroupForm data={form.data}
+            places={query.place.options()}
+            transitions={query.transition.options()}
+            subnets={query.subnet.options()}
+            selectedPlaces={query.place.selectedOptions(form.data.placeIds)}
+            selectedTransitions={query.transition.selectedOptions(form.data.transitionIds)}
+            selectedSubnets={query.subnet.selectedOptions(form.data.subnetIds)} />;
+          break;
+        case 'arc':
+          formComp = <ArcForm data={form.data} />;
+          break;
+        case 'event':
+          formComp = <EventForm data={form.data} />;
+          break;
+        case 'handler':
+          formComp = <HandlerForm data={form.data} events={query.event.options()}
+            selectedEvents={query.event.selectedOptions(form.data.events)} />;
+          break;
+      }
     }
 
     const switches = NodeNames.map( (nodeName) => (
@@ -144,6 +145,8 @@ export default class Engine extends React.Component {
           {switches}
           <span></span>
           <Button onClick={ () => query.arrangement.set('default') } bsStyle="default">Auto Arrangement</Button>
+          <span></span>
+          <Button onClick={ () => methods.storage.clear() } bsStyle="danger">Clear Storage</Button>
         </div>
         <div className="right-sidebar">
           {formComp}

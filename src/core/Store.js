@@ -168,7 +168,7 @@ export default function Store(setState) {
 
   } );
 
-  methods.event.remove = handlerFactory.remove('event', (state, eid) => {
+  methods.event.remove = handlerFactory.remove( 'event', (state, eid) => {
     state.db.handlers.forEach( (handler) => {
       const eventKey = handler.events.indexOf(eid);
 
@@ -290,7 +290,7 @@ export default function Store(setState) {
     }
   };
 
-  NodeNames.forEach((nodeName) => {
+  NodeNames.forEach( (nodeName) => {
     methods[nodeName].setSelect = (value) => (state) => {
       state.select.types[nodeName] = value;
       return state;
@@ -320,44 +320,75 @@ export default function Store(setState) {
     return state;
   } );
 
-  this.state = {
-    db: new EngineModel( StorageEngine.loadFromStorage( 'db' )),
-    viewport: new ViewportModel(),
-    active: {
-      data: null,
-      type: null
-    },
-    form: {
-      data: null,
-      type: null
-    },
-    current: {
-      net: null
-    },
-    drawing: {
-      arc: {
-        data: null,
-        startOffset: null
+  this.storage = {
+    init: (dbParams = null) => {
+      let state = {
+        db: new EngineModel(dbParams),
+        viewport: new ViewportModel(),
+        active: {
+          data: null,
+          type: null
+        },
+        form: {
+          data: null,
+          type: null
+        },
+        current: {
+          net: null
+        },
+        drawing: {
+          arc: {
+            data: null,
+            startOffset: null
+          }
+        },
+        dragging: {},
+        select: {
+          types: {},
+          data: {}
+        }
+      };
+
+      NodeGroupNames.forEach( (key) => {
+        state.dragging[key] = null;
+      } );
+
+      NodeNames.forEach( (nodeName) => {
+        state.select.types[nodeName] = false;
+        state.select.data[nodeName] = [];
+      } );
+
+      if (!_.isEmpty(state.db.nets)) {
+        methods.net.current(state.db.nets[0].id)(state);
       }
+
+      return state;
     },
-    dragging: {},
-    select: {
-      types: {},
-      data: {}
-    }
+
+    clear: () => setState((state) => {
+      methods.place.active(null)(state);
+      methods.place.edit(null)(state);
+      state.current.net = null;
+      methods.arc.escapeDraw() (state);
+      NodeGroupNames.forEach( (key) => {
+        state.dragging[key] = null;
+      } );
+      NodeNames.forEach( (nodeName) => {
+        state.select.types[nodeName] = false;
+        state.select.data[nodeName] = [];
+      } );
+      methods.zoom.set(1) (state);
+      methods.translate.set(0,0) (state);
+      ['net', 'event', 'handler',].forEach( (entityName) => {
+        while (!_.isEmpty( state.db[ s(entityName) ] )) {
+          const eid = state.db[ s(entityName) ][0].id;
+          methods[entityName].remove(eid)(state);
+        }
+      } );
+      return state;
+    })
   };
 
-  NodeGroupNames.forEach( (key) => {
-    this.state.dragging[key] = null;
-  } );
-
-  NodeNames.forEach( (nodeName) => {
-    this.state.select.types[nodeName] = false;
-    this.state.select.data[nodeName] = [];
-  } );
-
-  if (!_.isEmpty( this.state.db.nets) ) {
-    methods.net.current(this.state.db.nets[0].id)(this.state);
-  }
+  this.state = this.storage.init( StorageEngine.loadFromStorage('db') );
 
 }
