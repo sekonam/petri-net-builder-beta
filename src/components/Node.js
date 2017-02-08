@@ -29,7 +29,11 @@ export default class Node extends React.Component {
       <g className={className} id={data.id}>
         <rect className="node-rect" style={style} x={x} y={y}
           width={width + 'px'} height={height + 'px'} rx={r} ry={r} />
-        <text className="node-txt" x={x} y={y+height+12}>{this.props.data.short('name', Math.round(width/6.5))}</text>
+        <text className="node-txt" x={x} y={y+height}>
+          {data.multiline('name', Math.round(width/6.5)).map(
+            (line, key) => <tspan dy="1em" x={x} key={data.id + '-' + key}>{line}</tspan>
+          )}
+        </text>
         <Sockets data={data}/>
       </g>
     );

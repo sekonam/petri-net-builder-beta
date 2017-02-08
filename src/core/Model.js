@@ -36,6 +36,38 @@ Model.prototype.short = function (propName, maxLength = Model.maxShortLength) {
   return '';
 };
 
+Model.prototype.multiline = function (propName, maxLength = Model.maxShortLength) {
+  if (propName in this) {
+    const prop = this[propName];
+
+    if (prop.length < maxLength) {
+      return [prop];
+    } else {
+
+      const words = prop.split(/\s+/);
+      let lines = [],
+        line = '';
+
+      words.forEach( (word) => {
+        if (line.length + word.length + 1 > maxLength && line.length > 0) {
+          lines.push(line);
+          line = '';
+        }
+
+        line += word + ' ';
+      } );
+
+      if (line.length > 0) {
+        lines.push(line);
+      }
+
+      return lines;
+    }
+  }
+
+  return [];
+};
+
 Model.prototype.entityName = function () {
   const constructorName = this.constructor.name;
   return constructorName.substr(0, constructorName.length-5).toLowerCase();
