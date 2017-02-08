@@ -220,13 +220,12 @@ export default function Store(setState) {
     return state;
   };
 
-  methods.arc.startDraw = (sid, offset) => (state) => {
+  methods.arc.startDraw = (sid) => (state) => {
     const socket = state.db.sockets.valueById(sid);
     if (socket.type) {
       let tmpArc = EntityFactory['arc']();
       tmpArc.startSocketId = socket.id;
       state.drawing.arc.data = tmpArc;
-      state.drawing.arc.startOffset = offset;
     }
 
     return state;
@@ -338,8 +337,7 @@ export default function Store(setState) {
         },
         drawing: {
           arc: {
-            data: null,
-            startOffset: null
+            data: null
           }
         },
         dragging: {},

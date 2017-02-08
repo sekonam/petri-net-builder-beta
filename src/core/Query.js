@@ -136,11 +136,6 @@ export default class Query {
       return entities;
     };
 
-    this.arc.drawingOffset = (mouseOffset) => this.viewport.zoom.offset({
-      x: mouseOffset.x - state.drawing.arc.startOffset.x,
-      y: mouseOffset.y - state.drawing.arc.startOffset.y
-    });
-
     this.arc.drawing = () => state.drawing.arc.data;
 
     this.group.nodes = (id) => {

@@ -100,14 +100,14 @@ class Context extends React.Component {
     const query = Query.instance;
     if (!query.isDragging()) {
       this.setState({
-        mouseOffset: {
+        mouseOffset: this.svgOffset({
           x: e.pageX,
           y: e.pageY
-        },
-        mouseDown: {
+        }),
+        mouseDown: this.svgOffset({
           x: e.pageX,
           y: e.pageY
-        },
+        }),
         translateX: query.viewport.translateX(),
         translateY: query.viewport.translateY()
       });
@@ -123,8 +123,8 @@ class Context extends React.Component {
 
       if (this.isSelecting()) {
         const
-          startOffset = this.svgOffset(this.state.mouseDown),
-          finishOffset = this.svgOffset(this.state.mouseOffset);
+          startOffset = this.state.mouseDown,
+          finishOffset = this.state.mouseOffset;
 
         query.selectNodeTypes().forEach((nodeName) => {
           const selectedNodes = query[nodeName].inRectIds(startOffset, finishOffset);
@@ -144,17 +144,20 @@ class Context extends React.Component {
     const query = Query.instance;
 
     this.setState( {
-      mouseOffset: {
+      mouseOffset: this.svgOffset({
         x: e.pageX,
         y: e.pageY
-      }
+      })
     } );
 
     if (this.isTranslating()) {
-      const zoom = query.viewport.zoom.get();
+      const offset = this.svgOffset({
+        x: e.pageX,
+        y: e.pageY
+      });
       Store.instance.translate.set(
-        this.state.translateX + (e.pageX - this.state.mouseDown.x) * zoom,
-        this.state.translateY + (e.pageY - this.state.mouseDown.y) * zoom
+        this.state.translateX + offset.x - this.state.mouseDown.x,
+        this.state.translateY + offset.y - this.state.mouseDown.y
       );
     }
   }
@@ -224,10 +227,10 @@ class Context extends React.Component {
 
       const mouseDown = this.state.mouseDown,
         mouseOffset = this.state.mouseOffset,
-        offset = this.svgOffset({
+        offset = {
           x: Math.min(mouseDown.x, mouseOffset.x),
           y: Math.min(mouseDown.y, mouseOffset.y)
-        }),
+        },
         size = {
           width: Math.abs(mouseDown.x - mouseOffset.x),
           height: Math.abs(mouseDown.y - mouseOffset.y)
@@ -247,7 +250,7 @@ class Context extends React.Component {
         <g className="diagram-objects" style={{transform}}>
           {drawingArc ? <Arc
             data={drawingArc}
-            offset={query.arc.drawingOffset(this.state.mouseOffset)}
+            offset={query.viewport.offset(this.state.mouseOffset)}
           /> : ''}
           {arcs}
           {subnets}
