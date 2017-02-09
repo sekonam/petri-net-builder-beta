@@ -566,9 +566,10 @@ export default class Query {
         if (startNode) return startNode;
         if (minIncomeArcs.node) return minIncomeArcs.node;
 
-        for(let key in NodeNames) {
-          const nodeName = NodeNames[key],
+        for(let i=0; i< NodeNames.length; i++) {
+          const nodeName = NodeNames[i],
             nodes = query [s(nodeName)] ();
+
           if (nodes.length > 0)
             return nodes[0];
         }

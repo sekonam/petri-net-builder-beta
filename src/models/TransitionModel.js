@@ -9,14 +9,11 @@ export default class TransitionModel extends NodeModel {
     this.set({
       name: 'Transition name',
       handlerIds: [],
-      width: 80,
-      height: 62,
-      r: 0,
-      color: ''
+      r: 0
     });
 
     const init = {
-      x: 150,
+      x: 175,
       y: 50
     }, step = 10;
 

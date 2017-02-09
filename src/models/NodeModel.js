@@ -9,7 +9,13 @@ export default class NodeModel extends Model {
     this.set({
       name: 'Node name',
       socketIds: [],
-      netId: null
+      netId: null,
+      x: 100,
+      y: 50,
+      width: 80,
+      height: 62,
+      r: 25,
+      color: ''
     });
   }
 

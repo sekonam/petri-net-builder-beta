@@ -7,16 +7,12 @@ export default class SubnetModel extends NodeModel {
     super.defaults();
 
     this.set({
-      name: 'Subnet name',
-      width: 85,
-      height: 55,
-      r: 25,
-      color: ''
+      name: 'Subnet name'
     });
 
     const init = {
       x: 300,
-      y: 10
+      y: 50
     }, step = 10;
 
     [ 'x', 'y' ].forEach( (name) => {
