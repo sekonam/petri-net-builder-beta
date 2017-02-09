@@ -374,16 +374,24 @@ export default class Query {
     };
 
     this.socket.offset = (id) => {
-      const side = this.socketsBySide[id],
+      const socket = this.socket.get(id),
+        node = this.socket.node(id),
+        side = this.socketsBySide[id],
         location = this.socket.location(id),
         socketIds = location.type == 'group'
           ? this.group.externalSocketIds(location.data.id)
-          : this.socket.node(id).socketIds,
+          : node.socketIds,
         sideSockets = socketIds.filter( (sid) => this.socketsBySide[sid] == side ),
-        {x, y, width, height} = this.socket.locationOffset(id),
         position = sideSockets.indexOf(id),
         count = sideSockets.length;
-      let step = 0;
+      let {x, y, width, height} = this.socket.locationOffset(id),
+        step = 0;
+
+      if (NodeNames.has(location.type) && this.settings.nodeType() == 'schema') {
+        const nodeSize = node.getSize();
+        width = nodeSize.width;
+        height = nodeSize.height;
+      }
 
       switch (side) {
         case 'top':
@@ -700,6 +708,10 @@ export default class Query {
           y: (pos.y - center.y - state.viewport.translateY) / state.viewport.zoom + center.y
         };
       }
+    };
+
+    this.settings = {
+      nodeType: () => state.settings.nodeType
     };
 
     this.socketsBySide = null;
