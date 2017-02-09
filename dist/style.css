@@ -7166,9 +7166,6 @@ body {
 /*
  * SVG workflow 2D context
  */
-text {
-  text-shadow: 1px 1px 0 black;
-}
 svg.context {
   margin: 10px 5px 5px;
   overflow: hidden;
@@ -7198,28 +7195,37 @@ svg.context {
   stroke-dasharray: 2,2;
 }
 .node-rect {
-  fill: #000;
-  stroke: #fff;
   stroke-width: 1;
-}
-.subnet .node-rect {
-  fill: #003000;
-}
-.place .node-rect {
-  fill: #000030;
-}
-.place.start-place .node-rect,
-.place.finish-place .node-rect {
-  fill: #422;
-}
-.node-txt {
-  fill: #fff;
-  font-size: 10pt;
 }
 .node:hover .node-rect {
   stroke-width: 2px;
 }
-.node:hover .node-txt {
+.node-schema .node-rect {
+  fill-opacity: 0;
+  stroke: #000;
+}
+.node-default text {
+  text-shadow: 1px 1px 0 black;
+}
+.node-default .node-rect {
+  fill: #000;
+  stroke: #fff;
+}
+.subnet .node-default .node-rect {
+  fill: #003000;
+}
+.place .node-default .node-rect {
+  fill: #000030;
+}
+.place.start-place .node-default .node-rect,
+.place.finish-place .node-default .node-rect {
+  fill: #422;
+}
+.node-default .node-txt {
+  fill: #fff;
+  font-size: 10pt;
+}
+.node-default .node:hover .node-txt {
   fill: #fff;
 }
 .socket {
@@ -7277,22 +7283,17 @@ svg.context {
   fill: #fff;
 }
 .arc {
-  stroke-width: 1;
+  stroke-width: 2;
   fill: none;
   stroke: #fff;
   opacity: 1;
 }
 .arc:hover {
   cursor: pointer;
-  stroke-width: 2;
-}
-.arc .arc-line {
-  stroke-width: 3;
-}
-.arc:hover .arc-line {
   stroke-width: 3;
 }
 .arc-marker {
+  stroke-width: 0;
   stroke: #fff;
   fill: #fff;
 }

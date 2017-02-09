@@ -105,7 +105,8 @@ export default class Arc extends React.Component {
         }}>
           <defs>
             <marker className='arc-marker' id={'arrow-' + data.id} viewBox="0 0 10 10"
-              refX="1" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+              refX="1" refY="5" markerWidth="4" markerHeight="4" orient="auto"
+              style={data.color ? {fill: data.color, stroke: data.color} : {}}>
               <path d="M 0 0 L 10 5 L 0 10 z" />
             </marker>
           </defs>
