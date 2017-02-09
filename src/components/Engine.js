@@ -132,7 +132,7 @@ export default class Engine extends React.Component {
           <Tree ref={(tree) => { this.tree = tree; }} />
           {leftMenuBlocks}
         </div>
-        <div className="buttons">
+        <div className="buttons buttons1">
           <span className="lbl">Add:</span>
           <Button onClick={ () => methods.net.add() } bsStyle="primary">Net</Button>
           <Button onClick={ () => methods.subnet.add() } bsStyle="primary">SubNet</Button>
@@ -144,7 +144,6 @@ export default class Engine extends React.Component {
         <div className="buttons">
           <span className="lbl">Select:</span>
           {switches}
-          <Button onClick={ () => query.arrangement.set('default') } bsStyle="default">Auto Arrangement</Button>
           <div className="select-container">
             <Select value={this.state.settings.nodeType}
               options={NodeTypes.map((nodeType) => ({
@@ -153,6 +152,7 @@ export default class Engine extends React.Component {
               }))}
               onChange={(el) => methods.settings.setNodeType(el.value)} />
           </div>
+          <Button onClick={ () => query.arrangement.set('default') } bsStyle="default">Auto Arrangement</Button>
           <Button onClick={ () => methods.storage.clear() } bsStyle="danger">Clear Storage</Button>
         </div>
         <div className="right-sidebar">

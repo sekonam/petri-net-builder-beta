@@ -7097,7 +7097,9 @@ body {
  */
 .buttons {
   margin-left: 185px;
-  overflow: auto;
+}
+.buttons1 {
+  overflow: hidden;
 }
 .buttons .select-container {
   width: 125px;
