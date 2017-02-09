@@ -88,14 +88,14 @@ export default class Tree extends React.Component {
         const node = {
           id: net.id,
           type: 'net',
-          name: net.name,
+          name: net.short('name'),
           toggled: toggled.indexOf(net.id) > -1,
           children: entities.group.map( (group) => {
 
             const node = {
               id: group.id,
               type: 'group',
-              name: group.name,
+              name: group.short('name'),
               toggled: toggled.indexOf(group.id) > -1,
               children: []
             };
@@ -113,7 +113,7 @@ export default class Tree extends React.Component {
                   const node = {
                     id: entity.id,
                     type: entityName,
-                    name: entity.name
+                    name: entity.short('name')
                   };
 
                   if (entity.id == activeId) {
@@ -141,7 +141,7 @@ export default class Tree extends React.Component {
               const node = {
                 id: entity.id,
                 type: entityName,
-                name: entity.name
+                name: entity.short('name')
               };
 
               if (entity.id == activeId) {
