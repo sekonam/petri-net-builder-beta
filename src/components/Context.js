@@ -12,6 +12,7 @@ import ViewportModel from './../models/ViewportModel.js';
 import Place from './Place.js';
 import Transition from './Transition.js';
 import Subnet from './Subnet.js';
+import External from './External.js';
 import NodeByType from './NodeByType.js';
 import Arc from './Arc.js';
 import Group from './Group.js';
@@ -170,14 +171,11 @@ class Context extends React.Component {
     e.preventDefault();
   }
 
-  nodeTag(nodeName, node) {
-    switch (nodeName) {
-      case 'place':
-      case 'subnet':
-      case 'transition':
-        return <NodeByType type={nodeName} data={node} key={node.id}/>;
-      case 'group':
-        return <Group data={node} key={node.id}/>;
+  nodeTag(node) {
+    if (node.entityName() == 'group') {
+      return <Group data={node} key={node.id}/>;
+    } else {
+      return <NodeByType data={node} key={node.id}/>;
     }
   }
 
@@ -216,6 +214,10 @@ class Context extends React.Component {
         <Place data={place} key={place.id} />
       ) ),
 
+      externals = query.externalsNotActive(null, groupsEntityIds).cmap( (node) => (
+        <External data={node} key={node.id} />
+      ) ),
+
       arcs = query.arcs().cmap( (arc, key) => (
         <Arc data={arc} key={arc.id} />
       ) ),
@@ -230,7 +232,7 @@ class Context extends React.Component {
     let topEntities = [];
 
     if (query.active.isSet()) {
-      topEntities.push( this.nodeTag(query.active.type, query.active.data) );
+      topEntities.push( this.nodeTag(query.active.data) );
     }
 
     const selectNodeTypes = query.selectNodeTypes();
@@ -270,6 +272,7 @@ class Context extends React.Component {
           {arcs}
           {subnets}
           {transitions}
+          {externals}
           {places}
           {groups}
           {topEntities}

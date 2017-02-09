@@ -62,7 +62,7 @@ class Group extends React.Component {
         NodeNames.forEach( (nodeName) => {
           data[nodeName + 'Ids'].forEach( (nodeId) => {
             const node = query[nodeName].get(nodeId);
-            entities.push( <NodeByType type={nodeName} data={node} key={node.id}/> );
+            entities.push( <NodeByType data={node} key={node.id}/> );
           } );
         } );
 

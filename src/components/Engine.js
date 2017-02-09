@@ -13,6 +13,7 @@ import Context from './Context.js';
 import PlaceForm from './PlaceForm.js';
 import TransitionForm from './TransitionForm.js';
 import SubnetForm from './SubnetForm.js';
+import ExternalForm from './ExternalForm.js';
 import GroupForm from './GroupForm.js';
 import EventForm from './EventForm.js';
 import HandlerForm from './HandlerForm.js';
@@ -75,7 +76,14 @@ export default class Engine extends React.Component {
           data={query[entityType].options()}
           editHandler={methods[entityType].edit}
           addHandler={methods[entityType].add}/>
-      )});
+      )}),
+
+      switches = NodeNames.map( (nodeName) => (
+        <Switch key={nodeName}
+          labelText={nodeName.ucfirst()}
+          value={query[nodeName].isSelecting()}
+          onChange={(el, value) => methods[nodeName].setSelect(value)}/>
+      ) );
 
     let formComp = '';
 
@@ -95,6 +103,9 @@ export default class Engine extends React.Component {
           break;
         case 'subnet':
           formComp = <SubnetForm data={form.data} />;
+          break;
+        case 'external':
+          formComp = <ExternalForm data={form.data} />;
           break;
         case 'group':
           formComp = <GroupForm data={form.data}
@@ -118,13 +129,6 @@ export default class Engine extends React.Component {
       }
     }
 
-    const switches = NodeNames.map( (nodeName) => (
-      <Switch key={nodeName}
-        labelText={nodeName.ucfirst()}
-        value={query[nodeName].isSelecting()}
-        onChange={(el, value) => methods[nodeName].setSelect(value)}/>
-    ) );
-
     return (
       <div className="engine">
         <div className="left-menu">
@@ -138,6 +142,7 @@ export default class Engine extends React.Component {
           <Button onClick={ () => methods.subnet.add() } bsStyle="primary">SubNet</Button>
           <Button onClick={ () => methods.place.add() } bsStyle="primary">Place</Button>
           <Button onClick={ () => methods.transition.add() } bsStyle="primary">Transition</Button>
+          <Button onClick={ () => methods.external.add() } bsStyle="primary">External Node</Button>
           <Button onClick={ () => methods.group.add({type: 0}) } bsStyle="primary">Phase</Button>
           <Button onClick={ () => methods.group.add({type: 1}) } bsStyle="primary">Milestone</Button>
         </div>

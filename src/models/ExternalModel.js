@@ -9,7 +9,8 @@ export default class ExternalModel extends NodeModel {
     this.set({
       name: 'External name',
       nodeNetId: null,
-      nodeId: null
+      nodeId: null,
+      nodeType: 'place',
     });
 
     const init = {

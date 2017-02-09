@@ -3,26 +3,21 @@ import React, {PropTypes} from 'react';
 import Place from './Place.js';
 import Transition from './Transition.js';
 import Subnet from './Subnet.js';
+import External from './External.js';
 
 export default class NodeByType extends React.Component {
   render() {
-    const {type, data} = this.props;
+    const {data} = this.props,
+      type = data.entityName();
     switch (type) {
       case 'place':
-        return (
-          <Place data={data} key={data.id} />
-        );
-        break;
+        return <Place data={data} key={data.id} />;
       case 'subnet':
-        return (
-          <Subnet data={data} key={data.id} />
-        );
-        break;
+        return <Subnet data={data} key={data.id} />;
       case 'transition':
-        return (
-          <Transition data={data} key={data.id} />
-        );
-        break;
+        return <Transition data={data} key={data.id} />;
+      case 'external':
+        return <External data={data} key={data.id} />;
     }
     return null;
   }

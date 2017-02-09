@@ -48,6 +48,7 @@ export default class Query {
         if (this.active.isSet() && this.active.data.id == id) return true;
         return false;
       }
+
     } );
 
     const listFunc = (entityName, condition) => (ids = null, exceptIds = null) => {
@@ -80,6 +81,12 @@ export default class Query {
         (entity) => defaultCondition(entity)
           && !this[entityName].isActive(entity.id)
       );
+
+      this[entityName].inNet = (nid, ids = null, exceptIds = null) => listFunc(
+        entityName,
+        (entity) => entity.netId == nid
+      )(ids, exceptIds);
+
     } );
 
     NodeNames.forEach( (nodeName) => {
@@ -134,6 +141,16 @@ export default class Query {
       }
 
       return entities;
+    };
+
+    this.external.node = (eid) => {
+      const external = this.external.get(eid);
+
+      if (external.nodeId && external.nodeType) {
+        return this[external.nodeType].get(external.nodeId);
+      }
+
+      return undefined;
     };
 
     this.arc.drawing = () => state.drawing.arc.data;
