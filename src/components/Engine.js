@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import React from 'react';
 import {Button} from 'react-bootstrap';
+import Select from 'react-select';
 import Switch from 'react-bootstrap-switch';
 
-import {NodeNames} from '../core/Entities.js';
+import {NodeNames, NodeTypes} from '../core/Entities.js';
 import Store from '../core/Store.js';
 import Query from '../core/Query.js';
 import StorageEngine from '../core/StorageEngine.js';
@@ -132,7 +133,7 @@ export default class Engine extends React.Component {
           {leftMenuBlocks}
         </div>
         <div className="buttons">
-          <span>Add:</span>
+          <span className="lbl">Add:</span>
           <Button onClick={ () => methods.net.add() } bsStyle="primary">Net</Button>
           <Button onClick={ () => methods.subnet.add() } bsStyle="primary">SubNet</Button>
           <Button onClick={ () => methods.place.add() } bsStyle="primary">Place</Button>
@@ -141,11 +142,17 @@ export default class Engine extends React.Component {
           <Button onClick={ () => methods.group.add({type: 1}) } bsStyle="primary">Milestone</Button>
         </div>
         <div className="buttons">
-          <span>Select:</span>
+          <span className="lbl">Select:</span>
           {switches}
-          <span></span>
           <Button onClick={ () => query.arrangement.set('default') } bsStyle="default">Auto Arrangement</Button>
-          <span></span>
+          <div className="select-container">
+            <Select value={this.state.settings.nodeType}
+              options={NodeTypes.map((nodeType) => ({
+                value: nodeType,
+                label: nodeType.ucfirst(),
+              }))}
+              onChange={(el) => methods.settings.setNodeType(el.value)} />
+          </div>
           <Button onClick={ () => methods.storage.clear() } bsStyle="danger">Clear Storage</Button>
         </div>
         <div className="right-sidebar">

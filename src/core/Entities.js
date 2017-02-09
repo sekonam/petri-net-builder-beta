@@ -29,7 +29,8 @@ const EntityFactory = {
     right: 'left',
     bottom: 'top',
     left: 'right',
-  };
+  },
+  NodeTypes = ['default', 'schema',];
 
 export {
   EntityNames,
@@ -38,5 +39,6 @@ export {
   EntityFactory,
   StatusNames,
   SideNames,
-  AnotherSide
+  AnotherSide,
+  NodeTypes
 };

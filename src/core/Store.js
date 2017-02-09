@@ -307,7 +307,14 @@ export default function Store(setState) {
     };
   });
 
-  EntityNames.concat(['zoom', 'translate',]).forEach( (entityName) => {
+  methods.settings = {
+    setNodeType: (nodeType) => (state) => {
+      state.settings.nodeType = nodeType;
+      return state;
+    }
+  };
+
+  EntityNames.concat(['zoom', 'translate', 'settings',]).forEach( (entityName) => {
     this[entityName] = {};
 
     Object.getOwnPropertyNames( methods[entityName] ).forEach( (methodName) => {
@@ -350,6 +357,9 @@ export default function Store(setState) {
         select: {
           types: {},
           data: {}
+        },
+        settings: {
+          nodeType: 'default'
         }
       };
 

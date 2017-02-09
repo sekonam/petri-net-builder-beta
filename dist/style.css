@@ -7096,16 +7096,23 @@ body {
  * Top menu
  */
 .buttons {
-  margin: 5px auto auto 185px;
+  margin-left: 185px;
+  overflow: auto;
 }
+.buttons .select-container {
+  width: 125px;
+}
+.buttons .select-container,
+.buttons .bootstrap-switch,
 .buttons .btn {
   margin-left: 5px;
+  margin-top: 5px;
+  float: left;
 }
-.buttons span {
-  margin-left: 15px;
-}
-.bootstrap-switch {
+.buttons span.lbl {
   margin-left: 5px;
+  margin-top: 12px;
+  float: left;
 }
 /*
  * Left menu
