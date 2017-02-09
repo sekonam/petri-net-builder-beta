@@ -11,49 +11,38 @@ import SocketList from './SocketList.js';
 export default class ExternalForm extends React.Component {
 
   constructor(props) {
+    const query = Query.instance,
+      {data} = props;
     super(props);
     this.state = {
-      nodeOptions: [this.emptyOption()],
+      nodeOptions: query.external.nodeOptions(data.id),
     };
     this.selectNetId = this.selectNetId.bind(this);
+    this.selectNodeId = this.selectNodeId.bind(this);
   }
 
-  emptyOption() {
-    return {
-      value:null,
-      label:'None'
-    };
-  }
-
-  optionsAddEmpty(options) {
-    return [this.emptyOption()].concat(options);
-  }
-
-  selectNetId(netId) {
-    const
+  selectNetId(el) {
+    const {data} = this.props,
       query = Query.instance,
       methods = Store.instance,
-      {data} = this.props;
+      netId = el ? el.value : null;
 
-    methods.save('nodeNetId', netId)
+    methods.save('nodeNetId', netId);
+    this.setState({
+      nodeOptions: query.external.nodeOptions(netId),
+    });
+  }
 
-    let
-      nodeOptions = [this.emptyOption()];
-    if (data.nodeNetId) {
-      const nid = data.nodeNetId;
-
-      ExternalNodeNames.forEach( (nodeName) => {
-        const nodes = query[nodeName].inNet(nid);
-        nodeOptions = nodeOptions.concat(nodes.map(
-          (node) => ({
-            value: node.id,
-            type: nodeName,
-            label: node.name,
-          })
-        ));
-      } );
-    }
-    this.setState({ nodeOptions });
+  selectNodeId(el) {
+    const
+      methods = Store.instance,
+      {data} = this.props,
+      value = el ? el.value : null,
+      type = el ? el.type : undefined;
+    methods.external.set(data.id, {
+      nodeId: value,
+      nodeType: type,
+    });
   }
 
   render() {
@@ -67,16 +56,13 @@ export default class ExternalForm extends React.Component {
           <FormGroup>
             <ControlLabel>External Net</ControlLabel><br/>
             <Select value={data.nodeNetId}
-              options={this.optionsAddEmpty( query.net.options() )}
-              onChange={(el) => this.selectNetId(el.value)} />
+              options={query.external.netOptions()}
+              onChange={(el) => this.selectNetId(el)} />
           </FormGroup>
           <FormGroup>
             <ControlLabel>External Node</ControlLabel><br/>
             <Select value={data.nodeId} options={this.state.nodeOptions}
-              onChange={(el) => methods.external.set(data.id, {
-                nodeId: el.value,
-                nodeType: el.type,
-              })} />
+              onChange={(el) => this.selectNodeId(el)} />
           </FormGroup>
           <FormGroup>
             <ControlLabel>External Color</ControlLabel>

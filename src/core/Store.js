@@ -239,8 +239,8 @@ export default function Store(setState) {
     let acceptableFinishNodeTypes = [];
 
     if (startNodeType == 'transition' || startNodeType == 'subnet') {
-      acceptableFinishNodeTypes = ['place',];
-    } else if(startNodeType == 'place') {
+      acceptableFinishNodeTypes = ['place', 'external',];
+    } else if(startNodeType == 'place' || startNodeType == 'external') {
       acceptableFinishNodeTypes = ['transition', 'subnet',];
     }
 

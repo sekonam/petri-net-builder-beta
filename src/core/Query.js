@@ -1,4 +1,4 @@
-import {EntityNames, NodeNames, NodeGroupNames, StatusNames, SideNames} from './Entities.js';
+import {EntityNames, NodeNames, NodeGroupNames, StatusNames, SideNames, ExternalNodeNames} from './Entities.js';
 import Store from './Store.js';
 
 export default class Query {
@@ -153,6 +153,45 @@ export default class Query {
       return undefined;
     };
 
+    this.external.nodeOptions = (nid) => {
+      let nodeOptions = [{
+        value:null,
+        label:'None',
+      }];
+
+      if (nid) {
+        ExternalNodeNames.forEach( (nodeName) => {
+          const nodes = this[nodeName].inNet(nid);
+          nodeOptions = nodeOptions.concat(nodes.map(
+            (node) => ({
+              value: node.id,
+              type: nodeName,
+              label: node.name,
+            })
+          ));
+        } );
+      }
+
+      return nodeOptions;
+    };
+
+    this.external.netOptions = () => {
+      return [{
+        value:null,
+        label:'None'
+      }].concat(
+        this.nets().filter(
+          (net) => !state.current.net || net.id != state.current.net.id
+        ).map(
+          (net) => ({
+            value: net.id,
+            label: net.name,
+          })
+        )
+      );
+    }
+
+
     this.arc.drawing = () => state.drawing.arc.data;
 
     this.group.nodes = (id) => {
@@ -239,6 +278,8 @@ export default class Query {
     } );
 
     this.subnet.net = (id) => this.nets.find( (net) => net.subnetId == id );
+
+    this.net.current = () => state.current.net ? state.current.net.id : null;
 
     this.groupsEntityIds = () => {
       let ids = [];

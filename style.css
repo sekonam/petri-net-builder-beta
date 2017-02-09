@@ -159,6 +159,10 @@ svg.context {
   fill:#fff;
 }
 
+.external .node .node-rect {
+  fill: #aaa;
+}
+
 .socket {
   stroke:#aaa;
   stroke-width:1;

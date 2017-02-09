@@ -33,7 +33,7 @@ const EntityFactory = {
     left: 'right',
   },
   NodeTypes = ['default', 'schema',],
-  ExternalNodeNames = ['place', 'transition',];
+  ExternalNodeNames = ['place',];
 
 export {
   EntityNames,

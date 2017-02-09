@@ -15,8 +15,7 @@ class External extends React.Component {
 
     let className = 'external';
     if (externalNode) {
-      className += ' ' + externalNode.entityName();
-      ['name','width','height','r','color',].forEach(
+      ['name','width','height','r',].forEach(
         (propName) => {
           data[propName] = externalNode[propName];
         }
