@@ -9,6 +9,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
+import Navbar from './Navbar';
 
 const AppWrapper = styled.div`
   max-width: 100%;
@@ -29,6 +30,7 @@ export function App(props) {
           { name: 'description', content: 'Realine React Boilerplate application' },
         ]}
       />
+      <Navbar />
       {React.Children.toArray(props.children)}
     </AppWrapper>
   );
