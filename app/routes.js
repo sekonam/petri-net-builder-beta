@@ -1,7 +1,7 @@
 import App from 'containers/App';
 import NotFound from 'containers/NotFound';
 import Home from 'containers/Home';
-import EchartExamples from 'modules/echart';
+import EchartExamples from 'components/EchartExamples';
 
 export default () => ({
   indexRoute: '/',

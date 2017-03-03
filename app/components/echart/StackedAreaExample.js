@@ -1,17 +1,7 @@
 import React from 'react';
-import { StackedArea } from './StackedArea';
+import { StackedArea } from '../../modules/echart/StackedArea';
 
-const EchartExamples = [
-  {
-    route: 'stackedarea',
-    label: 'Stacked Area',
-    component: StackedAreaExample,
-  },
-];
-
-export default EchartExamples;
-
-export function StackedAreaExample() {
+export default function StackedAreaExample() {
   const data = {
     First: [120, 132, 101, 134, 90, 230, 210],
     Second: [220, 182, 191, 234, 290, 330, 310],

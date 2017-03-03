@@ -9,7 +9,9 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
+// import Navbar from 'react-navbar';
 import Navbar from './Navbar';
+// import EchartExamples from '../../components/EchartExamples';
 
 const AppWrapper = styled.div`
   max-width: 100%;
@@ -21,6 +23,16 @@ const AppWrapper = styled.div`
 `;
 
 export function App(props) {
+/*  const menuItems = [
+    {
+      href: '#',
+      title: 'CPN builder',
+    },
+    {
+      items: ,
+      title: 'Echart',
+    },
+  ];*/
   return (
     <AppWrapper>
       <Helmet
