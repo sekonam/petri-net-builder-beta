@@ -9,9 +9,14 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import styled from 'styled-components';
-// import Navbar from 'react-navbar';
-import Navbar from './Navbar';
-// import EchartExamples from '../../components/EchartExamples';
+import {
+  Navbar,
+  Nav,
+  NavItem,
+  NavDropdown,
+  MenuItem,
+} from 'react-bootstrap';
+import EchartExamples from '../../components/EchartExamples';
 
 const AppWrapper = styled.div`
   max-width: 100%;
@@ -23,16 +28,6 @@ const AppWrapper = styled.div`
 `;
 
 export function App(props) {
-/*  const menuItems = [
-    {
-      href: '#',
-      title: 'CPN builder',
-    },
-    {
-      items: ,
-      title: 'Echart',
-    },
-  ];*/
   return (
     <AppWrapper>
       <Helmet
@@ -42,8 +37,35 @@ export function App(props) {
           { name: 'description', content: 'Realine React Boilerplate application' },
         ]}
       />
-      <Navbar />
-      {React.Children.toArray(props.children)}
+      <Navbar inverse collapseOnSelect>
+        <Navbar.Header>
+          <Navbar.Brand>
+            <a href="/">Realine, sekonam</a>
+          </Navbar.Brand>
+          <Navbar.Toggle />
+        </Navbar.Header>
+        <Navbar.Collapse>
+          <Nav>
+          </Nav>
+          <Nav pullRight>
+            <NavItem eventKey={1} href="cpn_builder">CPN Builder</NavItem>
+            <NavDropdown eventKey={3} title="Echat Examples" id="basic-nav-dropdown">
+              {EchartExamples.map(
+                (example, key) => (<MenuItem
+                  eventKey={`3-${key}`}
+                  href={example.route}
+                  key={`3-${key}`}>
+                  {example.label}
+                </MenuItem>)
+              )}
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+
+      <div className="container">
+        {React.Children.toArray(props.children)}
+      </div>
     </AppWrapper>
   );
 }
