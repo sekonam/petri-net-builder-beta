@@ -2,8 +2,7 @@ import React, {
   Component,
   PropTypes,
 } from 'react';
-// import ReactEcharts from 'echarts-for-react';
-import Charts from 'rc-echarts';
+import BaseEchart from './BaseEchart';
 
 export class StackedAreaModel {
   constructor(data, points) {
@@ -72,8 +71,7 @@ export class StackedArea extends Component {
       ],
       series: model.series,
     };
-//    return <ReactEcharts option={ options } />
-    return <Charts options={options} />;
+    return <BaseEchart options={options} />;
   }
 }
 
