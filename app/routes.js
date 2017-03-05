@@ -1,7 +1,8 @@
 import App from 'containers/App';
 import NotFound from 'containers/NotFound';
 import Home from 'containers/Home';
-import EchartExamples from 'components/EchartExamples';
+import EchartRoutes from 'components/echart/EchartRoutes';
+import { EchartTesterSample } from 'containers/EchartTester';
 
 export default () => ({
   indexRoute: '/',
@@ -11,8 +12,12 @@ export default () => ({
         path: '/',
         component: Home,
       },
+      {
+        path: 'echarts',
+        component: EchartTesterSample,
+      },
     ].concat(
-      EchartExamples.map(
+      EchartRoutes.map(
         (example) => ({
           path: example.route,
           component: example.component,

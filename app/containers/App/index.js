@@ -16,7 +16,7 @@ import {
   NavDropdown,
   MenuItem,
 } from 'react-bootstrap';
-import EchartExamples from '../../components/EchartExamples';
+import EchartRoutes from '../../components/echart/EchartRoutes';
 
 const AppWrapper = styled.div`
   max-width: 100%;
@@ -50,7 +50,7 @@ export function App(props) {
           <Nav pullRight>
             <NavItem eventKey={1} href="cpn_builder">CPN Builder</NavItem>
             <NavDropdown eventKey={3} title="Echat Examples" id="basic-nav-dropdown">
-              {EchartExamples.map(
+              {EchartRoutes.map(
                 (example, key) => (<MenuItem
                   eventKey={`3-${key}`}
                   href={example.route}

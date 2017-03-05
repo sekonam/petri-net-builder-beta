@@ -1,5 +1,6 @@
 import React from 'react';
-import { StackedArea } from '../../modules/echart/StackedArea';
+import StackedArea from '../../modules/echart/components/StackedArea';
+import StackedAreaModel from '../../modules/echart/models/StackedAreaModel';
 
 export default function StackedAreaExample() {
   const data = {
@@ -10,9 +11,9 @@ export default function StackedAreaExample() {
     Fifth: [820, 932, 901, 934, 1290, 1330, 1320],
   };
   const points = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7'];
+  const model = new StackedAreaModel(data, points);
   return (<StackedArea
     title="Stack Area Example"
-    data={data}
-    points={points}
+    model={model}
   />);
 }
