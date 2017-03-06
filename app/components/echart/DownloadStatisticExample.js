@@ -1,6 +1,6 @@
 import React from 'react';
-import DownloadStatistic from '../../modules/echart/components/DownloadStatistic';
-import DownloadStatisticModel from '../../modules/echart/models/DownloadStatisticModel';
+import DownloadStatistic from '../../containers/echart/components/DownloadStatistic';
+import DownloadStatisticModel from '../../containers/echart/models/DownloadStatisticModel';
 
 export default function DownloadStatisticExample() {
   const builderJson = {

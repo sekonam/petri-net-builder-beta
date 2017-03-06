@@ -1,6 +1,6 @@
 import React from 'react';
-import StackedArea from '../../modules/echart/components/StackedArea';
-import StackedAreaModel from '../../modules/echart/models/StackedAreaModel';
+import StackedArea from '../../containers/echart/components/StackedArea';
+import StackedAreaModel from '../../containers/echart/models/StackedAreaModel';
 
 export default function StackedAreaExample() {
   const data = {

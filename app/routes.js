@@ -1,9 +1,9 @@
 import App from 'containers/App';
 import NotFound from 'containers/NotFound';
 import Home from 'containers/Home';
-import EchartRoutes from 'components/echart/EchartRoutes';
-import { EchartTesterSample } from 'containers/EchartTester';
-import PetriNetBuilder from 'modules/PetriNetBuilder';
+import EchartRoutes from './components/echart/EchartRoutes';
+import { EchartTesterSample } from './containers/EchartTester';
+import PetriNetBuilder from './containers/PetriNetBuilder';
 
 export default () => ({
   indexRoute: '/',
