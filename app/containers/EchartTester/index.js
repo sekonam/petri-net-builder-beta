@@ -12,7 +12,7 @@ import 'codemirror/lib/codemirror.css';
 import EchartComponent from './EchartComponent';
 import echarts from '../../assets/js/echarts.min';
 import codes from './codes';
-import doEval from './doEval';
+import calcOptions from './calcOptions';
 
 import '../../assets/js/world';
 import '../../assets/js/china';
@@ -44,10 +44,7 @@ class EchartTester extends Component {
 
   checkCode() {
     if (this.code) {
-      let options;
-      let option;
-      doEval(this.code);
-      return options || option;
+      return calcOptions(this.code);
 /*      const codeFunction = new Function(`${code};
         return options || option;`);
       return codeFunction();*/

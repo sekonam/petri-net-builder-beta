@@ -18,4 +18,4 @@ internals/scripts
 app/assets/data
 app/assets/js
 app/containers/EchartTester/codes.js
-app/containers/EchartTester/doEval.js
+app/containers/EchartTester/calcOptions.js
