@@ -3,6 +3,7 @@ import NotFound from 'containers/NotFound';
 import Home from 'containers/Home';
 import EchartRoutes from 'components/echart/EchartRoutes';
 import { EchartTesterSample } from 'containers/EchartTester';
+import PetriNetBuilder from 'modules/PetriNetBuilder';
 
 export default () => ({
   indexRoute: '/',
@@ -11,6 +12,10 @@ export default () => ({
       {
         path: '/',
         component: Home,
+      },
+      {
+        path: 'cpn_builder',
+        component: PetriNetBuilder,
       },
       {
         path: 'echarts',
