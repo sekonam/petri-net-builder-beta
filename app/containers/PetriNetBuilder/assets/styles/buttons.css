@@ -1,0 +1,102 @@
+.btn {
+  line-height: 1.4em;
+  padding: 5px 10px;
+  border-radius: 3px;
+	box-shadow:none !important;
+}
+.btn.btn-xs {
+  padding: 1px 5px;
+}
+
+.btn-box-tool {
+  background: transparent none repeat scroll 0 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #97a0b3;
+  font-size: 14px;
+  padding: 0;
+}
+
+.btn.btn-box-tool:hover {
+  color: #444;
+  background: transparent none repeat scroll 0 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.input-group-btn .btn-box-tool {
+  padding: 5px 10px;
+}
+
+.btn-group-xs > .btn, .btn-xs {
+  font-size: 12.5px;
+}
+
+.btn-group-sm > .btn, .btn-sm {
+  font-size: 14px;
+  padding: 1px 5px;
+}
+
+.btn-circle {
+  border-radius: 50% !important;
+  width: 42px;
+  height: 42px;
+}
+
+.btn-circle .fa-2x {
+  font-size: 1.5em !important;
+  vertical-align: middle;
+}
+
+.btn.btn-default .lnr {
+  line-height: 1.2em;
+}
+
+.box-header .options-btn {
+  visibility: hidden;
+}
+
+.box-header:hover .options-btn {
+  visibility: visible;
+}
+
+.btn-circle-min {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  margin: 0 3px;
+  padding: 0;
+}
+
+.btn-circle-min .rotate-135 {
+  display: inline-block;
+}
+
+.btn-box-tool.fs-18 {
+  font-size: 18px;
+}
+
+/*.pull-right.options-btn > .dropdown-menu {
+    left: auto;
+    right: -10px;
+    top: -5px;
+    z-index: 1;
+}
+.btn-group.options-btn .dropdown-toggle:active, .btn-group.open.options-btn .dropdown-toggle {
+    outline: 0 none;
+    position: relative;
+    z-index: 10;
+}*/
+.btn i + span, .btn .caret {
+  margin-left: 5px;
+}
+
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+}
+
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-bottom-right-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}

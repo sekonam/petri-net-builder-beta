@@ -1,0 +1,278 @@
+input, input:focus, input:active, input:focus:active, .form-control, .form-control:focus, .form-control:active, .form-control:focus:active {
+  box-shadow: none;
+}
+
+.form-control {
+  background: none;
+  border-color: #d2d6de;
+  border-left: 0 none;
+  border-radius: 0 !important;
+  border-right: 0 none;
+  border-top: 0 none;
+  box-shadow: none;
+  font-size: 14px;
+  padding: 5px 2px;
+}
+
+select, input.form-control, select.form-control {
+  height: 32px;
+}
+
+div.form-control {
+  height: auto;
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+  background: none;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
+
+textarea.form-control {
+  border: 1px solid #d2d6de;
+  padding: 5px;
+  resize: vertical;
+}
+
+textarea.no-resize {
+  overflow: hidden;
+  word-wrap: break-word;
+  resize: none;
+}
+
+.form-inline label.control-label, .form-label {
+  line-height: 1.5em;
+  margin-bottom: 0;
+  margin-top: 4px;
+  min-width: 30%;
+  overflow: hidden;
+  padding-right: 15px;
+  text-align: right;
+  text-overflow: ellipsis;
+  vertical-align: top;
+  white-space: nowrap;
+  width: 30%;
+}
+
+.col-xs-2 .form-label {
+  width: 100%;
+}
+
+.form-inline label.control-label:after, .form-label:after {
+  content: ':';
+}
+
+.form-inline .form-control {
+  line-height: 1.5em;
+  width: 69%;
+}
+
+.input-group .input-group-addon {
+  background-color: transparent;
+  border-color: -moz-use-text-color -moz-use-text-color #d2d6de;
+  border-left: 0 none;
+  border-radius: 0;
+  border-right: 0 none;
+  border-top: 0 none;
+  padding: 5px;
+}
+
+.form-control.no-border {
+  padding: 0;
+}
+
+select, select.form-control {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #fff !important;
+  border-radius: 3px !important;
+  border: 1px solid #d2d6de !important;
+  line-height: normal !important;
+  padding-left: 5px !important;
+  padding-right: 15px !important;
+  height: 32px;
+}
+
+select:focus {
+  outline: none;
+}
+
+select option {
+  padding: 5px;
+}
+
+.validation-warning {
+  text-align: right;
+  font-size: 12px;
+}
+
+.value {
+  font-size: 14px;
+  padding-top: 5px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.disabled, *[disabled='disabled'] {
+  cursor: default;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.form-inline .input-group, .form-inline .form-control .form-control {
+  width: 100%;
+}
+
+.edit-header, .edit-field {
+  display: inline-block;
+}
+
+.form-inline .edit-header, .form-inline .edit-field {
+  display: inline-block;
+  width: 69%;
+}
+
+.edit-field {
+  vertical-align: top;
+  margin-top: -2px;
+}
+
+.edit-field span.value {
+  display: inline-block;
+  padding: 5px 2px;
+}
+
+.header-name, .field-name, .field-input {
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+
+.field-name {
+  /*margin-left: -3px;
+  padding-left: 3px;*/
+}
+
+.field-name .btn.btn-xs, .field-input .btn.btn-xs {
+  padding: 2px 5px;
+}
+
+.field-name .label {
+  margin: 2px;
+}
+
+.field-name .label-default {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.header-name:hover, .field-name:hover, .field-input {
+  border: 1px solid #d2d6de;
+}
+
+.header-name:hover .input-group-btn, .field-name:hover .input-group-btn {
+  visibility: visible;
+}
+
+.header-name .input-group-btn, .field-name .input-group-btn {
+  visibility: hidden;
+}
+
+.header-input {
+  min-width: 450px;
+}
+
+.field-input {
+  width: 100%;
+}
+
+.edit-field .input-group-btn {
+  background: #ededed;
+  padding: 0 5px;
+}
+
+.header-input .form-control {
+  font-size: 24px;
+  padding: 0 2px;
+}
+
+.form-group .edit-field .input-group .input-group-btn {
+  width: 1%;
+}
+
+.field-input .form-control {
+  height: 22px;
+  padding: 0 2px;
+}
+
+.form-group .edit-field .input-group .form-control {
+  height: 30px;
+  padding: 5px 2px;
+}
+
+.btn.collapsed {
+  transform: rotate(-90deg);
+}
+
+label {
+  font-weight: normal;
+}
+
+.form-label-full, .form-inline label.form-label-full, .form-label.form-label-full {
+  text-align: left;
+  width: 100%;
+}
+
+.form-inline label.form-checkbox:after, .form-label.form-checkbox:after, .form-inline label.empty-label:after {
+  content: none;
+}
+
+.form-radio input[type=radio] {
+  margin-right: 3px;
+}
+
+.label-xs {
+  padding: 1px 5px;
+}
+
+.box-header .checkbox {
+  margin: 0;
+}
+
+input[type=checkbox] {
+  display: none;
+}
+
+input[type="checkbox"] + span:before {
+  color: #d2d6de;
+  content: "\f096";
+  display: inline-block;
+  font-size: 16px;
+  padding: 0;
+  vertical-align: baseline;
+  margin-right: 4px;
+  width: 14px;
+  font-family: FontAwesome;
+  height: 16px;
+  line-height: 19px;
+}
+
+input[type="checkbox"]:checked + span:before {
+  content: "\f14a";
+  font-family: FontAwesome;
+  font-size: 14px;
+}
+
+.form-inline .radio, .form-inline .checkbox {
+  padding: 5px 15px 0 3px;
+  display: block;
+  margin-right: 4px;
+}
+
+.radio, .checkbox {
+  overflow: hidden;
+}

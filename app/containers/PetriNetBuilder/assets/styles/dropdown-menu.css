@@ -1,0 +1,155 @@
+.dropdown-menu {
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  z-index: 1001;
+}
+
+.dropdown-menu .panel-heading {
+  background-color: #ffffff;
+  border-radius: 0;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px;
+  text-transform: uppercase;
+}
+
+.dropdown-menu .panel-footer {
+  background-color: #ffffff;
+  border-radius: 0px;
+  border: 0;
+  padding: 10px;
+  text-align: center;
+}
+
+div.panel.dropdown-menu .panel-body.scrollable-div {
+  overflow: auto;
+  height: 200px;
+  padding: 0;
+  min-width: 280px;
+}
+
+.dropdown-menu > li > a, .dropdown-menu > li.hover-list {
+  padding: 8px 15px;
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-menu > li.hover-list:hover {
+  background: #f2f4f7;
+}
+
+.dropdown-menu .divider {
+  background-color: #ddd;
+  margin: 0;
+}
+
+/** list with img **/
+ul.items-with-images li > a {
+  display: block;
+  white-space: nowrap;
+  border-bottom: 1px solid #ededed;
+  margin: 0;
+  padding: 10px;
+}
+
+ul.items-with-images li > a h4 {
+  padding: 0;
+  margin: 0 0 3px 50px;
+  font-size: 14px;
+  position: relative;
+  font-weight: normal;
+}
+
+ul.items-with-images li > a h4 small {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+ul.items-with-images li > a p {
+  margin: 0 0 0 50px;
+  white-space: normal;
+  color: #333;
+}
+
+ul.items-with-images li > a:hover {
+  background: #f2f4f7;
+}
+
+ul.items-with-images li > a img, ul.items-with-images li > a .user-icon img {
+  margin: auto 10px auto auto;
+  width: 38px;
+  height: 38px;
+}
+
+ul.items-with-images li > a .user-icon {
+  display: block;
+}
+
+ul.items-with-images li > a .user-icon .badge.status {
+  left: 25px;
+  top: 25px;
+}
+
+ul.list-with-item-paddings li a {
+  padding: 10px;
+}
+
+ul.list-with-item-borders {
+  padding: 0;
+}
+
+ul.list-with-item-borders li a {
+  border-bottom: 1px solid #ededed;
+}
+
+.dropdown-menu .small-panel-heading {
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px;
+  text-transform: uppercase;
+}
+
+ul.items-with-images li > a p {
+  position: relative;
+  padding-right: 40px;
+}
+
+ul.items-with-images li > a .btn-circle-min {
+  width: 24px;
+  height: 24px;
+}
+
+ul.items-with-images li > a .btn {
+  position: absolute;
+  top: -3px;
+  right: 10px;
+}
+
+ul.items-with-images li > a .btn i {
+  font-size: 12px;
+}
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
+}
+
+.select-user.user-list input:focus + .results {
+  display: block;
+}
+
+.select-user.user-list input {
+  height: auto;
+}
+
+.list-unstyled {
+  margin: 0;
+}

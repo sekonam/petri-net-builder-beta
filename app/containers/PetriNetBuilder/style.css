@@ -1,0 +1,272 @@
+
+/*
+ * Top menu
+ */
+.buttons {
+	margin-left: 185px;
+}
+.buttons1 {
+	overflow: hidden;
+}
+.buttons .select-container {
+	width: 125px;
+}
+.buttons .select-container, .buttons .bootstrap-switch, .buttons .btn {
+	margin-left: 5px;
+	margin-top: 5px;
+	float: left;
+}
+.buttons span.lbl {
+	margin-left: 5px;
+	margin-top: 12px;
+	float: left;
+}
+/*
+ * Left menu
+ */
+.engine .left-menu {
+	float: left;
+	width: 180px;
+	padding-top: 5px;
+}
+.list-type-style-none {
+	list-style-type: none;
+	padding-left: 0;
+}
+.list-type-style-none li {
+	margin-bottom: 5px;
+}
+.right-sidebar {
+	float: right;
+	width: 250px;
+}
+.center {
+	text-align: center;
+}
+.center .btn {
+	margin-left: 5px;
+}
+.col-xs-8.form-control {
+	width: 65%;
+	margin-right: 1%;
+}
+/*
+ * Form State Sockets
+ */
+
+.columns {
+	overflow: hidden;
+}
+.left-side {
+	float: left;
+	width: 49%;
+}
+.right-side {
+	float: right;
+	width: 49%;
+}
+.sockets .form-control {
+	width: 65%;
+	margin-right: 1%;
+}
+.select-inline {
+	display:inline-block;
+	width:200px;
+	vertical-align:middle;
+}
+/*
+ * SVG workflow 2D context
+ */
+
+svg.context {
+	overflow: hidden;
+	background:#828B98 ;
+	opacity: 1;
+}
+.diagram-objects {
+	transform-origin: 50% 50%;
+}
+.selection {
+	fill: #aaa;
+	stroke: #000;
+	stroke-width: 1px;
+	stroke-dasharray: 2, 2;
+	opacity: 0.5;
+}
+.node {
+	cursor: move;
+	opacity: 1;
+}
+.node.active .node-rect {
+	stroke-width: 2px;
+}
+.node.selected .node-rect {
+	stroke-width: 2px;
+	stroke-dasharray: 2, 2;
+}
+.node-rect {
+	stroke-width: 1;
+}
+.node:hover .node-rect {
+	stroke-width: 2px;
+}
+.node-schema .node-rect {
+	fill-opacity: 0;
+	stroke: #000;
+}
+.node-schema text {
+	color: #000;
+}
+.node-default text {
+	text-shadow: 1px 1px 0 black;
+}
+.node-default .node-rect {
+	fill: #000;
+	stroke: #fff;
+}
+.subnet .node-default .node-rect {
+	fill: #003000;
+}
+.place .node-default .node-rect {
+	fill: #000030;
+}
+.place.start-place .node-default .node-rect, .place.finish-place .node-default .node-rect {
+	fill: #422;
+}
+.node-default .node-txt {
+	fill: #fff;
+	font-size: 10pt;
+}
+.node-default .node:hover .node-txt {
+	fill: #fff;
+}
+.external .node .node-rect {
+	fill: #aaa;
+}
+.socket {
+	stroke: #aaa;
+	stroke-width: 1;
+	cursor: pointer;
+}
+.socket {
+	fill: #a44;
+}
+.socket:hover {
+	stroke: #fff;
+	stroke-width: 2px;
+}
+.socket-in-drawing-mode {
+	transform: scale(1.5);
+	transform-origin: 50% 50%;
+	transition: transform 0.5s ease-in-out;
+}
+.group .group-header {
+	fill : #fff;
+}
+.group-rect, .group > .node > .node-rect {
+	fill: #666;
+	stroke: #222;
+	stroke-width: 1;
+	fill-opacity: 0.5;
+}
+.milestone .group-rect {
+	fill: #999;
+	stroke: #444;
+}
+.phase .group-rect {
+}
+.circle-button {
+	fill: #25a;
+	stroke: #aaa;
+	stroke-width: 1;
+	cursor: pointer;
+}
+.circle-button .circle {
+	stroke: #fff;
+	fill: #25a;
+}
+.circle-button .circle.remove-button {
+	fill: #d9534f;
+}
+.circle-button:hover {
+	stroke: #fff;
+}
+.circle-button .circle-button-text {
+	fill: #ddd;
+	stroke-width: 0;
+}
+.circle-button:hover .circle-button-text {
+	fill: #fff;
+}
+.arc {
+	stroke-width: 2;
+	fill: none;
+	stroke: #fff;
+	opacity: 1;
+}
+.arc:hover {
+	cursor: pointer;
+	stroke-width: 3;
+}
+.arc-marker {
+	stroke-width: 0;
+	stroke: #fff;
+	fill: #fff;
+}
+.dim-layer {
+	fill: #000;
+	opacity: 0.5;
+}
+/***** Node tree *****/
+
+.tree-left-menu ul {
+	font-family: inherit !important;
+	color: #fff !important;
+	background: none !important;
+}
+.tree-left-menu * {
+	color: #fff !important;
+}
+.box.box-left-side {
+	width: 90%;
+}
+.scroll-section .box.box-left-side {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	overflow: hidden;
+}
+.scroll-section .box.box-left-side .box-header {
+	padding: 10px 15px;
+	border: 0;
+}
+.scroll-section .box.box-left-side .box-header h5 {
+	margin: 0;
+	font-size: 14px;
+}
+.box-left-side .btn-box-tool.text-white.padding-medium-vertical {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 100%;
+	text-align: left;
+}
+.rl-global-wrapper .Select-control, .rl-global-wrapper .Select-input, .rl-global-wrapper .Select-input > input {
+	height:29px;
+}
+.rl-global-wrapper .Select-placeholder {
+	line-height:27px;
+}
+.Select:hover, .Select-control:hover {
+	box-shadow:none !important;
+}
+.bootstrap-switch-handle-on, .bootstrap-switch-handle-off {
+	display:none !important;
+}
+.bootstrap-switch .bootstrap-switch-handle-on, .bootstrap-switch .bootstrap-switch-handle-off, .bootstrap-switch .bootstrap-switch-label {
+	padding:4px 10px !important;
+}
+.Select-item {
+	margin-top:1px !important;
+	margin-left:1px !important;
+	margin-right:3px;
+}

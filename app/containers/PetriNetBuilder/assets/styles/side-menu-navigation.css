@@ -1,0 +1,125 @@
+.rl-left-menu a i, .rl-left-menu span i {
+  display: inline-block;
+  font-size: 18px;
+  width: 23px;
+  text-align: center;
+  vertical-align: sub;
+  line-height: inherit;
+}
+
+.rl-left-menu .list-group-item i {
+  font-size: 14px;
+  vertical-align: initial;
+}
+.rl-left-menu .list-group-item i.fa-2x {
+  font-size: 18px;
+  vertical-align: middle;
+  margin-right:5px;
+  margin-left:-28px;
+}
+
+.rl-left-menu .list-group-item i.fa + i.fa-2x {
+	margin-left:0;
+}
+.rl-left-menu .list-group-item i.fa + i.fa-2x.undefined {
+	margin-left:-28px;
+}
+
+/** Content **/
+
+.rl-left-menu hr {
+  margin: 0;
+}
+
+.rl-left-menu span.text-uppercase {
+  padding: 10px 15px;
+  display: block;
+  height: 43px;
+}
+
+.rl-left-menu .list-group, .rl-left-menu .list-group-item {
+  margin-bottom: 0;
+}
+
+.rl-left-menu .list-group-item {
+  padding: 7px 15px 7px 40px;
+}
+
+.rl-left-menu .level-2 .list-group-item {
+  padding: 7px 15px 7px 55px;
+}
+
+.rl-left-menu .list-group-item .fa.fa-caret-right, .rl-left-menu .list-group-item .fa.fa-caret-down {
+  margin-left: -25px;
+}
+
+.rl-left-menu .list-group-item, .rl-left-menu .list-group-item.active, .rl-left-menu .list-group-item.active:hover, .rl-left-menu .list-group-item.active:focus {
+  border: none;
+}
+
+.rl-left-menu .list-group-item.active, .rl-left-menu .list-group-item.active:hover, .rl-left-menu .list-group-item.active:focus {
+  border: none;
+  font-weight: bold;
+}
+
+.rl-left-menu .list-group-item:first-child, .rl-left-menu .list-group-item:last-child {
+  border-radius: 0;
+}
+
+.rl-left-menu .nav-tabs.nav-justified > li > a {
+  text-align: left;
+}
+
+/*** in sidebar ***/
+.rl-left-menu {
+  position: relative;
+  height: 100%;
+  min-height: 200px;
+}
+
+.rl-left-menu .tab-content {
+  /*position: absolute;
+  top: 0px;
+  bottom: 0px;
+  position:relative;
+  overflow: auto;
+  padding-right: 20px;
+  right: -20px;
+  left: 0;
+  box-sizing: unset;
+  width: 100%;*/
+}
+
+.rl-left-menu .rl-headless-tabs .tab-content {
+  top: 0;
+}
+
+.rl-sidebar.rl-closed-sidebar .rl-sidebar-content span.text-uppercase span + span, .rl-sidebar.rl-closed-sidebar .rl-sidebar-content span.text-uppercase i + span, .rl-sidebar.rl-closed-sidebar .nav .nav-link span, .rl-sidebar.rl-closed-sidebar .nav li:not(.active), .rl-left-menu .rl-headless-tabs ul.nav.nav-tabs, .rl-closed-sidebar.rl-sidebar .rl-sidebar-footer a:first-child, .rl-sidebar.rl-closed-sidebar .rl-left-menu a, .rl-sidebar.rl-closed-sidebar .list-items .media-body, .rl-sidebar.rl-closed-sidebar .list-items .media-right, .rl-sidebar.rl-closed-sidebar .rl-left-menu h5 i + span {
+  display: none;
+}
+
+.rl-sidebar.rl-closed-sidebar .rl-left-menu .list-items a.media-left {
+  display: table-cell;
+}
+
+.rl-left-menu .list-group, .rl-left-menu span.text-uppercase, .rl-left-menu hr, .rl-left-menu .rl-header-sidebar, .rl-left-menu .stream-info, .rl-left-menu .list-items, .rl-left-menu h5 {
+  /*width:230px;*/
+}
+
+.rl-sidebar.rl-closed-sidebar .rl-sidebar-content span.text-uppercase, .rl-sidebar.rl-closed-sidebar .rl-left-menu span.text-uppercase, .rl-sidebar.rl-closed-sidebar .rl-left-menu hr, .rl-sidebar.rl-closed-sidebar .rl-left-menu h5 {
+  width: 53px;
+}
+
+.rl-sidebar.rl-closed-sidebar .rl-left-menu a {
+  text-align: center;
+}
+
+.rl-left-menu a .user-icon i, .rl-left-menu .user-icon i {
+  font-size: inherit;
+  width: auto;
+  vertical-align: inherit;
+}
+
+.rl-left-menu span.text-uppercase .pull-right .btn-box-tool {
+  margin-top: 3px;
+}

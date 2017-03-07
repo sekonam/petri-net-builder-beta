@@ -1,0 +1,51 @@
+.table {
+  margin-bottom: 10px;
+}
+
+.table > thead > tr > th {
+  background: #f9f9fb none repeat scroll 0 0;
+  white-space: nowrap;
+}
+
+.table > thead > tr > td, .table > thead > tr > th {
+  padding: 8px 12px;
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+  border-bottom: 1px solid #eee;
+  border-top: 1px solid #eee;
+}
+
+.table-hover > tbody > tr:hover, .selected-row {
+  background-color: #f2f4f7 !important;
+}
+
+.small-cell {
+  width: 16px;
+}
+
+.table > tbody > tr > td {
+  padding: 17px 12px;
+}
+
+.sub-table .table > thead > tr > td, .sub-table .table > thead > tr > th, .sub-table .table > tbody > tr > td, .sub-table .table > tbody > tr > th, .sub-table .table > tfoot > tr > td, .sub-table .table > tfoot > tr > th {
+  padding: 5px 8px;
+}
+
+.sorter {
+  display: inline;
+  margin-left: 5px;
+  opacity: 0.6;
+}
+
+.non-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.table-va-middle > thead > tr > th, .table-va-middle > tbody > tr > th, .table-va-middle > tfoot > tr > th, .table-va-middle > thead > tr > td, .table-va-middle > tbody > tr > td, .table-va-middle > tfoot > tr > td {
+  vertical-align: middle;
+}
