@@ -2,6 +2,7 @@ import App from 'containers/App';
 import NotFound from 'containers/NotFound';
 import Home from 'containers/Home';
 import PetriNetBuilder from './containers/PetriNetBuilder';
+import AirQuality from './components/AirQuality';
 
 export default () => ({
   indexRoute: '/',
@@ -15,10 +16,10 @@ export default () => ({
         path: 'cpn_builder',
         component: PetriNetBuilder,
       },
-/*      {
+      {
         path: 'echarts',
-        component: EchartTesterSample,
-      },*/
+        component: AirQuality,
+      },
       {
         path: '*',
         status: 404,
