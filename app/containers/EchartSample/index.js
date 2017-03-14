@@ -1,3 +1,4 @@
+
 import React, {
   Component,
   PropTypes,
@@ -16,7 +17,7 @@ class EchartSample extends Component {
     this.storage = this.props.storage;
     this.json = JSON.stringify(this.storage);
     this.state = {
-      option: this.props.getOption(),
+      option: this.props.getOption(this.storage),
     };
     this.setJson = ::this.setJson;
     this.setOption = ::this.setOption;
@@ -31,7 +32,7 @@ class EchartSample extends Component {
     Object.keys(this.storage).forEach((key) => {
       this.storage[key] = storage[key];
     });
-    this.setState({ option: this.props.getOption() });
+    this.setState({ option: this.props.getOption(this.storage) });
   }
 
   render() {

@@ -388,10 +388,10 @@ const storage = {
   geoCoordMap,
 };
 
-const convertData = function (data) {
+const convertData = function (data, geoCoordMap) {
   var res = [];
   for (var i = 0; i < data.length; i++) {
-    var geoCoord = storage.geoCoordMap[data[i].name];
+    var geoCoord = geoCoordMap[data[i].name];
     if (geoCoord) {
       res.push({
         name: data[i].name,
@@ -402,7 +402,7 @@ const convertData = function (data) {
   return res;
 };
 
-const getOption = () => ({
+const getOption = (storage) => ({
   backgroundColor: '#404a59',
   title: {
     text: '全国主要城市空气质量',
@@ -448,7 +448,7 @@ const getOption = () => ({
       name: 'pm2.5',
       type: 'scatter',
       coordinateSystem: 'geo',
-      data: convertData(storage.data),
+      data: convertData(storage.data, storage.geoCoordMap),
       symbolSize: function (val) {
         return val[2] / 10;
       },
@@ -474,7 +474,7 @@ const getOption = () => ({
       coordinateSystem: 'geo',
       data: convertData(storage.data.sort(function (a, b) {
         return b.value - a.value;
-      }).slice(0, 6)),
+      }).slice(0, 6), storage.geoCoordMap),
       symbolSize: function (val) {
         return val[2] / 10;
       },

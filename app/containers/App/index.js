@@ -13,8 +13,12 @@ import {
   Navbar,
   Nav,
   NavItem,
+  NavDropdown,
+  MenuItem,
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+
+import EchartsRoutes from '../../EchartsRoutes';
 
 const AppWrapper = styled.div`
   max-width: 100%;
@@ -49,9 +53,15 @@ export function App(props) {
             <LinkContainer to="/cpn_builder">
               <NavItem eventKey={1}>CPN Builder</NavItem>
             </LinkContainer>
-            <LinkContainer to="/echarts">
-              <NavItem eventKey={2}>Echart Examples</NavItem>
-            </LinkContainer>
+            <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
+              {EchartsRoutes.map(
+                (conf, key) => (
+                  <LinkContainer to={`/${conf.route}`} key={key}>
+                    <MenuItem eventKey={`2.${key}`}>{conf.label}</MenuItem>
+                  </LinkContainer>
+                )
+              )}
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

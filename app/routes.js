@@ -2,7 +2,7 @@ import App from 'containers/App';
 import NotFound from 'containers/NotFound';
 import Home from 'containers/Home';
 import PetriNetBuilder from './containers/PetriNetBuilder';
-import AirQuality from './components/AirQuality';
+import EchartsRoutes from './EchartsRoutes';
 
 export default () => ({
   indexRoute: '/',
@@ -16,16 +16,17 @@ export default () => ({
         path: 'cpn_builder',
         component: PetriNetBuilder,
       },
-      {
-        path: 'echarts',
-        component: AirQuality,
-      },
+    ].concat(
+      EchartsRoutes.map((conf) => ({
+        path: conf.route,
+        component: conf.component,
+      })),
       {
         path: '*',
         status: 404,
         component: NotFound,
       },
-    ];
+    );
     childRoutes.push();
     cb(null, childRoutes);
   },
