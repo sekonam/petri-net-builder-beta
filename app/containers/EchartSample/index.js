@@ -1,4 +1,4 @@
-
+import { isFunction } from 'lodash';
 import React, {
   Component,
   PropTypes,
@@ -35,6 +35,23 @@ class EchartSample extends Component {
     this.setState({ option: this.props.getOption(this.storage) });
   }
 
+  doUpdate() {
+    const { onMount } = this.props;
+    const echart = this.refs.echart.getEchartsInstance();
+
+    if (isFunction(onMount)) {
+      onMount(echart, this.storage);
+    }
+  }
+
+  componentDidMount() {
+    this.doUpdate();
+  }
+
+  componentDidUpdate() {
+    this.doUpdate();
+  }
+
   render() {
     const Container = styled.div`
       height: 100%;
@@ -60,6 +77,7 @@ class EchartSample extends Component {
         <Left>
           <ReactEcharts
             option={this.state.option || {}}
+            ref="echart"
           />
         </Left>
         <Right>
@@ -83,6 +101,7 @@ class EchartSample extends Component {
 EchartSample.propTypes = {
   storage: PropTypes.object.isRequired,
   getOption: PropTypes.func.isRequired,
+  onMount: PropTypes.func,
 };
 
 export default EchartSample;

@@ -20,6 +20,7 @@ import BrushBarChart from './components/BrushBarChart';
 import GradientShadow from './components/GradientShadow';
 import MultipleYAxes from './components/MultipleYAxes';
 import FinanceIndices from './components/FinanceIndices';
+import ScatterMapBrush from './components/ScatterMapBrush';
 
 const EchartsRoutes = [
   {
@@ -130,7 +131,12 @@ const EchartsRoutes = [
   {
     route: 'finance-indices',
     component: FinanceIndices,
-    label: 'MFinance Indices',
+    label: 'Finance Indices',
+  },
+  {
+    route: 'scatter-map-brush',
+    component: ScatterMapBrush,
+    label: 'Scatter Map Brush',
   },
 ];
 
