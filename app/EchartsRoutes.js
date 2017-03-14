@@ -21,12 +21,19 @@ import GradientShadow from './components/GradientShadow';
 import MultipleYAxes from './components/MultipleYAxes';
 import FinanceIndices from './components/FinanceIndices';
 import ScatterMapBrush from './components/ScatterMapBrush';
+import NegativeBarChart from './components/NegativeBarChart';
+import GraphWebkitDep from './components/GraphWebkitDep';
 
 const EchartsRoutes = [
   {
     route: 'air-quality',
     component: AirQuality,
     label: 'Air Quality',
+  },
+  {
+    route: 'graph-webkit-dep',
+    component: GraphWebkitDep,
+    label: 'Graph Webkit Dep',
   },
   {
     route: 'air-quality-baidu-map',
@@ -137,6 +144,11 @@ const EchartsRoutes = [
     route: 'scatter-map-brush',
     component: ScatterMapBrush,
     label: 'Scatter Map Brush',
+  },
+  {
+    route: 'negative-bar-chart',
+    component: NegativeBarChart,
+    label: 'Negative Bar Chart',
   },
 ];
 
