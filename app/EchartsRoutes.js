@@ -23,6 +23,9 @@ import FinanceIndices from './components/FinanceIndices';
 import ScatterMapBrush from './components/ScatterMapBrush';
 import NegativeBarChart from './components/NegativeBarChart';
 import GraphWebkitDep from './components/GraphWebkitDep';
+import DiskUsage from './components/DiskUsage';
+import Funnel from './components/Funnel';
+import SankeyDiagram from './components/SankeyDiagram';
 
 const EchartsRoutes = [
   {
@@ -149,6 +152,21 @@ const EchartsRoutes = [
     route: 'negative-bar-chart',
     component: NegativeBarChart,
     label: 'Negative Bar Chart',
+  },
+  {
+    route: 'disk-usage',
+    component: DiskUsage,
+    label: 'Disk Usage',
+  },
+  {
+    route: 'funnel',
+    component: Funnel,
+    label: 'Funnel',
+  },
+  {
+    route: 'sankey-diagram',
+    component: SankeyDiagram,
+    label: 'Sankey Diagram',
   },
 ];
 
