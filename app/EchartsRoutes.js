@@ -26,6 +26,9 @@ import GraphWebkitDep from './components/GraphWebkitDep';
 import DiskUsage from './components/DiskUsage';
 import Funnel from './components/Funnel';
 import SankeyDiagram from './components/SankeyDiagram';
+import ParallelAqi from './components/ParallelAqi';
+import GraphCartesian from './components/GraphCartesian';
+import AQIRadarChart from './components/AQIRadarChart';
 
 const EchartsRoutes = [
   {
@@ -167,6 +170,21 @@ const EchartsRoutes = [
     route: 'sankey-diagram',
     component: SankeyDiagram,
     label: 'Sankey Diagram',
+  },
+  {
+    route: 'parallel-aqi',
+    component: ParallelAqi,
+    label: 'Parallel Aqi',
+  },
+  {
+    route: 'graph-cartesian',
+    component: GraphCartesian,
+    label: 'Graph on Cartesian',
+  },
+  {
+    route: 'aqi-radar-chart',
+    component: AQIRadarChart,
+    label: 'AQI Radar Chart',
   },
 ];
 

@@ -23,6 +23,14 @@ class EchartSample extends Component {
     this.setOption = ::this.setOption;
   }
 
+  componentDidMount() {
+    this.doUpdate();
+  }
+
+  componentDidUpdate() {
+    this.doUpdate();
+  }
+
   setJson(val) {
     this.json = val;
   }
@@ -37,19 +45,11 @@ class EchartSample extends Component {
 
   doUpdate() {
     const { onMount } = this.props;
-    const echart = this.refs.echart.getEchartsInstance();
+    const echart = this.echart.getEchartsInstance();
 
     if (isFunction(onMount)) {
       onMount(echart, this.storage);
     }
-  }
-
-  componentDidMount() {
-    this.doUpdate();
-  }
-
-  componentDidUpdate() {
-    this.doUpdate();
   }
 
   render() {
@@ -77,7 +77,7 @@ class EchartSample extends Component {
         <Left>
           <ReactEcharts
             option={this.state.option || {}}
-            ref="echart"
+            ref={(echart) => { this.echart = echart; }}
           />
         </Left>
         <Right>
