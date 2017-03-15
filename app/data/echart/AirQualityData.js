@@ -468,37 +468,6 @@ const getOption = (storage) => ({
         }
       }
     },
-    {
-      name: 'Top 5',
-      type: 'effectScatter',
-      coordinateSystem: 'geo',
-      data: convertData(storage.data.sort(function (a, b) {
-        return b.value - a.value;
-      }).slice(0, 6), storage.geoCoordMap),
-      symbolSize: function (val) {
-        return val[2] / 10;
-      },
-      showEffectOn: 'render',
-      rippleEffect: {
-        brushType: 'stroke'
-      },
-      hoverAnimation: true,
-      label: {
-        normal: {
-          formatter: '{b}',
-          position: 'right',
-          show: true
-        }
-      },
-      itemStyle: {
-        normal: {
-          color: '#f4e925',
-          shadowBlur: 10,
-          shadowColor: '#333'
-        }
-      },
-      zlevel: 1
-    }
   ]
 });
 

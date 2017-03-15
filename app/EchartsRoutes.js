@@ -1,11 +1,9 @@
 import AirQuality from './components/AirQuality';
-import AirQualityBaiduMap from './components/AirQualityBaiduMap';
 import BubbleChart from './components/BubbleChart';
 import PricesAndEarnings from './components/PricesAndEarnings';
 import AnscombeQuartet from './components/AnscombeQuartet';
 import ScatterAqiColor from './components/ScatterAqiColor';
 import LargeScatter from './components/LargeScatter';
-import LifeExpectancy from './components/LifeExpectancy';
 import AirQuality2 from './components/AirQuality2';
 import PunchCard from './components/PunchCard';
 import PunchCard2 from './components/PunchCard2';
@@ -19,10 +17,8 @@ import AnimationDelay from './components/AnimationDelay';
 import BrushBarChart from './components/BrushBarChart';
 import GradientShadow from './components/GradientShadow';
 import MultipleYAxes from './components/MultipleYAxes';
-import FinanceIndices from './components/FinanceIndices';
 import ScatterMapBrush from './components/ScatterMapBrush';
 import NegativeBarChart from './components/NegativeBarChart';
-import GraphWebkitDep from './components/GraphWebkitDep';
 import DiskUsage from './components/DiskUsage';
 import Funnel from './components/Funnel';
 import SankeyDiagram from './components/SankeyDiagram';
@@ -30,21 +26,11 @@ import ParallelAqi from './components/ParallelAqi';
 import GraphCartesian from './components/GraphCartesian';
 import AQIRadarChart from './components/AQIRadarChart';
 
-const EchartsRoutes = [
+const EchartsRoutesTest = [
   {
     route: 'air-quality',
     component: AirQuality,
     label: 'Air Quality',
-  },
-  {
-    route: 'graph-webkit-dep',
-    component: GraphWebkitDep,
-    label: 'Graph Webkit Dep',
-  },
-  {
-    route: 'air-quality-baidu-map',
-    component: AirQualityBaiduMap,
-    label: 'Air Quality Baidu Map',
   },
   {
     route: 'bubble-chart',
@@ -70,11 +56,6 @@ const EchartsRoutes = [
     route: 'large-scatter',
     component: LargeScatter,
     label: 'Large Scatter',
-  },
-  {
-    route: 'life-expectancy',
-    component: LifeExpectancy,
-    label: 'Life Expectancy',
   },
   {
     route: 'air-quality2',
@@ -142,11 +123,6 @@ const EchartsRoutes = [
     label: 'Multiple Y Axes',
   },
   {
-    route: 'finance-indices',
-    component: FinanceIndices,
-    label: 'Finance Indices',
-  },
-  {
     route: 'scatter-map-brush',
     component: ScatterMapBrush,
     label: 'Scatter Map Brush',
@@ -188,4 +164,4 @@ const EchartsRoutes = [
   },
 ];
 
-export default EchartsRoutes;
+export default EchartsRoutesTest;

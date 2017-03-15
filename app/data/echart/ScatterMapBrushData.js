@@ -575,7 +575,6 @@ const getOption = (storage) => ({
 });
 
 const onMount = (myChart, storage) => {
-  console.log('onMount');
 myChart.on('brushselected', renderBrushed);
 
 // myChart.setOption(option);
