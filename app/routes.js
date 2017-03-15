@@ -3,6 +3,7 @@ import NotFound from 'containers/NotFound';
 import Home from 'containers/Home';
 import PetriNetBuilder from './containers/PetriNetBuilder';
 import EchartsRoutes from './EchartsRoutes';
+import AllCharts from './components/AllCharts';
 
 export default () => ({
   indexRoute: '/',
@@ -13,8 +14,12 @@ export default () => ({
         component: Home,
       },
       {
-        path: 'cpn_builder',
+        path: 'cpn-builder',
         component: PetriNetBuilder,
+      },
+      {
+        path: 'all-charts',
+        component: AllCharts,
       },
     ].concat(
       EchartsRoutes.map((conf) => ({

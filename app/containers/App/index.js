@@ -50,7 +50,7 @@ export function App(props) {
           <Nav>
           </Nav>
           <Nav pullRight>
-            <LinkContainer to="/cpn_builder">
+            <LinkContainer to="/cpn-builder">
               <NavItem eventKey={1}>CPN Builder</NavItem>
             </LinkContainer>
             <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
@@ -62,6 +62,9 @@ export function App(props) {
                 )
               )}
             </NavDropdown>
+            <LinkContainer to="/all-charts">
+              <NavItem eventKey={2}>All Charts</NavItem>
+            </LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
