@@ -4,6 +4,7 @@ import Home from 'containers/Home';
 import PetriNetBuilder from './containers/PetriNetBuilder';
 import EchartsRoutes from './EchartsRoutes';
 import AllCharts from './components/AllCharts';
+import AllDatamaps from './components/AllDatamaps';
 
 export default () => ({
   indexRoute: '/',
@@ -20,6 +21,10 @@ export default () => ({
       {
         path: 'all-charts',
         component: AllCharts,
+      },
+      {
+        path: 'all-datamaps',
+        component: AllDatamaps,
       },
     ].concat(
       EchartsRoutes.map((conf) => ({

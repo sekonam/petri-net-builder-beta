@@ -53,7 +53,7 @@ export function App(props) {
             <LinkContainer to="/cpn-builder">
               <NavItem eventKey={1}>CPN Builder</NavItem>
             </LinkContainer>
-            <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
+            <NavDropdown eventKey={3} title="Echarts" id="basic-nav-dropdown">
               {EchartsRoutes.map(
                 (conf, key) => (
                   <LinkContainer to={`/${conf.route}`} key={key}>
@@ -64,6 +64,9 @@ export function App(props) {
             </NavDropdown>
             <LinkContainer to="/all-charts">
               <NavItem eventKey={2}>All Charts</NavItem>
+            </LinkContainer>
+            <LinkContainer to="/all-datamaps">
+              <NavItem eventKey={4}>All Datamaps</NavItem>
             </LinkContainer>
           </Nav>
         </Navbar.Collapse>

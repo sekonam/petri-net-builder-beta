@@ -1,4 +1,4 @@
-import { isFunction } from 'lodash';
+import { isObject } from 'lodash';
 import React, {
   Component,
   PropTypes,
@@ -6,31 +6,20 @@ import React, {
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import CodeMirror from 'react-codemirror';
-import ReactEcharts from 'echarts-for-react';
-
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/lib/codemirror.css';
 
-import 'echarts/theme/dark';
+import Datamap from '../Datamap';
 
-class EchartSample extends Component {
+class DatamapSample extends Component {
   constructor(props) {
     super(props);
-    this.storage = this.props.storage;
-    this.json = JSON.stringify(this.storage);
+    this.json = JSON.stringify(this.props.storage);
     this.state = {
-      option: this.props.getOption(this.storage),
+      storage: this.props.storage,
     };
     this.setJson = ::this.setJson;
     this.setOption = ::this.setOption;
-  }
-
-  componentDidMount() {
-    this.doUpdate();
-  }
-
-  componentDidUpdate() {
-    this.doUpdate();
   }
 
   setJson(val) {
@@ -38,20 +27,14 @@ class EchartSample extends Component {
   }
 
   setOption() {
-    const storage = JSON.parse(this.json);
-    Object.keys(this.storage).forEach((key) => {
-      this.storage[key] = storage[key];
+    this.setState((prevState) => {
+      const storage = JSON.parse(this.json);
+      const newStorage = {};
+      Object.keys(prevState.storage).forEach((key) => {
+        newStorage[key] = storage[key];
+      });
+      return { storage: newStorage };
     });
-    this.setState({ option: this.props.getOption(this.storage) });
-  }
-
-  doUpdate() {
-    const { onMount } = this.props;
-    const echart = this.echart.getEchartsInstance();
-
-    if (isFunction(onMount)) {
-      onMount(echart, this.storage);
-    }
   }
 
   render() {
@@ -74,18 +57,31 @@ class EchartSample extends Component {
       text-align: center;
     `;
 
+    const { storage } = this.state;
+
+    if (!this.state.storage.style) {
+      storage.style = {};
+    }
+
+    if (!this.state.storage.style.height) {
+      storage.style.height = '300px';
+    }
+
+    const { callbacks } = this.props;
+    if (isObject(callbacks)) {
+      Object.keys(callbacks).forEach((key) => {
+        storage[key] = callbacks[key];
+      });
+    }
+
     return (
       <Container>
         <Left>
-          <ReactEcharts
-            option={this.state.option || {}}
-            theme="dark"
-            ref={(echart) => { this.echart = echart; }}
-          />
+          <Datamap {...storage} />
         </Left>
         <Right>
           <CodeMirror
-            value={JSON.stringify(this.storage, undefined, 2)}
+            value={JSON.stringify(this.state.storage, undefined, 2)}
             onChange={this.setJson}
             options={{
               lineNumbers: true,
@@ -101,10 +97,9 @@ class EchartSample extends Component {
   }
 }
 
-EchartSample.propTypes = {
+DatamapSample.propTypes = {
   storage: PropTypes.object.isRequired,
-  getOption: PropTypes.func.isRequired,
-  onMount: PropTypes.func,
+  callbacks: PropTypes.object,
 };
 
-export default EchartSample;
+export default DatamapSample;
