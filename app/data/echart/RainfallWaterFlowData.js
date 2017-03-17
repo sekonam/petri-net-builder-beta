@@ -136,14 +136,6 @@ const getOption = (storage) => ({
             name:'流量',
             type:'line',
             animation: false,
-            areaStyle: {
-                normal: {}
-            },
-            lineStyle: {
-                normal: {
-                    width: 1
-                }
-            },
             markArea: {
                 silent: true,
                 data: [[{
@@ -159,14 +151,6 @@ const getOption = (storage) => ({
             type:'line',
             yAxisIndex:1,
             animation: false,
-            areaStyle: {
-                normal: {}
-            },
-            lineStyle: {
-                normal: {
-                    width: 1
-                }
-            },
             markArea: {
                 silent: true,
                 data: [[{

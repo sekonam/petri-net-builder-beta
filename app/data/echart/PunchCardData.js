@@ -31,10 +31,6 @@ const getOption = (storage) => ({
         boundaryGap: false,
         splitLine: {
             show: true,
-            lineStyle: {
-                color: '#999',
-                type: 'dashed'
-            }
         },
         axisLine: {
             show: false

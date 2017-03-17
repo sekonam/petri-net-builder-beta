@@ -12,13 +12,6 @@ const names = [
 const storage = { data, names };
 
 const getOption = (storage) => ({
-    backgroundColor: new echarts.graphic.RadialGradient(0.3, 0.3, 0.8, [{
-        offset: 0,
-        color: '#f7f8fa'
-    }, {
-        offset: 1,
-        color: '#cdd0d5'
-    }]),
     title: {
         text: `${storage.names[0]} 与 ${storage.names[1]} 年各国家人均寿命与 GDP`
     },
@@ -57,20 +50,6 @@ const getOption = (storage) => ({
                 position: 'top'
             }
         },
-        itemStyle: {
-            normal: {
-                shadowBlur: 10,
-                shadowColor: 'rgba(120, 36, 50, 0.5)',
-                shadowOffsetY: 5,
-                color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
-                    offset: 0,
-                    color: 'rgb(251, 118, 123)'
-                }, {
-                    offset: 1,
-                    color: 'rgb(204, 46, 72)'
-                }])
-            }
-        }
     }, {
         name: storage.names[1],
         data: storage.data[1],
@@ -87,20 +66,6 @@ const getOption = (storage) => ({
                 position: 'top'
             }
         },
-        itemStyle: {
-            normal: {
-                shadowBlur: 10,
-                shadowColor: 'rgba(25, 100, 150, 0.5)',
-                shadowOffsetY: 5,
-                color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
-                    offset: 0,
-                    color: 'rgb(129, 227, 238)'
-                }, {
-                    offset: 1,
-                    color: 'rgb(25, 183, 207)'
-                }])
-            }
-        }
     }]
 });
 

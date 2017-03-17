@@ -29,7 +29,6 @@ var itemStyle = {
 };
 
 const getOption = (storage) => ({
-    backgroundColor: '#eee',
     legend: {
         data: ['bar', 'bar2', 'bar3', 'bar4'],
         align: 'left',
@@ -78,11 +77,9 @@ const getOption = (storage) => ({
             colorLightness: [0.4, 0.8]
         },
         outOfRange: {
-            color: '#bbb'
         },
         controller: {
             inRange: {
-                color: '#2f4554'
             }
         }
     },
@@ -91,28 +88,24 @@ const getOption = (storage) => ({
             name: 'bar',
             type: 'bar',
             stack: 'one',
-            itemStyle: itemStyle,
             data: storage.data1
         },
         {
             name: 'bar2',
             type: 'bar',
             stack: 'one',
-            itemStyle: itemStyle,
             data: storage.data2
         },
         {
             name: 'bar3',
             type: 'bar',
             stack: 'two',
-            itemStyle: itemStyle,
             data: storage.data3
         },
         {
             name: 'bar4',
             type: 'bar',
             stack: 'two',
-            itemStyle: itemStyle,
             data: storage.data4
         }
     ]

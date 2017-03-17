@@ -40,11 +40,6 @@ const getOption = (storage) => ({
             edgeSymbolSize: [4, 10],
             data: storage.data,
             links: storage.links,
-            lineStyle: {
-                normal: {
-                    color: '#2f4554'
-                }
-            }
         }
     ]
 });

@@ -402,7 +402,6 @@ const convertData = function (data, geoCoordMap) {
 };
 
 const getOption = (storage) => ({
-    backgroundColor: '#404a59',
     animation: true,
     animationDuration: 1000,
     animationEasing: 'cubicInOut',
@@ -414,40 +413,17 @@ const getOption = (storage) => ({
             subtext: 'data from PM25.in',
             sublink: 'http://www.pm25.in',
             left: 'center',
-            textStyle: {
-                color: '#fff'
-            }
         },
         {
             id: 'statistic',
             right: 120,
             top: 40,
             width: 100,
-            textStyle: {
-                color: '#fff',
-                fontSize: 16
-            }
         }
     ],
     toolbox: {
-        iconStyle: {
-            normal: {
-                borderColor: '#fff'
-            },
-            emphasis: {
-                borderColor: '#b1e4ff'
-            }
-        }
     },
     brush: {
-        outOfBrush: {
-            color: '#abc'
-        },
-        brushStyle: {
-            borderWidth: 2,
-            color: 'rgba(0,0,0,0.2)',
-            borderColor: 'rgba(0,0,0,0.5)',
-        },
         seriesIndex: [0, 1],
         throttleType: 'debounce',
         throttleDelay: 300,
@@ -465,15 +441,6 @@ const getOption = (storage) => ({
             }
         },
         roam: true,
-        itemStyle: {
-            normal: {
-                areaColor: '#323c48',
-                borderColor: '#111'
-            },
-            emphasis: {
-                areaColor: '#2a333d'
-            }
-        }
     },
     tooltip : {
         trigger: 'item'
@@ -522,11 +489,6 @@ const getOption = (storage) => ({
                     show: true
                 }
             },
-            itemStyle: {
-                normal: {
-                    color: '#ddb926'
-                }
-            }
         },
         {
             name: 'Top 5',
@@ -550,13 +512,6 @@ const getOption = (storage) => ({
                     show: true
                 }
             },
-            itemStyle: {
-                normal: {
-                    color: '#f4e925',
-                    shadowBlur: 10,
-                    shadowColor: '#333'
-                }
-            },
             zlevel: 1
         },
         {
@@ -564,11 +519,6 @@ const getOption = (storage) => ({
             zlevel: 2,
             type: 'bar',
             symbol: 'none',
-            itemStyle: {
-                normal: {
-                    color: '#ddb926'
-                }
-            },
             data: []
         }
     ]

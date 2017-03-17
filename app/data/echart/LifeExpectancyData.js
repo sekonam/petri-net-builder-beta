@@ -11042,16 +11042,6 @@ const data = {
   ]
 };
 
-    const itemStyle = {
-        normal: {
-            opacity: 0.8,
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowOffsetY: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
-        }
-    };
-
     const sizeFunction = function (x) {
         var y = Math.sqrt(x / 5e8) + 0.1;
         return y * 80;
@@ -11085,38 +11075,8 @@ const data = {
                 width: 55,
                 height: null,
                 label: {
-                    normal: {
-                        textStyle: {
-                            color: '#999'
-                        }
-                    },
-                    emphasis: {
-                        textStyle: {
-                            color: '#fff'
-                        }
-                    }
                 },
                 symbol: 'none',
-                lineStyle: {
-                    color: '#555'
-                },
-                checkpointStyle: {
-                    color: '#bbb',
-                    borderColor: '#777',
-                    borderWidth: 2
-                },
-                controlStyle: {
-                    showNextBtn: false,
-                    showPrevBtn: false,
-                    normal: {
-                        color: '#666',
-                        borderColor: '#666'
-                    },
-                    emphasis: {
-                        color: '#aaa',
-                        borderColor: '#aaa'
-                    }
-                },
                 data: []
             },
             backgroundColor: '#404a59',
@@ -11125,16 +11085,9 @@ const data = {
                 textAlign: 'center',
                 left: '63%',
                 top: '55%',
-                textStyle: {
-                    fontSize: 100,
-                    color: 'rgba(255, 255, 255, 0.7)'
-                }
             }],
             tooltip: {
                 padding: 5,
-                backgroundColor: '#222',
-                borderColor: '#777',
-                borderWidth: 1,
                 formatter: function (obj) {
                     var value = obj.value;
                     return storage.schema[3].text + '：' + value[3] + '<br>'
@@ -11154,16 +11107,10 @@ const data = {
                 min: 300,
                 nameGap: 25,
                 nameLocation: 'middle',
-                nameTextStyle: {
-                    fontSize: 18
-                },
                 splitLine: {
                     show: false
                 },
                 axisLine: {
-                    lineStyle: {
-                        color: '#ccc'
-                    }
                 },
                 axisLabel: {
                     formatter: '{value} $'
@@ -11173,15 +11120,6 @@ const data = {
                 type: 'value',
                 name: '平均寿命',
                 max: 100,
-                nameTextStyle: {
-                    color: '#ccc',
-                    fontSize: 18
-                },
-                axisLine: {
-                    lineStyle: {
-                        color: '#ccc'
-                    }
-                },
                 splitLine: {
                     show: false
                 },
@@ -11197,9 +11135,6 @@ const data = {
                     calculable: true,
                     precision: 0.1,
                     textGap: 30,
-                    textStyle: {
-                        color: '#ccc'
-                    },
                     inRange: {
                         color: (function () {
                             var colors = ['#bcd3bb', '#e88f70', '#edc1a5', '#9dc5c8', '#e1e8c8', '#7b7c68', '#e5b5b5', '#f0b489', '#928ea8', '#bda29a'];
@@ -11211,7 +11146,6 @@ const data = {
             series: [
                 {
                     type: 'scatter',
-                    itemStyle: itemStyle,
                     data: storage.data.series[0],
                     symbolSize: function(val) {
                         return sizeFunction(val[2]);
@@ -11234,8 +11168,7 @@ const data = {
             series: {
                 name: data.timeline[n],
                 type: 'scatter',
-                itemStyle: itemStyle,
-                data: data.series[n],
+                itemStyle: itemStyle,77
                 symbolSize: function(val) {
                     return sizeFunction(val[2]);
                 }

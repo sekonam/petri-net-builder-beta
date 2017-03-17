@@ -427,15 +427,11 @@ storage.mapData.forEach(function (itemOpt) {
 });
 
 return {
-    backgroundColor: '#404a59',
     title : {
         text: 'World Population (2011)',
         subtext: 'From Gapminder',
         left: 'center',
         top: 'top',
-        textStyle: {
-            color: '#fff'
-        }
     },
     tooltip : {
         trigger: 'item',
@@ -464,15 +460,6 @@ return {
                 show: false
             }
         },
-        itemStyle: {
-            normal: {
-                areaColor: '#323c48',
-                borderColor: '#111'
-            },
-            emphasis: {
-                areaColor: '#2a333d'
-            }
-        }
     },
     series : [
         {
@@ -492,11 +479,6 @@ return {
                             show: true
                         }
                     },
-                    itemStyle: {
-                        normal: {
-                            color: itemOpt.color
-                        }
-                    }
                 };
             })
         }

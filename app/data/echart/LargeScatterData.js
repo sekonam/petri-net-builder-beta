@@ -8,10 +8,6 @@ const getOption = (storage) => ({
         axisPointer:{
             show: true,
             type : 'cross',
-            lineStyle: {
-                type : 'dashed',
-                width : 1
-            }
         },
         zlevel: 1
     },

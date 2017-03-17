@@ -20,9 +20,6 @@ const getOption = (storage) => ({
         data: storage.dataAxis,
         axisLabel: {
             inside: true,
-            textStyle: {
-                color: '#fff'
-            }
         },
         axisTick: {
             show: false
@@ -40,9 +37,6 @@ const getOption = (storage) => ({
             show: false
         },
         axisLabel: {
-            textStyle: {
-                color: '#999'
-            }
         }
     },
     dataZoom: [
@@ -53,9 +47,6 @@ const getOption = (storage) => ({
     series: [
         { // For shadow
             type: 'bar',
-            itemStyle: {
-                normal: {color: 'rgba(0,0,0,0.05)'}
-            },
             barGap:'-100%',
             barCategoryGap:'40%',
             data: storage.dataShadow,
@@ -63,28 +54,6 @@ const getOption = (storage) => ({
         },
         {
             type: 'bar',
-            itemStyle: {
-                normal: {
-                    color: new echarts.graphic.LinearGradient(
-                        0, 0, 0, 1,
-                        [
-                            {offset: 0, color: '#83bff6'},
-                            {offset: 0.5, color: '#188df0'},
-                            {offset: 1, color: '#188df0'}
-                        ]
-                    )
-                },
-                emphasis: {
-                    color: new echarts.graphic.LinearGradient(
-                        0, 0, 0, 1,
-                        [
-                            {offset: 0, color: '#2378f7'},
-                            {offset: 0.7, color: '#2378f7'},
-                            {offset: 1, color: '#83bff6'}
-                        ]
-                    )
-                }
-            },
             data: storage.data
         }
     ]

@@ -186,13 +186,6 @@ const getOption = (storage) => ({
             data: storage.height,
             markArea: {
                 silent: true,
-                itemStyle: {
-                    normal: {
-                        color: 'transparent',
-                        borderWidth: 1,
-                        borderType: 'dashed'
-                    }
-                },
                 data: [[{
                     name: '女性分布区间',
                     xAxis: 'min',
@@ -209,11 +202,6 @@ const getOption = (storage) => ({
                 ]
             },
             markLine : {
-                lineStyle: {
-                    normal: {
-                        type: 'solid'
-                    }
-                },
                 data : [
                     {type : 'average', name: '平均值'},
                     { xAxis: 160 }
@@ -226,13 +214,6 @@ const getOption = (storage) => ({
             data: storage.width,
             markArea: {
                 silent: true,
-                itemStyle: {
-                    normal: {
-                        color: 'transparent',
-                        borderWidth: 1,
-                        borderType: 'dashed'
-                    }
-                },
                 data: [[{
                     name: '男性分布区间',
                     xAxis: 'min',
@@ -249,11 +230,6 @@ const getOption = (storage) => ({
                 ]
             },
             markLine : {
-                lineStyle: {
-                    normal: {
-                        type: 'solid'
-                    }
-                },
                 data : [
                     {type : 'average', name: '平均值'},
                     { xAxis: 170 }

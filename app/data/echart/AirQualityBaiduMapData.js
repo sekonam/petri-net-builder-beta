@@ -417,13 +417,11 @@ const getOption = (storage) => ({
                 'featureType': 'water',
                 'elementType': 'all',
                 'stylers': {
-                    'color': '#d1d1d1'
                 }
             }, {
                 'featureType': 'land',
                 'elementType': 'all',
                 'stylers': {
-                    'color': '#f3f3f3'
                 }
             }, {
                 'featureType': 'railway',
@@ -435,7 +433,6 @@ const getOption = (storage) => ({
                 'featureType': 'highway',
                 'elementType': 'all',
                 'stylers': {
-                    'color': '#fdfdfd'
                 }
             }, {
                 'featureType': 'highway',
@@ -447,13 +444,11 @@ const getOption = (storage) => ({
                 'featureType': 'arterial',
                 'elementType': 'geometry',
                 'stylers': {
-                    'color': '#fefefe'
                 }
             }, {
                 'featureType': 'arterial',
                 'elementType': 'geometry.fill',
                 'stylers': {
-                    'color': '#fefefe'
                 }
             }, {
                 'featureType': 'poi',
@@ -477,13 +472,11 @@ const getOption = (storage) => ({
                 'featureType': 'manmade',
                 'elementType': 'all',
                 'stylers': {
-                    'color': '#d1d1d1'
                 }
             }, {
                 'featureType': 'local',
                 'elementType': 'all',
                 'stylers': {
-                    'color': '#d1d1d1'
                 }
             }, {
                 'featureType': 'arterial',
@@ -495,19 +488,16 @@ const getOption = (storage) => ({
                 'featureType': 'boundary',
                 'elementType': 'all',
                 'stylers': {
-                    'color': '#fefefe'
                 }
             }, {
                 'featureType': 'building',
                 'elementType': 'all',
                 'stylers': {
-                    'color': '#d1d1d1'
                 }
             }, {
                 'featureType': 'label',
                 'elementType': 'labels.text.fill',
                 'stylers': {
-                    'color': '#999999'
                 }
             }]
         }
@@ -557,13 +547,6 @@ const getOption = (storage) => ({
                     formatter: '{b}',
                     position: 'right',
                     show: true
-                }
-            },
-            itemStyle: {
-                normal: {
-                    color: 'purple',
-                    shadowBlur: 10,
-                    shadowColor: '#333'
                 }
             },
             zlevel: 1

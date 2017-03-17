@@ -21111,11 +21111,6 @@ const storage = { diskData };
                     show: true,
                     formatter: '{b}'
                 },
-                itemStyle: {
-                    normal: {
-                        borderColor: '#fff'
-                    }
-                },
                 levels: getLevelOption(),
                 data: storage.diskData
             }

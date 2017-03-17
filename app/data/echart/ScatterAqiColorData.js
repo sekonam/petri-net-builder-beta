@@ -110,37 +110,17 @@ const schema = [
     {name: 'SO2', index: 6, text: '二氧化硫（SO2）'}
 ];
 
-
-const itemStyle = {
-    normal: {
-        opacity: 0.8,
-        shadowBlur: 10,
-        shadowOffsetX: 0,
-        shadowOffsetY: 0,
-        shadowColor: 'rgba(0, 0, 0, 0.5)'
-    }
-};
-
 const storage = {
   dataBJ,
   dataGZ,
   dataSH,
   schema,
-  itemStyle,
 };
 
 const getOption = () => ({
-    backgroundColor: '#404a59',
-    color: [
-        '#dd4444', '#fec42c', '#80F1BE'
-    ],
     legend: {
         y: 'top',
         data: ['北京', '上海', '广州'],
-        textStyle: {
-            color: '#fff',
-            fontSize: 16
-        }
     },
     grid: {
         x: '10%',
@@ -150,8 +130,6 @@ const getOption = () => ({
     },
     tooltip: {
         padding: 10,
-        backgroundColor: '#222',
-        borderColor: '#777',
         borderWidth: 1,
         formatter: function (obj) {
             var value = obj.value;
@@ -171,18 +149,11 @@ const getOption = () => ({
         type: 'value',
         name: '日期',
         nameGap: 16,
-        nameTextStyle: {
-            color: '#fff',
-            fontSize: 14
-        },
         max: 31,
         splitLine: {
             show: false
         },
         axisLine: {
-            lineStyle: {
-                color: '#eee'
-            }
         }
     },
     yAxis: {
@@ -190,14 +161,7 @@ const getOption = () => ({
         name: 'AQI指数',
         nameLocation: 'end',
         nameGap: 20,
-        nameTextStyle: {
-            color: '#fff',
-            fontSize: 16
-        },
         axisLine: {
-            lineStyle: {
-                color: '#eee'
-            }
         },
         splitLine: {
             show: false
@@ -216,22 +180,16 @@ const getOption = () => ({
             precision: 0.1,
             text: ['圆形大小：PM2.5'],
             textGap: 30,
-            textStyle: {
-                color: '#fff'
-            },
             inRange: {
                 symbolSize: [10, 70]
             },
             outOfRange: {
                 symbolSize: [10, 70],
-                color: ['rgba(255,255,255,.2)']
             },
             controller: {
                 inRange: {
-                    color: ['#c23531']
                 },
                 outOfRange: {
-                    color: ['#444']
                 }
             }
         },
@@ -253,14 +211,11 @@ const getOption = () => ({
                 colorLightness: [1, 0.5]
             },
             outOfRange: {
-                color: ['rgba(255,255,255,.2)']
             },
             controller: {
                 inRange: {
-                    color: ['#c23531']
                 },
                 outOfRange: {
-                    color: ['#444']
                 }
             }
         }
@@ -269,19 +224,16 @@ const getOption = () => ({
         {
             name: '北京',
             type: 'scatter',
-            itemStyle: storage.itemStyle,
             data: storage.dataBJ
         },
         {
             name: '上海',
             type: 'scatter',
-            itemStyle: storage.itemStyle,
             data: storage.dataSH
         },
         {
             name: '广州',
             type: 'scatter',
-            itemStyle: storage.itemStyle,
             data: storage.dataGZ
         }
     ]

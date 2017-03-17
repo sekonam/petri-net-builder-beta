@@ -241,13 +241,6 @@ function makeParallelAxis(schema) {
 }
 
 const getOption = (storage) => ({
-    backgroundColor: new echarts.graphic.RadialGradient(0.5, 0.5, 0.4, [{
-        offset: 0,
-        color: '#4b5769'
-    }, {
-        offset: 1,
-        color: '#404a59'
-    }]),
     title: {
         text: 'Prices and Earnings 2012',
         subtext: 'data from macrofocus',
@@ -255,9 +248,6 @@ const getOption = (storage) => ({
         left: 'center',
         top: 5,
         itemGap: 0,
-        textStyle: {
-            color: '#eee'
-        }
     },
     tooltip: {
         trigger: 'item',
@@ -270,11 +260,6 @@ const getOption = (storage) => ({
     toolbox: {
         show: true,
         left: 'right',
-        iconStyle: {
-            normal: {
-                borderColor: '#ddd'
-            }
-        },
         feature: {
         }
     },
@@ -284,11 +269,6 @@ const getOption = (storage) => ({
         inBrush: {
             opacity: 1
         },
-        outOfBrush: {
-            color: '#b99e2a',
-            symbolSize: 4,
-            opacity: 0.1
-        }
     },
     geo: {
         map: 'world',
@@ -299,26 +279,11 @@ const getOption = (storage) => ({
                 areaColor: '#eee'
             }
         },
-        itemStyle: {
-            normal: {
-                borderWidth: 0.2,
-                borderColor: '#404a59'
-            }
-        },
         left: '6%',
         top: 40,
         bottom: '54%',
         right: '14%',
         roam: false,
-        // itemStyle: {
-        //     normal: {
-        //         areaColor: '#323c48',
-        //         borderColor: '#111'
-        //     },
-        //     emphasis: {
-        //         areaColor: '#2a333d'
-        //     }
-        // }
     },
     parallelAxis: makeParallelAxis(storage.schema),
     parallel: {
@@ -326,11 +291,6 @@ const getOption = (storage) => ({
         left: 60,
         right: 20,
         bottom: 80,
-        // top: 10,
-        // left: 10,
-        // width: 300,
-        // bottom: 10,
-        // layout: 'vertical',
         axisExpandable: true,
         axisExpandCenter: 15,
         axisExpandCount: 10,
@@ -338,8 +298,6 @@ const getOption = (storage) => ({
         parallelAxisDefault: {
             type: 'value',
             nameLocation: 'start',
-            // nameRotate: 45,
-            // nameLocation: 'end',
             nameTextStyle: {
                 fontSize: 12
             },
@@ -350,10 +308,6 @@ const getOption = (storage) => ({
             },
             axisLine: {
                 // show: false,
-                lineStyle: {
-                    width: 1,
-                    color: 'rgba(255,255,255,0.3)'
-                }
             },
             axisTick: {
                 show: false
@@ -384,24 +338,11 @@ const getOption = (storage) => ({
             symbolSize: function (data) {
                 return data[2] / 5;
             },
-            itemStyle: {
-                normal: {
-                    borderColor: '#fff',
-                    color: '#577ceb',
-                }
-            }
         },
         {
             name: 'parallel',
             type: 'parallel',
             smooth: true,
-            lineStyle: {
-                normal: {
-                    color: '#577ceb',
-                    width: 0.5,
-                    opacity: 0.6
-                }
-            },
             blendMode: 'lighter',
             data: rawData
         }

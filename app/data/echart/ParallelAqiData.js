@@ -117,29 +117,14 @@ const pAxis = ['优', '良', '轻度污染', '中度污染', '重度污染', '�
 
 const storage = { dataBJ, dataGZ, dataSH, schema, legend, pAxis };
 
-var lineStyle = {
-    normal: {
-        width: 1,
-        opacity: 0.5
-    }
-};
-
 const getOption = (storage) => ({
-    backgroundColor: '#333',
     legend: {
         bottom: 30,
         data: storage.legend,
         itemGap: 20,
-        textStyle: {
-            color: '#fff',
-            fontSize: 14
-        }
     },
     tooltip: {
         padding: 10,
-        backgroundColor: '#222',
-        borderColor: '#777',
-        borderWidth: 1,
         formatter: function (obj) {
             var value = obj[0].value;
             return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
@@ -189,27 +174,14 @@ const getOption = (storage) => ({
             name: 'AQI指数',
             nameLocation: 'end',
             nameGap: 20,
-            nameTextStyle: {
-                color: '#fff',
-                fontSize: 12
-            },
             axisLine: {
-                lineStyle: {
-                    color: '#aaa'
-                }
             },
             axisTick: {
-                lineStyle: {
-                    color: '#777'
-                }
             },
             splitLine: {
                 show: false
             },
             axisLabel: {
-                textStyle: {
-                    color: '#fff'
-                }
             }
         }
     },
@@ -217,19 +189,16 @@ const getOption = (storage) => ({
         {
             name: '北京',
             type: 'parallel',
-            lineStyle: lineStyle,
             data: storage.dataBJ
         },
         {
             name: '上海',
             type: 'parallel',
-            lineStyle: lineStyle,
             data: storage.dataSH
         },
         {
             name: '广州',
             type: 'parallel',
-            lineStyle: lineStyle,
             data: storage.dataGZ
         }
     ]

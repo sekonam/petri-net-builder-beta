@@ -44,13 +44,9 @@ const getOption = (storage) => ({
     },
     tooltip: {
         trigger: 'item',
-        backgroundColor : 'rgba(0,0,250,0.2)'
     },
     legend: {
         data: storage.legend
-    },
-    visualMap: {
-        color: ['red', 'yellow']
     },
     radar: {
        indicator : storage.indicator
@@ -67,7 +63,6 @@ const getOption = (storage) => ({
                 }
             },
             emphasis : {
-                areaStyle: {color:'rgba(0,250,0,0.3)'}
             }
         },
         data

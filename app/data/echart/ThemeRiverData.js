@@ -53,11 +53,6 @@ const getOption = (storage) => ({
         trigger: 'axis',
         axisPointer: {
             type: 'line',
-            lineStyle: {
-                color: 'rgba(0,0,0,0.2)',
-                width: 1,
-                type: 'solid'
-            }
         }
     },
 
@@ -89,12 +84,6 @@ const getOption = (storage) => ({
     series: [
         {
             type: 'themeRiver',
-            itemStyle: {
-                emphasis: {
-                    shadowBlur: 20,
-                    shadowColor: 'rgba(0, 0, 0, 0.8)'
-                }
-            },
             data: storage.data
         }
     ]

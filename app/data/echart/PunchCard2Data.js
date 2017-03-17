@@ -38,13 +38,6 @@ const getOption = (storage) => ({
         type: 'category',
         data: hours,
         boundaryGap: false,
-        splitLine: {
-            show: true,
-            lineStyle: {
-                color: '#999',
-                type: 'dashed'
-            }
-        },
         axisLine: {
             show: false
         }

@@ -135,18 +135,6 @@ const getOption = (storage) => ({
             layout: 'none',
             data: storage.data.nodes,
             links: storage.data.links,
-            itemStyle: {
-                normal: {
-                    borderWidth: 1,
-                    borderColor: '#aaa'
-                }
-            },
-            lineStyle: {
-                normal: {
-                    color: 'source',
-                    curveness: 0.5
-                }
-            }
         }
     ]
 });

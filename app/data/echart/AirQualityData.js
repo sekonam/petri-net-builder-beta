@@ -403,15 +403,11 @@ const convertData = function (data, geoCoordMap) {
 };
 
 const getOption = (storage) => ({
-  backgroundColor: '#404a59',
   title: {
     text: '全国主要城市空气质量',
     subtext: 'data from PM25.in',
     sublink: 'http://www.pm25.in',
     left: 'center',
-    textStyle: {
-      color: '#fff'
-    }
   },
   tooltip : {
     trigger: 'item'
@@ -421,9 +417,6 @@ const getOption = (storage) => ({
     y: 'bottom',
     x:'right',
     data:['pm2.5'],
-    textStyle: {
-      color: '#fff'
-    }
   },
   geo: {
     map: 'china',
@@ -433,15 +426,6 @@ const getOption = (storage) => ({
       }
     },
     roam: true,
-    itemStyle: {
-      normal: {
-        areaColor: '#323c48',
-        borderColor: '#111'
-      },
-      emphasis: {
-        areaColor: '#2a333d'
-      }
-    }
   },
   series : [
     {
@@ -462,11 +446,6 @@ const getOption = (storage) => ({
           show: true
         }
       },
-      itemStyle: {
-        normal: {
-          color: '#ddb926'
-        }
-      }
     },
   ]
 });
