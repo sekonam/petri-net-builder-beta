@@ -12,6 +12,13 @@ import 'codemirror/mode/javascript/javascript';
 import 'codemirror/lib/codemirror.css';
 
 import 'echarts/theme/dark';
+import 'echarts/theme/infographic';
+import 'echarts/theme/macarons';
+import 'echarts/theme/roma';
+import 'echarts/theme/shine';
+import 'echarts/theme/vintage';
+
+import { DEFAULT_THEME } from './themes';
 
 class EchartSample extends Component {
   constructor(props) {
@@ -57,6 +64,7 @@ class EchartSample extends Component {
   render() {
     const Container = styled.div`
       height: 100%;
+      margin-top: 10px;
       overflow: hidden;
     `;
     const Left = styled.div`
@@ -79,7 +87,7 @@ class EchartSample extends Component {
         <Left>
           <ReactEcharts
             option={this.state.option || {}}
-            theme="dark"
+            theme={this.props.theme || DEFAULT_THEME}
             ref={(echart) => { this.echart = echart; }}
           />
         </Left>
@@ -105,6 +113,7 @@ EchartSample.propTypes = {
   storage: PropTypes.object.isRequired,
   getOption: PropTypes.func.isRequired,
   onMount: PropTypes.func,
+  theme: PropTypes.string,
 };
 
 export default EchartSample;

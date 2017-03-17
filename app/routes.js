@@ -3,7 +3,7 @@ import NotFound from 'containers/NotFound';
 import Home from 'containers/Home';
 import PetriNetBuilder from './containers/PetriNetBuilder';
 import EchartsRoutes from './EchartsRoutes';
-import AllCharts from './components/AllCharts';
+import AllCharts from './containers/AllCharts';
 import AllDatamaps from './components/AllDatamaps';
 
 export default () => ({
