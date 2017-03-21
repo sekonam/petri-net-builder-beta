@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import CodeMirror from 'react-codemirror';
 import ReactEcharts from 'echarts-for-react';
+import Visibility from 'components/Visibility';
 
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/lib/codemirror.css';
@@ -30,14 +31,25 @@ class EchartSample extends Component {
     };
     this.setJson = ::this.setJson;
     this.setOption = ::this.setOption;
+    this.showChart = ::this.showChart;
+    this.showCode = ::this.showCode;
   }
 
+  state = {
+    visible: false,
+    visibleCode: false,
+  };
+
   componentDidMount() {
-    this.doUpdate();
+    // this.doUpdate(); @todo fix it if needed
   }
 
   componentDidUpdate() {
     this.doUpdate();
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timer);
   }
 
   setJson(val) {
@@ -61,6 +73,14 @@ class EchartSample extends Component {
     }
   }
 
+  showChart() {
+    this.setState({ visible: true });
+  }
+
+  showCode() {
+    this.setState({ visibleCode: true });
+  }
+
   render() {
     const Container = styled.div`
       height: 100%;
@@ -82,7 +102,10 @@ class EchartSample extends Component {
       text-align: center;
     `;
 
-    return (
+    const { visible, visibleCode } = this.state;
+
+    return visible ?
+    (
       <Container>
         <Left>
           <ReactEcharts
@@ -92,20 +115,24 @@ class EchartSample extends Component {
           />
         </Left>
         <Right>
-          <CodeMirror
+          {visibleCode && <CodeMirror
             value={JSON.stringify(this.storage, undefined, 2)}
             onChange={this.setJson}
             options={{
               lineNumbers: true,
               mode: 'javascript',
             }}
-          />
+          />}
           <CenterBtn>
-            <Button onClick={this.setOption}>Submit</Button>
+            {!visibleCode && <Button onClick={this.showCode}>Edit Data</Button>}
+            {visibleCode && <Button onClick={this.setOption}>Submit</Button>}
           </CenterBtn>
         </Right>
       </Container>
-    );
+    ) :
+      <Visibility onOnScreen={this.showChart}>
+        <div style={{ height: 300 }}>Loading...</div>
+      </Visibility>;
   }
 }
 
