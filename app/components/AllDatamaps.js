@@ -2,7 +2,7 @@ import React from 'react';
 import * as d3 from 'd3';
 import DatamapSample from '../containers/DatamapSample';
 
-const colors = d3.scale.category10();
+const colors = d3.scaleOrdinal(d3.schemeCategory10);
 
 const DatamapDatas = [
   {

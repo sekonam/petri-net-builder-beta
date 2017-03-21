@@ -17,7 +17,8 @@ class AllCharts extends Component {
   }
 
   setTheme(theme) {
-    this.setState({ theme || DEFAULT_THEME });
+    const val = theme || DEFAULT_THEME;
+    this.setState({ theme: val });
   }
 
   getThemeOptions() {
