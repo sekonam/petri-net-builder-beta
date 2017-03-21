@@ -17,7 +17,16 @@ class AllCharts extends Component {
   }
 
   setTheme(theme) {
-    this.setState({ theme });
+    this.setState({ theme || DEFAULT_THEME });
+  }
+
+  getThemeOptions() {
+    return THEMES.map(
+      (theme) => ({
+        value: theme,
+        label: theme,
+      })
+    );
   }
 
   render() {
@@ -28,15 +37,8 @@ class AllCharts extends Component {
           <Select
             simpleValue
             value={this.state.theme}
-            options={THEMES.map(
-              (theme) => ({
-                value: theme,
-                label: theme,
-              })
-            )}
-            onChange={(val) => this.setTheme(
-              val || DEFAULT_THEME
-            )}
+            options={this.getThemeOptions()}
+            onChange={this.setTheme}
           />
         </div></div>
         {Object.keys(EchartsData).map(
