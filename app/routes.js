@@ -5,6 +5,7 @@ import PetriNetBuilder from './containers/PetriNetBuilder';
 import EchartsRoutes from './EchartsRoutes';
 import AllCharts from './containers/AllCharts';
 import AllDatamaps from './components/AllDatamaps';
+import BubbleChart from './containers/d3/BubbleChart';
 
 export default () => ({
   indexRoute: '/',
@@ -25,6 +26,10 @@ export default () => ({
       {
         path: 'all-datamaps',
         component: AllDatamaps,
+      },
+      {
+        path: 'bubble-chart',
+        component: BubbleChart,
       },
     ].concat(
       EchartsRoutes.map((conf) => ({
