@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import BubbleChartData from './BubbleChartData';
+import BubbleChartData from './data';
 
 var rootNode = document.createElement('div'),
   width = 960,

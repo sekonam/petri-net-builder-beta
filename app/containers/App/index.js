@@ -68,6 +68,14 @@ export function App(props) {
             <LinkContainer to="/all-datamaps">
               <NavItem eventKey={4}>All Datamaps</NavItem>
             </LinkContainer>
+            <NavDropdown eventKey={5} title="D3 charts" id="basic-nav-dropdown">
+              <LinkContainer to={`/all-d3-charts`} key={'5.1'}>
+                <MenuItem eventKey={`5.1`}>All d3 charts</MenuItem>
+              </LinkContainer>
+              <LinkContainer to={`/multiple-d3-charts`} key={'5.2'}>
+                <MenuItem eventKey={`5.2`}>Multiple d3 charts</MenuItem>
+              </LinkContainer>
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

@@ -1,4 +1,5 @@
 const Data = {};
+
 Data.AirQuality = require('./AirQualityData');
 Data.BubbleChartData = require('./BubbleChartData');
 Data.PricesAndEarningsData = require('./PricesAndEarningsData');

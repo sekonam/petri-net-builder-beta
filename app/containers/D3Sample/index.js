@@ -1,6 +1,6 @@
 import React, {
-  Component,
   PropTypes,
+  Component,
 } from 'react';
 import styled from 'styled-components';
 import rd3 from 'react-d3-library';
@@ -12,7 +12,7 @@ import 'codemirror/lib/codemirror.css';
 class D3Sample extends Component {
 
   static propTypes = {
-    initData: PropType.any.isRequired,
+    initData: PropTypes.any.isRequired,
     buildGraph: PropTypes.func.isRequired,
   };
 
