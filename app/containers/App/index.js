@@ -76,6 +76,14 @@ export function App(props) {
                 <MenuItem eventKey={`5.2`}>Multiple d3 charts</MenuItem>
               </LinkContainer>
             </NavDropdown>
+            <NavDropdown eventKey={6} title="Vega charts" id="basic-nav-dropdown">
+              <LinkContainer to={`/vega-bar-chart`} key={'6.1'}>
+                <MenuItem eventKey={`6.1`}>Bar Chart</MenuItem>
+              </LinkContainer>
+              <LinkContainer to={`/vega-bar-chart-cycle`} key={'6.2'}>
+                <MenuItem eventKey={`6.2`}>Cycled Bar Chart (15ms)</MenuItem>
+              </LinkContainer>
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

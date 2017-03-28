@@ -7,6 +7,8 @@ import AllCharts from './containers/AllCharts';
 import AllDatamaps from './components/AllDatamaps';
 import AllD3Charts from './components/AllD3Charts';
 import D3MultipleCharts from './components/AllD3Charts/D3MultipleCharts';
+import VegaBarChart from './components/vega/BarChart';
+import VegaBarChartCycle from './components/vega/BarChartCycle';
 
 export default () => ({
   indexRoute: '/',
@@ -35,6 +37,14 @@ export default () => ({
       {
         path: 'multiple-d3-charts',
         component: D3MultipleCharts,
+      },
+      {
+        path: 'vega-bar-chart',
+        component: VegaBarChart,
+      },
+      {
+        path: 'vega-bar-chart-cycle',
+        component: VegaBarChartCycle,
       },
     ].concat(
       EchartsRoutes.map((conf) => ({
