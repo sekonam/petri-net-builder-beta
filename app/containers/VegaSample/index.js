@@ -1,4 +1,3 @@
-import { isArray } from 'lodash';
 import React, {
   Component,
   PropTypes,
@@ -126,7 +125,7 @@ class VegaSample extends Component {
         <Left>
           <div
             id="vega-container"
-            ref={(vega) => { this.vega = vega; }}
+            ref={(v) => { this.vega = v; }}
           />
         </Left>
         <Right>
@@ -149,10 +148,7 @@ class VegaSample extends Component {
 }
 
 VegaSample.propTypes = {
-  initData: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.array,
-  ]).isRequired,
+  initData: PropTypes.object.isRequired,
   buildSpec: PropTypes.func.isRequired,
 };
 

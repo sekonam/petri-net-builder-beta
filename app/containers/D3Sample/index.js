@@ -77,6 +77,6 @@ class D3Sample extends Component {
       </div>
     );
   }
-};
+}
 
 export default D3Sample;

@@ -68,20 +68,12 @@ export function App(props) {
             <LinkContainer to="/all-datamaps">
               <NavItem eventKey={4}>All Datamaps</NavItem>
             </LinkContainer>
-            <NavDropdown eventKey={5} title="D3 charts" id="basic-nav-dropdown">
-              <LinkContainer to={`/all-d3-charts`} key={'5.1'}>
-                <MenuItem eventKey={`5.1`}>All d3 charts</MenuItem>
-              </LinkContainer>
-              <LinkContainer to={`/multiple-d3-charts`} key={'5.2'}>
-                <MenuItem eventKey={`5.2`}>Multiple d3 charts</MenuItem>
-              </LinkContainer>
-            </NavDropdown>
             <NavDropdown eventKey={6} title="Vega charts" id="basic-nav-dropdown">
-              <LinkContainer to={`/vega-bar-chart`} key={'6.1'}>
-                <MenuItem eventKey={`6.1`}>Bar Chart</MenuItem>
+              <LinkContainer to={'/vega-bar-chart'} key={'6.1'}>
+                <MenuItem eventKey={'6.1'}>Bar Chart</MenuItem>
               </LinkContainer>
-              <LinkContainer to={`/vega-bar-chart-cycle`} key={'6.2'}>
-                <MenuItem eventKey={`6.2`}>Cycled Bar Chart (15ms)</MenuItem>
+              <LinkContainer to={'/vega-bar-chart-cycle'} key={'6.2'}>
+                <MenuItem eventKey={'6.2'}>Cycled Bar Chart (15ms)</MenuItem>
               </LinkContainer>
             </NavDropdown>
           </Nav>

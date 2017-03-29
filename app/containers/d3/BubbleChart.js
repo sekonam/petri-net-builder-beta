@@ -12,7 +12,7 @@ import 'codemirror/lib/codemirror.css';
 class D3Sample extends Component {
 
   static propTypes = {
-    initData: PropType.any.isRequired,
+    initData: PropTypes.any.isRequired,
     buildGraph: PropTypes.func.isRequired,
   };
 
@@ -77,6 +77,6 @@ class D3Sample extends Component {
       </div>
     );
   }
-};
+}
 
 export default D3Sample;
