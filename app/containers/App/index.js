@@ -75,6 +75,10 @@ export function App(props) {
               <LinkContainer to={'/vega-bar-chart-cycle'} key={'6.2'}>
                 <MenuItem eventKey={'6.2'}>Multiple Updated(15ms) BarCharts</MenuItem>
               </LinkContainer>
+              <LinkContainer to={'/vega-catalog-cycle'} key={'6.3'}>
+                <MenuItem eventKey={'6.3'}>Vega Cycled Catalog</MenuItem>
+              </LinkContainer>
+
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
