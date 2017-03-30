@@ -3,7 +3,9 @@ import { Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import Select from 'react-select';
 
 import VegaSampleCycle from './VegaSampleCycle';
-import { spec, genData } from '../../data/vega/BarChartData';
+import VegaCharts from '../../data/vega';
+
+const ChartNames = Object.keys(VegaCharts);
 
 const gen = (c) => {
   const a = [];
@@ -73,13 +75,22 @@ class VegaSampleCatalog extends Component {
         </Form>
         {gen(this.state.amount).map(
           (i) => (
-            <VegaSampleCycle
-              key={i}
-              spec={spec}
-              genData={genData}
-              delay={this.state.delay}
-              renderer={this.state.renderer}
-            />
+            <div key={i}>
+              {ChartNames.map(
+                (chartName) => {
+                  const vegaChart = VegaCharts[chartName];
+                  return (
+                    <VegaSampleCycle
+                      key={chartName}
+                      spec={vegaChart.spec}
+                      genData={vegaChart.genData}
+                      delay={this.state.delay}
+                      renderer={this.state.renderer}
+                    />
+                  );
+                }
+              )}
+            </div>
           )
         )}
       </div>
