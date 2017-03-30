@@ -10,6 +10,7 @@ class VegaSampleCycle extends Component {
     spec: PropTypes.object.isRequired,
     genData: PropTypes.func.isRequired,
     delay: PropTypes.number,
+    renderer: PropTypes.string,
   };
 
   constructor(props) {
@@ -23,6 +24,13 @@ class VegaSampleCycle extends Component {
       this.updateGraph,
       this.props.delay || 1000
     );
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.deay !== this.props.delay) {
+      this.componentWillUnmount();
+      this.componentDidMount();
+    }
   }
 
   componentWillUnmount() {
@@ -40,7 +48,7 @@ class VegaSampleCycle extends Component {
     return (
       <VegaContainer
         spec={this.props.spec}
-        renderer={'canvas'}
+        renderer={this.props.renderer || 'canvas'}
         ref={(vega) => { this.vega = vega; }}
       />
     );
