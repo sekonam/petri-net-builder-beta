@@ -60,6 +60,7 @@ export function App(props) {
                     <MenuItem eventKey={`2.${key}`}>{conf.label}</MenuItem>
                   </LinkContainer>
                 )
+                
               )}
             </NavDropdown>
             <LinkContainer to="/all-charts">
