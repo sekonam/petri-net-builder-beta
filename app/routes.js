@@ -10,6 +10,7 @@ import D3MultipleCharts from './components/AllD3Charts/D3MultipleCharts';
 import VegaBarChart from './components/vega/BarChart';
 import VegaBarChartCycle from './components/vega/BarChartCycle';
 import VegaSampleCatalog from './containers/VegaSample/VegaSampleCatalog';
+import EchartSampleCatalog from './containers/EchartSample/EchartSampleCatalog';
 
 export default () => ({
   indexRoute: '/',
@@ -50,6 +51,10 @@ export default () => ({
       {
         path: 'vega-catalog-cycle',
         component: VegaSampleCatalog,
+      },
+      {
+        path: 'echart-catalog-cycle',
+        component: EchartSampleCatalog,
       },
     ].concat(
       EchartsRoutes.map((conf) => ({

@@ -78,8 +78,10 @@ export function App(props) {
               <LinkContainer to={'/vega-catalog-cycle'} key={'6.3'}>
                 <MenuItem eventKey={'6.3'}>Vega Cycled Catalog</MenuItem>
               </LinkContainer>
-
             </NavDropdown>
+            <LinkContainer to="/echart-catalog-cycle">
+              <NavItem eventKey={7}>Echart Cycled</NavItem>
+            </LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
