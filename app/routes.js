@@ -4,7 +4,6 @@ import Home from 'containers/Home';
 import PetriNetBuilder from './containers/PetriNetBuilder';
 import EchartsRoutes from './EchartsRoutes';
 import AllCharts from './containers/AllCharts';
-import AllDatamaps from './components/AllDatamaps';
 import AllD3Charts from './components/AllD3Charts';
 import D3MultipleCharts from './components/AllD3Charts/D3MultipleCharts';
 import VegaBarChart from './components/vega/BarChart';
@@ -28,10 +27,6 @@ export default () => ({
       {
         path: 'all-charts',
         component: AllCharts,
-      },
-      {
-        path: 'all-datamaps',
-        component: AllDatamaps,
       },
       {
         path: 'all-d3-charts',

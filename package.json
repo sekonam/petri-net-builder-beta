@@ -254,7 +254,6 @@
     "core-decorators": "0.15.0",
     "cross-env": "3.1.3",
     "d3": "4.7.3",
-    "d3v3": "github:d3/d3#v3.5.17",
     "datamaps": "0.5.8",
     "echarts": "3.3.1",
     "echarts-for-react": "1.1.6",

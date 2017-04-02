@@ -27,7 +27,7 @@ class EchartSample extends Component {
     this.storage = this.props.storage;
     this.json = JSON.stringify(this.storage);
     this.state = {
-      option: this.props.getOption(this.storage),
+      option: this.getOption(),
     };
     this.setJson = ::this.setJson;
     this.setOption = ::this.setOption;
@@ -36,7 +36,7 @@ class EchartSample extends Component {
   }
 
   state = {
-    visible: false,
+    visible: true,
     visibleCode: false,
   };
 
@@ -52,6 +52,12 @@ class EchartSample extends Component {
     clearTimeout(this.timer);
   }
 
+  getOption() {
+    const options = this.props.getOption(this.storage);
+    options.animation = false;
+    return options;
+  }
+
   setJson(val) {
     this.json = val;
   }
@@ -61,7 +67,7 @@ class EchartSample extends Component {
     Object.keys(this.storage).forEach((key) => {
       this.storage[key] = storage[key];
     });
-    this.setState({ option: this.props.getOption(this.storage) });
+    this.setState({ option: this.getOption() });
   }
 
   doUpdate() {

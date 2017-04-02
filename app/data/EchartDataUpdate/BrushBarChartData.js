@@ -73,6 +73,7 @@ const options = {
             }
         }
     },
+    animation: false,
     series: [
         {
             name: 'bar',

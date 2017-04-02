@@ -65,9 +65,6 @@ export function App(props) {
             <LinkContainer to="/all-charts">
               <NavItem eventKey={2}>All Charts</NavItem>
             </LinkContainer>
-            <LinkContainer to="/all-datamaps">
-              <NavItem eventKey={4}>All Datamaps</NavItem>
-            </LinkContainer>
             <NavDropdown eventKey={6} title="Vega charts" id="basic-nav-dropdown">
               <LinkContainer to={'/vega-bar-chart'} key={'6.1'}>
                 <MenuItem eventKey={'6.1'}>Bar Chart</MenuItem>
