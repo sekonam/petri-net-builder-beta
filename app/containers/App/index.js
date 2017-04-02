@@ -82,6 +82,9 @@ export function App(props) {
             <LinkContainer to="/echart-catalog-cycle">
               <NavItem eventKey={7}>Echart Cycled</NavItem>
             </LinkContainer>
+            <LinkContainer to="/d3-catalog-cycle">
+              <NavItem eventKey={8}>D3 Cycled</NavItem>
+            </LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
