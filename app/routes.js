@@ -11,6 +11,7 @@ import VegaBarChartCycle from './components/vega/BarChartCycle';
 import VegaSampleCatalog from './containers/VegaSample/VegaSampleCatalog';
 import EchartSampleCatalog from './containers/EchartSample/EchartSampleCatalog';
 import D3SampleCatalog from './containers/D3Sample/D3SampleCatalog';
+import VivaContainer from './containers/viva/VivaContainer';
 
 export default () => ({
   indexRoute: '/',
@@ -55,6 +56,10 @@ export default () => ({
       {
         path: 'd3-catalog-cycle',
         component: D3SampleCatalog,
+      },
+      {
+        path: 'viva-container',
+        component: VivaContainer,
       },
     ].concat(
       EchartsRoutes.map((conf) => ({
