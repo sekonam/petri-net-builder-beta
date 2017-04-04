@@ -82,6 +82,9 @@ export function App(props) {
             <LinkContainer to="/d3-catalog-cycle">
               <NavItem eventKey={8}>D3 Cycled</NavItem>
             </LinkContainer>
+            <LinkContainer to="/viva-catalog">
+              <NavItem eventKey={9}>Viva Graphs</NavItem>
+            </LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

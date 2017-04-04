@@ -1,22 +1,16 @@
 import React, { PropTypes, Component } from 'react';
 import Viva from 'vivagraphjs';
 
-import './VivaContainer.css';
+import './style.css';
 
-export default
-class VivaContainer extends Component {
-  propTypes = {
-    m: PropTypes.number,
-    n: PropTypes.number,
-  };
-
+class Dinamic extends Component {
   componentDidMount() {
     const graph = Viva.Graph.graph();
     const layout = Viva.Graph.Layout.forceDirected(graph, {
-      springLength : 10,
-      springCoeff : 0.0008,
-      dragCoeff : 0.02,
-      gravity : -1.2
+      springLength: 10,
+      springCoeff: 0.0008,
+      dragCoeff: 0.02,
+      gravity: -1.2,
     });
 
     const graphics = Viva.Graph.View.svgGraphics();
@@ -28,10 +22,10 @@ class VivaContainer extends Component {
     ));
 
     const renderer = Viva.Graph.View.renderer(graph, {
-      layout     : layout,
-      graphics   : graphics,
-      container  : this.viva,
-      renderLinks : true
+      layout,
+      graphics,
+      container: this.viva,
+      renderLinks: true,
     });
 
     renderer.run();
@@ -39,7 +33,7 @@ class VivaContainer extends Component {
   }
 
   beginRemoveNodesLoop(graph) {
-    var nodesLeft = [];
+    const nodesLeft = [];
     graph.forEachNode((node) => {
       nodesLeft.push(node.id);
     });
@@ -49,7 +43,7 @@ class VivaContainer extends Component {
 
       if (nodesCount > 0) {
         const nodeToRemove = Math.min(
-          (Math.random() * nodesCount) << 0,
+          Math.random(Math.random() * nodesCount),
           nodesCount - 1,
         );
 
@@ -57,9 +51,9 @@ class VivaContainer extends Component {
         nodesLeft.splice(nodeToRemove, 1);
       }
 
-       if (nodesCount === 0) {
-         clearInterval(removeInterval);
-         setTimeout(
+      if (nodesCount === 0) {
+        clearInterval(removeInterval);
+        setTimeout(
            () => this.beginAddNodesLoop(graph),
            100,
          );
@@ -75,13 +69,13 @@ class VivaContainer extends Component {
     const addInterval = setInterval(() => {
       graph.beginUpdate();
 
-      for (var j = 0; j < m; ++j) {
-        const node = i + j * n;
-        if (i > 0) { graph.addLink(node, i - 1 + j * n); }
-        if (j > 0) { graph.addLink(node, i + (j - 1) * n); }
+      for (let j = 0; j < m; j += 1) {
+        const node = i + (j * n);
+        if (i > 0) { graph.addLink(node, i - 1 + (j * n)); }
+        if (j > 0) { graph.addLink(node, i + ((j - 1) * n)); }
       }
 
-      i++;
+      i += 1;
       graph.endUpdate();
 
       if (i >= n) {
@@ -107,3 +101,10 @@ class VivaContainer extends Component {
     );
   }
 }
+
+Dinamic.propTypes = {
+  m: PropTypes.number,
+  n: PropTypes.number,
+};
+
+export default Dinamic;
