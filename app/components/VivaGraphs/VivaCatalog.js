@@ -1,5 +1,6 @@
 import React from 'react';
 import Graphs from './index';
+import './VivaCatalog.css';
 
 export default () => (
   <div className="viva-catalog">

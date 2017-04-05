@@ -4,9 +4,15 @@ import Viva from 'vivagraphjs';
 import './style.css';
 
 class Dinamic extends Component {
+  constructor(props) {
+    super(props);
+    this.beginAddNodesLoop = :: this.beginAddNodesLoop;
+    this.beginRemoveNodesLoop = :: this.beginRemoveNodesLoop;
+  }
+
   componentDidMount() {
-    const graph = Viva.Graph.graph();
-    const layout = Viva.Graph.Layout.forceDirected(graph, {
+    this.graph = Viva.Graph.graph();
+    const layout = Viva.Graph.Layout.forceDirected(this.graph, {
       springLength: 10,
       springCoeff: 0.0008,
       dragCoeff: 0.02,
@@ -21,7 +27,7 @@ class Dinamic extends Component {
         .attr('fill', node.data ? node.data : '#00a2e8')
     ));
 
-    const renderer = Viva.Graph.View.renderer(graph, {
+    const renderer = Viva.Graph.View.renderer(this.graph, {
       layout,
       graphics,
       container: this.viva,
@@ -29,12 +35,12 @@ class Dinamic extends Component {
     });
 
     renderer.run();
-    this.beginAddNodesLoop(graph);
+    this.beginAddNodesLoop();
   }
 
-  beginRemoveNodesLoop(graph) {
+  beginRemoveNodesLoop() {
     const nodesLeft = [];
-    graph.forEachNode((node) => {
+    this.graph.forEachNode((node) => {
       nodesLeft.push(node.id);
     });
 
@@ -47,43 +53,37 @@ class Dinamic extends Component {
           nodesCount - 1,
         );
 
-        graph.removeNode(nodesLeft[nodeToRemove]);
+        this.graph.removeNode(nodesLeft[nodeToRemove]);
         nodesLeft.splice(nodeToRemove, 1);
       }
 
       if (nodesCount === 0) {
         clearInterval(removeInterval);
-        setTimeout(
-           () => this.beginAddNodesLoop(graph),
-           100,
-         );
+        setTimeout(this.beginAddNodesLoop, 100);
       }
     }, 100);
   }
 
-  beginAddNodesLoop(graph) {
+  beginAddNodesLoop() {
     let i = 0;
     let { m, n } = this.props;
     m = m || 10;
     n = n || 20;
     const addInterval = setInterval(() => {
-      graph.beginUpdate();
+      this.graph.beginUpdate();
 
       for (let j = 0; j < m; j += 1) {
         const node = i + (j * n);
-        if (i > 0) { graph.addLink(node, i - 1 + (j * n)); }
-        if (j > 0) { graph.addLink(node, i + ((j - 1) * n)); }
+        if (i > 0) { this.graph.addLink(node, i - 1 + (j * n)); }
+        if (j > 0) { this.graph.addLink(node, i + ((j - 1) * n)); }
       }
 
       i += 1;
-      graph.endUpdate();
+      this.graph.endUpdate();
 
       if (i >= n) {
         clearInterval(addInterval);
-        setTimeout(
-          () => this.beginRemoveNodesLoop(graph),
-          3000,
-        );
+        setTimeout(this.beginRemoveNodesLoop, 3000);
       }
     }, 100);
   }

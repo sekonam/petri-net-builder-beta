@@ -82,9 +82,14 @@ export function App(props) {
             <LinkContainer to="/d3-catalog-cycle">
               <NavItem eventKey={8}>D3 Cycled</NavItem>
             </LinkContainer>
-            <LinkContainer to="/viva-catalog">
-              <NavItem eventKey={9}>Viva Graphs</NavItem>
-            </LinkContainer>
+            <NavDropdown eventKey={9} title="Viva Graphs" id="basic-nav-dropdown">
+              <LinkContainer to={'/viva-dinamic'} key={'9.1'}>
+                <MenuItem eventKey={'9.1'}>Dinamic Graph</MenuItem>
+              </LinkContainer>
+              <LinkContainer to={'/viva-gig'} key={'9.2'}>
+                <MenuItem eventKey={'9.2'}>Viva Graph Inside Graph</MenuItem>
+              </LinkContainer>
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
