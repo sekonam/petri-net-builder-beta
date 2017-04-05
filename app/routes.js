@@ -13,6 +13,7 @@ import EchartSampleCatalog from './containers/EchartSample/EchartSampleCatalog';
 import D3SampleCatalog from './containers/D3Sample/D3SampleCatalog';
 import Dinamic from './components/VivaGraphs/Dinamic';
 import GraphInsideGraph from './components/VivaGraphs/GraphInsideGraph';
+import VivaTester from './containers/VivaTester';
 
 export default () => ({
   indexRoute: '/',
@@ -65,6 +66,10 @@ export default () => ({
       {
         path: 'viva-gig',
         component: GraphInsideGraph,
+      },
+      {
+        path: 'viva-tester',
+        component: VivaTester,
       },
     ].concat(
       EchartsRoutes.map((conf) => ({
