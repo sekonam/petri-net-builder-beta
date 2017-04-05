@@ -89,6 +89,9 @@ export function App(props) {
               <LinkContainer to={'/viva-gig'} key={'9.2'}>
                 <MenuItem eventKey={'9.2'}>Viva Graph Inside Graph</MenuItem>
               </LinkContainer>
+              <LinkContainer to={'/viva-tester'} key={'9.3'}>
+                <MenuItem eventKey={'9.3'}>Viva Tester</MenuItem>
+              </LinkContainer>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
