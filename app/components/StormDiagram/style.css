@@ -6,9 +6,12 @@ html,
 body,
 #app,
 #app>div,
-#app>div>.container{
+#app>div>.container,
+.storm-diagram{
   width: 100%;
   height: 100%;
+}
+.storm-diagram {
   background: rgb(60,60,60);
   display: flex;
 }

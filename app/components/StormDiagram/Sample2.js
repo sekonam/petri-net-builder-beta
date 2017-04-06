@@ -43,6 +43,11 @@ class Sample1 extends React.Component {
 
   render() {
     // 6) render the diagram!
-    return React.createElement(SRD.DiagramWidget, { diagramEngine: this.engine });
+    const diagram = React.createElement(SRD.DiagramWidget, { diagramEngine: this.engine });
+    return (
+      <div className="storm-diagram">
+        {diagram}
+      </div>
+    );
   }
 }

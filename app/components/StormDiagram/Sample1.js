@@ -39,8 +39,8 @@ class Sample1 extends React.Component {
     // 2) setup the diagram model
     const model = new SRD.DiagramModel();
 
-    for (let i = 0; i < 8; i += 1) {
-      for (let j = 0; j < 8; j += 1) {
+    for (let i = 0; i < 5; i += 1) {
+      for (let j = 0; j < 5; j += 1) {
         generateNodes(model, i * 200, j * 100);
       }
     }
@@ -51,6 +51,11 @@ class Sample1 extends React.Component {
 
   render() {
     // 6) render the diagram!
-    return React.createElement(SRD.DiagramWidget, { diagramEngine: this.engine });
+    const diagram = React.createElement(SRD.DiagramWidget, { diagramEngine: this.engine });
+    return (
+      <div className="storm-diagram">
+        {diagram}
+      </div>
+    );
   }
 }
