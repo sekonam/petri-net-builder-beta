@@ -93,6 +93,11 @@ export function App(props) {
                 <MenuItem eventKey={'9.3'}>Viva Tester</MenuItem>
               </LinkContainer>
             </NavDropdown>
+            <NavDropdown eventKey={10} title="Storm Diagram" id="basic-nav-dropdown">
+              <LinkContainer to={'/storm-sample-1'} key={'10.1'}>
+                <MenuItem eventKey={'10.1'}>First Storm Sample</MenuItem>
+              </LinkContainer>
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
