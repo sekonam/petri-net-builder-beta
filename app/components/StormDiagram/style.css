@@ -2,13 +2,15 @@
   margin: 0;
   padding: 0;
 }
-html,body{
+html,body,#app,#app > div,#app>div>.container{
   width: 100%;
   height: 100%;
   background: rgb(60,60,60);
   display: flex;
 }
 .storm-diagrams-canvas {
+  width:100%;
+  height:100%;
   position: relative;
   flex-grow: 1;
   display: flex;
