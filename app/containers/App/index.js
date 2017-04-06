@@ -94,8 +94,11 @@ export function App(props) {
               </LinkContainer>
             </NavDropdown>
             <NavDropdown eventKey={10} title="Storm Diagram" id="basic-nav-dropdown">
-              <LinkContainer to={'/storm-sample-1'} key={'10.1'}>
+              <LinkContainer to={'/storm-sample-2'} key={'10.1'}>
                 <MenuItem eventKey={'10.1'}>First Storm Sample</MenuItem>
+              </LinkContainer>
+              <LinkContainer to={'/storm-sample-1'} key={'10.2'}>
+                <MenuItem eventKey={'10.2'}>Second Storm Sample</MenuItem>
               </LinkContainer>
             </NavDropdown>
           </Nav>

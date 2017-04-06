@@ -15,6 +15,7 @@ import Dinamic from './components/VivaGraphs/Dinamic';
 import GraphInsideGraph from './components/VivaGraphs/GraphInsideGraph';
 import VivaTester from './containers/VivaTester';
 import StormSample1 from './components/StormDiagram/Sample1';
+import StormSample2 from './components/StormDiagram/Sample2';
 
 export default () => ({
   indexRoute: '/',
@@ -75,6 +76,10 @@ export default () => ({
       {
         path: 'storm-sample-1',
         component: StormSample1,
+      },
+      {
+        path: 'storm-sample-2',
+        component: StormSample2,
       },
     ].concat(
       EchartsRoutes.map((conf) => ({
