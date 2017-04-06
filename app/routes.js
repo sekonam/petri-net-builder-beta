@@ -14,6 +14,7 @@ import D3SampleCatalog from './containers/D3Sample/D3SampleCatalog';
 import Dinamic from './components/VivaGraphs/Dinamic';
 import GraphInsideGraph from './components/VivaGraphs/GraphInsideGraph';
 import VivaTester from './containers/VivaTester';
+import StormSample1 from './components/StormDiagram/Sample1';
 
 export default () => ({
   indexRoute: '/',
@@ -70,6 +71,10 @@ export default () => ({
       {
         path: 'viva-tester',
         component: VivaTester,
+      },
+      {
+        path: 'storm-sample-1',
+        component: StormSample1,
       },
     ].concat(
       EchartsRoutes.map((conf) => ({

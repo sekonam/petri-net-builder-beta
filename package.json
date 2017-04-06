@@ -302,6 +302,7 @@
     "redux-saga": "0.14.0",
     "reselect": "2.5.4",
     "sanitize.css": "4.1.0",
+    "storm-react-diagrams": "2.4.6",
     "styled-components": "1.1.2",
     "superagent": "1.8.4",
     "vega": "3.0.0-beta.27",
@@ -366,6 +367,9 @@
     "url-loader": "0.5.7",
     "webpack": "2.2.0-rc.3",
     "webpack-dev-middleware": "1.9.0",
-    "webpack-hot-middleware": "2.15.0"
+    "webpack-hot-middleware": "2.15.0",
+    "source-map-loader": "^0.1.6",
+    "ts-loader": "^2.0.0",
+    "typescript": "2.2.2"
   }
 }
