@@ -17,6 +17,7 @@ import VivaTester from './containers/VivaTester';
 import StormSample1 from './components/StormDiagram/Sample1';
 import StormSample2 from './components/StormDiagram/Sample2';
 import StormSample3 from './components/StormDiagram/Sample3';
+import StormSample4 from './components/StormDiagram/Sample4';
 
 export default () => ({
   indexRoute: '/',
@@ -85,6 +86,10 @@ export default () => ({
       {
         path: 'storm-sample-3',
         component: StormSample3,
+      },
+      {
+        path: 'storm-sample-4',
+        component: StormSample4,
       },
     ].concat(
       EchartsRoutes.map((conf) => ({

@@ -103,6 +103,9 @@ export function App(props) {
               <LinkContainer to={'/storm-sample-3'} key={'10.3'}>
                 <MenuItem eventKey={'10.3'}>Random Diagram</MenuItem>
               </LinkContainer>
+              <LinkContainer to={'/storm-sample-4'} key={'10.4'}>
+                <MenuItem eventKey={'10.4'}>Predefined Diagram</MenuItem>
+              </LinkContainer>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
