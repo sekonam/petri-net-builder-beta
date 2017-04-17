@@ -309,7 +309,8 @@
     "vivagraphjs": "0.8.2",
     "warning": "3.0.0",
     "whatwg-fetch": "2.0.1",
-    "zrender": "3.3.0"
+    "zrender": "3.3.0",
+    "realine-gremlin": "github:mobistix/web-gremlin-migration#b9f53d83efd17fa0213c47166ae6de5455c94510"
   },
   "devDependencies": {
     "babel-cli": "6.18.0",
