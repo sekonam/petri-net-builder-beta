@@ -107,6 +107,11 @@ export function App(props) {
                 <MenuItem eventKey={'10.4'}>Predefined Diagram</MenuItem>
               </LinkContainer>
             </NavDropdown>
+            <NavDropdown eventKey={11} title="ANT Diagrams" id="basic-nav-dropdown">
+              <LinkContainer to={'/atn-vega-performance'} key={'11.1'}>
+                <MenuItem eventKey={'10.1'}>Vega Diagram</MenuItem>
+              </LinkContainer>
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

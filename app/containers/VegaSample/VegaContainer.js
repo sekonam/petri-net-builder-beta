@@ -9,7 +9,7 @@ class VegaContainer extends Component {
   static propTypes = {
     spec: PropTypes.object.isRequired,
     renderer: PropTypes.string.isRequired,
-    data: PropTypes.onject,
+    data: PropTypes.object,
   };
 
   componentDidMount() {

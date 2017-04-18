@@ -45,7 +45,7 @@ class AtnVegaPerformance extends Component {
       <VegaContainer
         spec={spec}
         data={this.data}
-        renderer={'canvas'}
+        renderer={'svg'}
         ref={(v) => { this.vega = v; }} />
     );
   }
