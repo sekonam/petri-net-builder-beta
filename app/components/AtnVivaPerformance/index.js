@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { TinkerGraph } from 'realine-gremlin';
+import Viva from 'vivagraphjs';
 import ast from '../../data/ast/NeuralNetOntology.json';
-import spec from '../../data/vega/spec/ForceDirectedLayout.json';
-import VegaContainer from '../VegaSample/VegaContainer';
 
 export default
 class AtnVegaPerformance extends Component {
@@ -40,13 +39,29 @@ class AtnVegaPerformance extends Component {
     };
   }
 
+  componentDidMount() {
+    if (this.viva) {
+      const graph = Viva.Graph.graph();
+      const graphics = Viva.Graph.View.svgGraphics();
+      const renderer = Viva.Graph.View.renderer(graph, {
+        graphics,
+        container: this.viva,
+      });
+      renderer.run();
+
+      this.data.nodedata.forEach(
+        (node) => graph.addNode(node.index, node.name)
+      );
+
+      this.data.linkdata.forEach(
+        (link) => graph.addLink(link.source, link.target)
+      );
+    }
+  }
+
   render() {
     return (
-      <VegaContainer
-        spec={spec}
-        data={this.data}
-        renderer={'canvas'}
-        ref={(v) => { this.vega = v; }} />
+      <div ref={(v) => { this.viva = v; }}></div>
     );
   }
 }

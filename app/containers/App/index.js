@@ -111,6 +111,9 @@ export function App(props) {
               <LinkContainer to={'/atn-vega-performance'} key={'11.1'}>
                 <MenuItem eventKey={'10.1'}>Vega Diagram</MenuItem>
               </LinkContainer>
+              <LinkContainer to={'/atn-viva-performance'} key={'11.2'}>
+                <MenuItem eventKey={'10.2'}>Vega Diagram</MenuItem>
+              </LinkContainer>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

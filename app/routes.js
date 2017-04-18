@@ -18,7 +18,8 @@ import StormSample1 from './components/StormDiagram/Sample1';
 import StormSample2 from './components/StormDiagram/Sample2';
 import StormSample3 from './components/StormDiagram/Sample3';
 import StormSample4 from './components/StormDiagram/Sample4';
-import AtnVegaPerformance from './containers/AtnVegaPerformance';
+import AtnVegaPerformance from './components/AtnVegaPerformance';
+import AtnVivaPerformance from './components/AtnVivaPerformance';
 
 export default () => ({
   indexRoute: '/',
@@ -95,6 +96,10 @@ export default () => ({
       {
         path: 'atn-vega-performance',
         component: AtnVegaPerformance,
+      },
+      {
+        path: 'atn-viva-performance',
+        component: AtnVivaPerformance,
       },
     ].concat(
       EchartsRoutes.map((conf) => ({
