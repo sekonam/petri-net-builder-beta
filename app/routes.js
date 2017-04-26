@@ -20,6 +20,7 @@ import StormSample3 from './components/StormDiagram/Sample3';
 import StormSample4 from './components/StormDiagram/Sample4';
 import AtnVegaPerformance from './components/AtnVegaPerformance';
 import AtnVivaPerformance from './components/AtnVivaPerformance';
+import PdfOverlay from 'components/PdfOverlay';
 
 export default () => ({
   indexRoute: '/',
@@ -100,6 +101,10 @@ export default () => ({
       {
         path: 'atn-viva-performance',
         component: AtnVivaPerformance,
+      },
+      {
+        path: '/pdf-overlay-sample',
+        component: PdfOverlay,
       },
     ].concat(
       EchartsRoutes.map((conf) => ({

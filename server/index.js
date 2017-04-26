@@ -12,6 +12,10 @@ const ngrok = (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel ? require('ngr
 const resolve = require('path').resolve;
 
 const app = express();
+// app(); # was here before
+app.get('/pdf', (res, req) => {
+  req.sendFile('/home/sergey/compressed.tracemonkey-pldi-09.pdf');
+});
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
