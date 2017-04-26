@@ -65,7 +65,7 @@ class PdfViewer extends Component {
               textLayerFactory: new pdfjs.DefaultTextLayerFactory(),
               annotationLayerFactory: new pdfjs.DefaultAnnotationLayerFactory(),
             });
-            
+
             // Associates the actual page with the view, and drawing it
             pdfPageView.setPdfPage(page);
             return pdfPageView.draw();
@@ -82,7 +82,7 @@ class PdfViewer extends Component {
   getSelectionText() {
     let txt = '';
     if (window.getSelection) { // Не IE, используем метод getSelection
-      txt = window.getSelection();
+      txt = window.getSelection().toString();
     } else { // IE, используем объект selection
       txt = document.selection.createRange().text;
     }
