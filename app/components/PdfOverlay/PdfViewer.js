@@ -1,12 +1,13 @@
 import React, { Component, PropTypes }  from 'react';
 import styled from 'styled-components';
-import pdfjs from 'pdf.js/build/dist/build/pdf';
+// import pdfjs from 'pdf.js/build/dist/build/pdf';
+import { PDFJS as pdfjs } from 'pdf.js/build/dist/web/pdf_viewer';
 import Pagination from 'react-js-pagination';
-import './style.css';
+import 'pdf.js/build/dist/web/pdf_viewer.css';
 
 const DEFAULT_SCALE = 1;
 
-pdfjs.PDFJS.disableWorker = true;
+pdfjs.disableWorker = true;
 //pdfjs.PDFJS.workerSrc = '../../../node_modules/pdf.js/build/dist/build/pdf.worker.js';
 //pdfjs.PDFJS.cMapUrl = '../node_modules/pdf.js/build/dist/bcmaps/';
 //pdfjs.PDFJS.cMapPacked = true;
@@ -46,7 +47,31 @@ class PdfViewer extends Component {
 
   componentDidUpdate() {
     if (this.state.pdf) {
-      this.renderPage();
+      const { pageNum, pdf } = this.state;
+      if (pdf && 1 <= pageNum && pageNum <= pdf.numPages) {
+        pdf.getPage(pageNum).then(
+          (page) => {
+            const container = this.pageDiv;
+            while (container.firstChild) {
+              container.removeChild(container.firstChild);
+            }
+
+            const pdfPageView = new pdfjs.PDFPageView({
+              container,
+              id: pageNum,
+              scale: DEFAULT_SCALE,
+              defaultViewport: page.getViewport(DEFAULT_SCALE),
+              // We can enable text/annotations layers, if needed
+              textLayerFactory: new pdfjs.DefaultTextLayerFactory(),
+              annotationLayerFactory: new pdfjs.DefaultAnnotationLayerFactory(),
+            });
+            
+            // Associates the actual page with the view, and drawing it
+            pdfPageView.setPdfPage(page);
+            return pdfPageView.draw();
+          }
+        );
+      }
     }
   }
 
@@ -54,42 +79,27 @@ class PdfViewer extends Component {
     this.setState({ pageNum });
   }
 
-  renderPage() {
-    const { pageNum, pdf } = this.state;
-    if (pdf && 1 <= pageNum && pageNum <= pdf.numPages) {
-      pdf.getPage(pageNum).then(
-        (page) => {
-          const viewport = page.getViewport(DEFAULT_SCALE);
-          return page.getOperatorList().then(
-            (opList) => {
-              const svgGfx = new pdfjs.SVGGraphics(page.commonObjs, page.objs);
-              return svgGfx.getSVG(opList, viewport).then(
-                (svg) => {
-                  const pdfSvg = document.getElementById('pdf-svg');
-                  while (pdfSvg.firstChild) {
-                    pdfSvg.removeChild(pdfSvg.firstChild);
-                  }
-                  pdfSvg.appendChild(svg);
-                }
-              );
-            }
-          );
-        }
-      );
+  getSelectionText() {
+    let txt = '';
+    if (window.getSelection) { // Не IE, используем метод getSelection
+      txt = window.getSelection();
+    } else { // IE, используем объект selection
+      txt = document.selection.createRange().text;
     }
+    return txt;
   }
 
   render() {
     const { width, height } = this.props;
     const { pageNum, pdf } = this.state;
-    const PdfViewerContainer = styled.div`
-      width: ${width};
-      height: ${height};
-    `;
     return (
       <div style={{ width }}>
-        <PdfViewerContainer id="pdf-svg"></PdfViewerContainer>
-        <div className="page-scroll">
+        <div
+          style={{ width, height }}
+          className="pdfViewer singlePageView"
+          ref={(pageDiv) => { this.pageDiv = pageDiv; }}>
+        </div>
+        <div className="page-scroll" onClick={() => console.log(this.getSelectionText())}>
           {pdf && <Pagination
             activePage={pageNum}
             itemsCountPerPage={1}
