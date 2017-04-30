@@ -3,9 +3,11 @@ import styled from 'styled-components';
 // import pdfjs from 'pdf.js/build/dist/build/pdf';
 import { PDFJS as pdfjs } from 'pdf.js/build/dist/web/pdf_viewer';
 import Pagination from 'react-js-pagination';
+import md5 from 'blueimp-md5';
 import 'pdf.js/build/dist/web/pdf_viewer.css';
 
 const DEFAULT_SCALE = 1;
+const PDF_KEY = 'a64536dd-b58a-4faa-ae0c-036a3ff5ef3e';
 
 pdfjs.disableWorker = true;
 //pdfjs.PDFJS.workerSrc = '../../../node_modules/pdf.js/build/dist/build/pdf.worker.js';
@@ -33,6 +35,8 @@ class PdfViewer extends Component {
       pageNum: props.pageNum,
       pdf: null,
     };
+    this.getRelations = :: this.getRelations;
+    this.handlePageChange = :: this.handlePageChange;
   }
 
   componentDidMount() {
@@ -44,6 +48,7 @@ class PdfViewer extends Component {
       console.log,
     );
   }
+
 
   componentDidUpdate() {
     if (this.state.pdf) {
@@ -79,14 +84,71 @@ class PdfViewer extends Component {
     this.setState({ pageNum });
   }
 
-  getSelectionText() {
-    let txt = '';
-    if (window.getSelection) { // Не IE, используем метод getSelection
-      txt = window.getSelection().toString();
-    } else { // IE, используем объект selection
-      txt = document.selection.createRange().text;
+  getSelection() {
+    if (window.getSelection) { // IE8+ or other
+      const selection = window.getSelection();
+
+      if (selection.rangeCount) {
+        const range = selection.getRangeAt(0);
+        const text = range.startContainer.parentNode.innerHTML;
+        return {
+          selection: text.substring(range.startOffset),
+          line: text,
+        };
+      }
+
+      return null;
     }
-    return txt;
+    // IE8-
+    const selection = document.selection;
+    return null;
+  }
+
+  getContent(url) {
+    // return new pending promise
+    return new Promise((resolve, reject) => {
+      // select http or https module, depending on reqested url
+      const lib = /^https/.test(url) ? require('https') : require('http');
+      const request = lib.get(url, (response) => {
+        // handle http errors
+        if (response.statusCode < 200 || response.statusCode > 299) {
+          reject(new Error('Failed to load page, status code: ' + response.statusCode));
+        }
+        // temporary data holder
+        const body = [];
+        // on every content chunk, push it to the data array
+        response.on('data', (chunk) => body.push(chunk));
+        // we are done, resolve promise with those joined chunks
+        response.on('end', () => resolve(body.join('')));
+      });
+      // handle connection errors of the request
+      request.on('error', (err) => reject(err))
+    });
+  }
+
+  getRelations(word) {
+    if (this.state.pdf) {
+      const { selection, line } = this.getSelection();
+      const lineMd5 = md5(line);
+      console.log(line, lineMd5);
+
+      if (selection) {
+        Promise.all([
+          this.getContent(`http://108.59.80.90:8081/api/ontology/GetRelations/problem?documentId=${PDF_KEY}`),
+          this.getContent(`http://108.59.80.90:8081/api/ontology/GetLinesByWord/problem?documentId=${PDF_KEY}`),
+        ]).then(
+          (jsonStrs) => {
+            const getRelations = JSON.parse(jsonStrs[0]);
+            const getLinesByWorld = JSON.parse(jsonStrs[1]);
+            const wordsInLine = getLinesByWorld.filter(
+              (lineByWorld) => lineByWorld.MD5Hash === lineMd5
+            );
+            console.log(wordsInLine);
+          },
+          console.log,
+        );
+      }
+    }
   }
 
   render() {
@@ -99,13 +161,13 @@ class PdfViewer extends Component {
           className="pdfViewer singlePageView"
           ref={(pageDiv) => { this.pageDiv = pageDiv; }}>
         </div>
-        <div className="page-scroll" onClick={() => console.log(this.getSelectionText())}>
+        <div className="page-scroll" onClick={this.getRelations}>
           {pdf && <Pagination
             activePage={pageNum}
             itemsCountPerPage={1}
             totalItemsCount={pdf.numPages}
             pageRangeDisplayed={5}
-            onChange={::this.handlePageChange}
+            onChange={this.handlePageChange}
           />}
         </div>
       </div>
