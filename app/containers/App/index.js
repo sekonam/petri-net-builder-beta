@@ -54,6 +54,12 @@ export function App(props) {
               <NavItem eventKey={1}>CPN Builder</NavItem>
             </LinkContainer>
             <NavDropdown eventKey={3} title="Echarts" id="basic-nav-dropdown">
+              <LinkContainer to="/all-charts">
+                <NavItem eventKey={3.0}>All Charts</NavItem>
+              </LinkContainer>
+              <LinkContainer to="/echart-catalog-cycle">
+                <NavItem eventKey={7}>Echart Cycled</NavItem>
+              </LinkContainer>
               {EchartsRoutes.map(
                 (conf, key) => (
                   <LinkContainer to={`/${conf.route}`} key={key}>
@@ -62,10 +68,7 @@ export function App(props) {
                 )
               )}
             </NavDropdown>
-            <LinkContainer to="/all-charts">
-              <NavItem eventKey={2}>All Charts</NavItem>
-            </LinkContainer>
-            <NavDropdown eventKey={6} title="Vega charts" id="basic-nav-dropdown">
+            <NavDropdown eventKey={6} title="Vega" id="basic-nav-dropdown">
               <LinkContainer to={'/vega-bar-chart'} key={'6.1'}>
                 <MenuItem eventKey={'6.1'}>Bar Chart</MenuItem>
               </LinkContainer>
@@ -75,14 +78,11 @@ export function App(props) {
               <LinkContainer to={'/vega-catalog-cycle'} key={'6.3'}>
                 <MenuItem eventKey={'6.3'}>Vega Cycled Catalog</MenuItem>
               </LinkContainer>
+              <LinkContainer to={'/atn-vega-performance'} key={'11.1'}>
+                <MenuItem eventKey={'10.1'}>ANT Diagram</MenuItem>
+              </LinkContainer>
             </NavDropdown>
-            <LinkContainer to="/echart-catalog-cycle">
-              <NavItem eventKey={7}>Echart Cycled</NavItem>
-            </LinkContainer>
-            <LinkContainer to="/d3-catalog-cycle">
-              <NavItem eventKey={8}>D3 Cycled</NavItem>
-            </LinkContainer>
-            <NavDropdown eventKey={9} title="Viva Graphs" id="basic-nav-dropdown">
+            <NavDropdown eventKey={9} title="Viva" id="basic-nav-dropdown">
               <LinkContainer to={'/viva-dinamic'} key={'9.1'}>
                 <MenuItem eventKey={'9.1'}>Dinamic Graph</MenuItem>
               </LinkContainer>
@@ -92,8 +92,11 @@ export function App(props) {
               <LinkContainer to={'/viva-tester'} key={'9.3'}>
                 <MenuItem eventKey={'9.3'}>Viva Tester</MenuItem>
               </LinkContainer>
+              <LinkContainer to={'/atn-viva-performance'} key={'11.2'}>
+                <MenuItem eventKey={'10.2'}>ANT Diagram</MenuItem>
+              </LinkContainer>
             </NavDropdown>
-            <NavDropdown eventKey={10} title="Storm Diagram" id="basic-nav-dropdown">
+            <NavDropdown eventKey={10} title="Storm" id="basic-nav-dropdown">
               <LinkContainer to={'/storm-sample-2'} key={'10.1'}>
                 <MenuItem eventKey={'10.1'}>First Storm Sample</MenuItem>
               </LinkContainer>
@@ -107,14 +110,9 @@ export function App(props) {
                 <MenuItem eventKey={'10.4'}>Predefined Diagram</MenuItem>
               </LinkContainer>
             </NavDropdown>
-            <NavDropdown eventKey={11} title="ANT Diagrams" id="basic-nav-dropdown">
-              <LinkContainer to={'/atn-vega-performance'} key={'11.1'}>
-                <MenuItem eventKey={'10.1'}>Vega Diagram</MenuItem>
-              </LinkContainer>
-              <LinkContainer to={'/atn-viva-performance'} key={'11.2'}>
-                <MenuItem eventKey={'10.2'}>Vega Diagram</MenuItem>
-              </LinkContainer>
-            </NavDropdown>
+            <LinkContainer to="/pdf-overlay-sample">
+              <NavItem>PDF viewer</NavItem>
+            </LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
