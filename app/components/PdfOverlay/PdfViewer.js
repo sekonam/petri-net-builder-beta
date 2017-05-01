@@ -1,20 +1,20 @@
 import { isEmpty } from 'lodash';
-import React, { Component, PropTypes }  from 'react';
-import styled from 'styled-components';
-// import pdfjs from 'pdf.js/build/dist/build/pdf';
+import React, { Component, PropTypes } from 'react';
 import { PDFJS as pdfjs } from 'pdf.js/build/dist/web/pdf_viewer';
 import Pagination from 'react-js-pagination';
 import md5 from 'blueimp-md5';
 import { Button } from 'react-bootstrap';
+import https from 'https';
+import http from 'http';
 import 'pdf.js/build/dist/web/pdf_viewer.css';
 import './PdfViewer.scss';
 
 const DEFAULT_SCALE = 1;
 
 pdfjs.disableWorker = true;
-//pdfjs.PDFJS.workerSrc = '../../../node_modules/pdf.js/build/dist/build/pdf.worker.js';
-//pdfjs.PDFJS.cMapUrl = '../node_modules/pdf.js/build/dist/bcmaps/';
-//pdfjs.PDFJS.cMapPacked = true;
+// pdfjs.PDFJS.workerSrc = '../../../node_modules/pdf.js/build/dist/build/pdf.worker.js';
+// pdfjs.PDFJS.cMapUrl = '../node_modules/pdf.js/build/dist/bcmaps/';
+// pdfjs.PDFJS.cMapPacked = true;
 
 export default
 class PdfViewer extends Component {
@@ -53,7 +53,7 @@ class PdfViewer extends Component {
   componentDidUpdate() {
     if (this.state.pdf) {
       const { pageNum, pdf } = this.state;
-      if (pdf && 1 <= pageNum && pageNum <= pdf.numPages) {
+      if (pdf && pageNum >= 1 && pageNum <= pdf.numPages) {
         pdf.getPage(pageNum).then(
           (page) => {
             const container = this.pageDiv;
@@ -80,10 +80,6 @@ class PdfViewer extends Component {
     }
   }
 
-  handlePageChange(pageNum) {
-    this.setState({ pageNum });
-  }
-
   getSelection() {
     if (window.getSelection) { // IE8+ or other
       const selection = window.getSelection();
@@ -100,7 +96,7 @@ class PdfViewer extends Component {
       return null;
     }
     // IE8-
-    const selection = document.selection;
+    // const selection = document.selection;
     return null;
   }
 
@@ -108,11 +104,11 @@ class PdfViewer extends Component {
     // return new pending promise
     return new Promise((resolve, reject) => {
       // select http or https module, depending on reqested url
-      const lib = /^https/.test(url) ? require('https') : require('http');
+      const lib = /^https/.test(url) ? https : http;
       const request = lib.get(url, (response) => {
         // handle http errors
         if (response.statusCode < 200 || response.statusCode > 299) {
-          reject(new Error('Failed to load page, status code: ' + response.statusCode));
+          reject(new Error(`Failed to load page, status code: ${response.statusCode}`));
         }
         // temporary data holder
         const body = [];
@@ -122,11 +118,11 @@ class PdfViewer extends Component {
         response.on('end', () => resolve(body.join('')));
       });
       // handle connection errors of the request
-      request.on('error', (err) => reject(err))
+      request.on('error', (err) => reject(err));
     });
   }
 
-  getRelations(word) {
+  getRelations() {
     if (this.state.pdf) {
       const selectionObj = this.getSelection();
 
@@ -136,7 +132,7 @@ class PdfViewer extends Component {
         const { pdfId } = this.props;
 
         if (selection) {
-          this.setState({ loading:true });
+          this.setState({ loading: true });
           Promise.all([
             this.getContent(`http://108.59.80.90:8081/api/ontology/GetRelations/${selection}?documentId=${pdfId}`),
             this.getContent(`http://108.59.80.90:8081/api/ontology/GetLinesByWord/${selection}?documentId=${pdfId}`),
@@ -158,7 +154,7 @@ class PdfViewer extends Component {
             },
             (err) => {
               console.log(err);
-              this.setState({ relations, loading: false });
+              this.setState({ loading: false });
             },
           );
         }
@@ -166,18 +162,22 @@ class PdfViewer extends Component {
     }
   }
 
+  handlePageChange(pageNum) {
+    this.setState({ pageNum });
+  }
+
   render() {
     const { pageNum, pdf, relations, loading } = this.state;
     const RELATION_FIELDS = [
-      "Subject",
-      "Relation",
-      "Object",
+      'Subject',
+      'Relation',
+      'Object',
     ];
     const RELATION_NODE_FIELDS = [
-      "Position",
-      "OriginalText",
-      "Lemma",
-      "Class",
+      'Position',
+      'OriginalText',
+      'Lemma',
+      'Class',
     ];
     const showReltions = !isEmpty(relations);
     const noRelations = !loading && !showReltions;
@@ -204,7 +204,7 @@ class PdfViewer extends Component {
           {showReltions && relations.map(
             (relation, relKey) => (
               <div className="relation" key={relKey}>
-                <h3>{`${relKey+1}th relation`}</h3>
+                <h3>{`${relKey + 1}th relation`}</h3>
                 {RELATION_FIELDS.map(
                   (type, typeKey) => (!isEmpty(relation[type]) &&
                     <div className={`relation-${type} relation-type`} key={typeKey}>
@@ -212,7 +212,7 @@ class PdfViewer extends Component {
                         {relation[type].map(
                         (relNode, nodeKey) => (
                           <div className="relation-node" key={nodeKey}>
-                            <h5>{`${nodeKey+1}th item`}</h5>
+                            <h5>{`${nodeKey + 1}th item`}</h5>
                             {RELATION_NODE_FIELDS.map(
                               (nodeField, fieldKey) => (
                                 <div className="relation-node-field" key={fieldKey}>

@@ -30,13 +30,12 @@ class AtnVegaPerformance extends Component {
         )
         .map(
           (e) => {
-            const _id = e.value._id;
             const source = ids[e.value._inVertex._id];
             const target = ids[e.value._outVertex._id];
             const value = Math.round(20 * Math.random());
             return { source, target, value };
           }
-        )
+        ),
     };
   }
 
@@ -46,7 +45,8 @@ class AtnVegaPerformance extends Component {
         spec={spec}
         data={this.data}
         renderer={'svg'}
-        ref={(v) => { this.vega = v; }} />
+        ref={(v) => { this.vega = v; }}
+      />
     );
   }
 }
