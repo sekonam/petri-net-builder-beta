@@ -18,9 +18,11 @@ $height: 297px * 3;
     position: absolute;
     left: $viewer_width * 1.2;
     top: 0;
+    text-align: left;
 
-    .relation-node {
+    .relation-type {
       display: inline-block;
+      vertical-align: top;
       margin-right: 25px;
 
       .relation-node-field {
