@@ -1,20 +1,19 @@
 import { isEmpty } from 'lodash';
 import React, { Component, PropTypes } from 'react';
-import { PDFJS as pdfjs } from 'pdf.js/build/dist/web/pdf_viewer';
-import Pagination from 'react-js-pagination';
 import md5 from 'blueimp-md5';
-import { Button } from 'react-bootstrap';
+import { PDFJS as pdfjs } from 'pdfjs-dist/web/pdf_viewer';
 import https from 'https';
 import http from 'http';
-import 'pdf.js/build/dist/web/pdf_viewer.css';
+
+import Pagination from 'react-js-pagination';
+import { Button } from 'react-bootstrap';
+
+import 'pdfjs-dist/web/pdf_viewer.css';
 import './PdfViewer.scss';
 
 const DEFAULT_SCALE = 1;
 
 pdfjs.disableWorker = true;
-// pdfjs.PDFJS.workerSrc = '../../../node_modules/pdf.js/build/dist/build/pdf.worker.js';
-// pdfjs.PDFJS.cMapUrl = '../node_modules/pdf.js/build/dist/bcmaps/';
-// pdfjs.PDFJS.cMapPacked = true;
 
 export default
 class PdfViewer extends Component {
@@ -68,7 +67,7 @@ class PdfViewer extends Component {
               defaultViewport: page.getViewport(DEFAULT_SCALE),
               // We can enable text/annotations layers, if needed
               textLayerFactory: new pdfjs.DefaultTextLayerFactory(),
-              annotationLayerFactory: new pdfjs.DefaultAnnotationLayerFactory(),
+//              annotationLayerFactory: new pdfjs.DefaultAnnotationLayerFactory(),
             });
 
             // Associates the actual page with the view, and drawing it
@@ -145,11 +144,11 @@ class PdfViewer extends Component {
                 (ln) => ln.MD5Hash === lineMd5
               );
               if (dataLine) {
+                console.log(selection, dataLine.RelatedSentences, relationsJson.map((r) => r.SentenceId));
                 relations = relationsJson.filter(
                   (rl) => dataLine.RelatedSentences.indexOf(rl.SentenceId) > -1
                 );
               }
-              console.log(relations);
               this.setState({ relations, loading: false });
             },
             (err) => {

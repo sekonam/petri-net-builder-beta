@@ -1,18 +1,16 @@
 $viewer_width: 210px * 3;
-$heifht: 297px * 3;
-$relation_width: 300px;
+$height: 297px * 3;
 
 .pdf-relations-container {
   position: relative;
 
   .pdf-viewer-column {
-    width: $viewer_width;
     position: absolute;
     top: 0;
     left: 0;
 
     .pdf-viewer {
-      height: $heifht;
+      height: $height;
     }
   }
 
