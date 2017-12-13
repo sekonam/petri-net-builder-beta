@@ -299,7 +299,6 @@
     "react-select": "1.0.0-rc.3",
     "react-split-pane": "0.1.57",
     "react-treebeard": "1.1.4",
-    "realine-gremlin": "github:mobistix/web-gremlin-migration#b9f53d83efd17fa0213c47166ae6de5455c94510",
     "redux": "3.6.0",
     "redux-form": "6.2.0",
     "redux-immutable": "3.0.8",
